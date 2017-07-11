@@ -43,11 +43,31 @@
     <main role="main">
       <table id="my-investments">
         <tr>
-          <th></th>
-          <th></th>
+          <th>My investments</th>
         </tr>
         <tr>
-          <td></td>
+          <th>Name</th>
+          <th>Invested, crypto</th>
+          <th>Invested, USD</th>
+          <th>Stay, USD</th>
+          <th>Amount</th>
+          <th>Withdraw, USD</th>
+          <th>Withdraw, tkns</th>
+          <th>Now, USD</th>
+          <th>Withdraw + Now</th>
+          <th>Finish in, days</th>
+        </tr>
+        <tr v-for="investment in myInvestments">
+          <td>{{ investment.investName }}</td>
+          <td>{{ investment.cryptoInvestedAmount }} {{ investment.cryptoInvestedSymbol }}</td>
+          <td>{{ investment.usdInvested }}</td>
+          <td>{{ investment.usdInvested }}</td>
+          <td>{{ investment.coinsAmount }}</td>
+          <td>{{  }}</td>
+          <td>{{  }}</td>
+          <td>{{ investment.coinsAmount }}</td>
+          <td>{{ investment.coinsAmount }}</td>
+          <td>{{ investment.coinsAmount }}</td>
         </tr>
       </table>
       <table id="currencyRate">

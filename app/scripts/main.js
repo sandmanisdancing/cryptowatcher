@@ -109,7 +109,7 @@ const app = new Vue({
     },
 
     getMyInvestments: function() {
-      this.myInvestments = JSON.parse("myInvestments");
+      if(localStorage.getItem("myInvestments")) this.myInvestments = JSON.parse(localStorage.getItem("myInvestments"));
     },
 
     savetoLS: function() {
