@@ -1,0 +1,258 @@
+.checkbox,
+.checkbox-s {
+  position: relative;
+}
+
+.checkbox__label {
+  width: 45px;
+  height: 23px;
+  border: 1px solid var(--bg-color);
+  display: block;
+  border-radius: 20px;
+  transition: all .2s;
+}
+
+.checkbox__label:after {
+  position: absolute;
+  content: ' ';
+  width: 19px;
+  height: 19px;
+  border-radius: 10px;
+  background-color: var(--bg-color);
+  top: 2px;
+  left: 2px;
+  transition: all .2s;
+}
+
+.checkbox__input,
+.checkbox-s__input {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+}
+
+.checkbox__input:checked + .checkbox__label {
+  border-color: var(--main-color);
+  background-color: var(--main-color);
+}
+
+.checkbox__input:checked + .checkbox__label:after {
+  -webkit-transform: translate(22px, 0);
+  transform: translate(22px, 0);
+  background-color: #fff;
+}
+
+.checkbox-s__label {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--bg-color);
+  position: relative;
+  display: block;
+  border-radius: 3px;
+}
+
+.checkbox-s__input:focus + .checkbox-s__label {
+  box-shadow: 0 0 5px var(--main-color);
+}
+
+.checkbox-s__input:checked + .checkbox-s__label:after {
+  position: absolute;
+  content: ' ';
+  left: 3px;
+  top: 4px;
+  width: 17px;
+  height: 15px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="15" height="12" viewBox="0 0 30 24" ><polyline points="1,14 9,22 28,1" fill="none" stroke-linecap="round" stroke-width="3" stroke="#229fff"/></svg>');
+  background-repeat: no-repeat;
+}
+
+.sect-header {
+  font-size: 24px;
+	font-weight: bold;
+	text-align: center;
+	margin: 0 auto .7em;
+}
+
+.btn {
+  font-size: 16px;
+	font-weight: bold;
+	padding: 13px 25px;
+	border-radius: 50px;
+	text-align: center;
+	transition: background .15s, color .15s, transform .15s;
+	border: none;
+	position: relative;
+	align-items: center;
+}
+
+.btn:hover {
+  transition: none;
+}
+
+.btn[disabled],
+.btn[disabled]:hover {
+  background-color: var(--bglight-color);
+  color: var(--bg-color);
+}
+
+.btn--yellow {
+  color: var(--text-color);
+  background-color: var(--secondary-color);
+}
+
+.btn--yellow:hover {
+  background-color: var(--main-color);
+  color: #fff;
+}
+
+.btn--blue {
+  color: #fff;
+  background-color: var(--main-color);
+}
+
+.btn--blue:hover {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+.ui-ol {
+	counter-reset: custom-ol;
+}
+
+.ui-ol__item {
+  padding: 0 0 0 25px;
+  position: relative;
+  margin-bottom: 1em;
+}
+
+.ui-ol__item:before {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  font-weight: bold;
+  background-color: var(--secondary-color);
+  text-align: center;
+  border-radius: 50%;
+  left: 10px;
+  top: 0;
+  font-size: 13px;
+  content: counter(custom-ol);
+  counter-increment: custom-ol;
+}
+
+.ui-ul {
+	margin: 1em 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.ui-ul li {
+  padding: 0 0 0 25px;
+  position: relative;
+}
+
+.ui-ul li:before {
+  position: absolute;
+  content: '';
+  left: 4px;
+  top: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--main-color);
+}
+
+.ui-ul li + li {
+  margin-top: .7em;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 100;
+}
+
+.popup {
+  border-radius: 5px;
+  box-shadow: 2px 0 4px rgba(0,0,0,.1), -2px 0 4px rgba(0,0,0,.1);
+  position: absolute;
+  width: 640px;
+  height: 600px;
+  max-height: 100%;
+  max-width: 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.popup__close {
+  position: absolute;
+  right: -45px;
+  top: 0;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid var(--main-color);
+  background-color: #fff;
+  z-index: 1;
+}
+
+.popup__close:before,
+.popup__close:after {
+  position: absolute;
+  content: ' ';
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  height: 2px;
+  width: 16px;
+  background-color: var(--main-color);
+  transform: rotate(45deg);
+  transform-origin: 50% 50%;
+}
+
+.popup__close:after {
+  transform: rotate(-45deg);
+}
+
+.popup__inner {
+  overflow: auto;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+.secondary-span {
+  color: var(--bg-color);
+}
+
+.input-field {
+  padding: 0 7px;
+  height: 30px;
+  font-size: 15px;
+}
+
+.input-field::placeholder {
+  color: var(--bg-color);
+  transition: color .3s .2s;
+}
+
+.input-field:focus::placeholder {
+  color: transparent;
+}

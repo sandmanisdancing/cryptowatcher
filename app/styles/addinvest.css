@@ -1,0 +1,45 @@
+.invest {
+
+}
+
+.invest__screen {
+  border-bottom: 1px solid var(--bg-color);
+  padding-bottom: 15px;
+}
+
+.invest__screen:last-of-type {
+  border-bottom: none;
+}
+
+.invest__line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.invest__line + .invest__line {
+  margin-top: .5em;
+}
+
+.invest__columns {
+  display: flex;
+}
+
+.invest__block {
+  flex-grow: 1;
+  padding-right: 15px;
+}
+
+.invest__block + .invest__block {
+  padding-right: 0;
+  padding-left: 15px;
+  border-left: 1px dashed var(--bg-color);
+}
+
+.invest__label {
+  display: inline-block;
+  margin-bottom: .5em;
+}
+
+.invest__done {
+  margin-top: 2em;
+}

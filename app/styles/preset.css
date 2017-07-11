@@ -1,0 +1,68 @@
+:root {
+  --text-color: #3b4952;
+  --main-color: #229fff;
+  --secondary-color: #fdda24;
+  --bg-color: #d1d7db;
+  --bglight-color: #f7f8fb;
+  --section-padding: 40px 15px;
+  --font-name: 'MuseoSans', Arial, sans-serif;
+}
+
+@font-face {
+    font-family: 'MuseoSans';
+    font-weight: 300;
+    src: url("../fonts/museo300.woff2") format("woff2"),
+         url("../fonts/museo300.woff") format("woff");
+}
+
+@font-face {
+    font-family: 'MuseoSans';
+    font-weight: 700;
+    src: url("../fonts/museo700.woff2") format("woff2"),
+         url("../fonts/museo700.woff") format("woff");
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: border-box;
+}
+
+html {
+  font-weight: 300;
+  font-family: var(--font-name);
+}
+
+html, body {
+	height: 100%;
+	font-size: 16px;
+	color: var(--text-color);
+  background-color: #fff;
+  margin: 0;
+}
+
+input, button, textarea, select {
+  font-family: var(--font-name);
+	resize: none;
+	border-radius: 0;
+}
+
+main {
+  position: relative;
+}
+
+#crypto-app {
+  position: relative;
+}
+
+#crypto-app[v-cloak] .popup-overlay {
+  display: none;
+}
+
+p {
+  margin: 0;
+}
+
+* + p {
+  margin-top: 1em;
+}

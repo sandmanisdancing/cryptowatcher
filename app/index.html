@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>Your Crypto investments watcher</title>
+
+  <!-- <link rel="canonical" href="https://atlas.kyivstar.ua"> -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- PWA icons, uncomment for production -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Your Crypto investments watcher">
+  <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
+
+  <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
+  <meta name="msapplication-TileColor" content="#229fff">
+
+  <!-- shortcut icon, uncomment for production -->
+  <link rel="shortcut icon" href="images/icons/icon-32x32.png" type="image/ico">
+
+  <!-- preload and prefetch, uncomment for production -->
+  <!-- <link rel="dns-prefetch" href="//cdn.kyivstar.ua"> -->
+  <!-- <link rel="preload" href="fonts/museo300.woff2" as="font" type="font/woff2" crossorigin="">
+  <link rel="preload" href="fonts/museo700.woff2" as="font" type="font/woff2" crossorigin=""> -->
+
+
+  <link rel="stylesheet" type="text/css" href="styles/main.css" media="all">
+  <link rel="stylesheet" type="text/css" href="styles/desktop.css" media="(min-width: 700px)">
+  <link rel="preload" href="scripts/main.js" as="script">
+</head>
+<body>
+  <div id="crypto-app" v-cloak>
+    <header class="pageheader">
+      <div class="load-status" v-if="loadStatus">{{ loadStatus }}</div>
+      <button class="btn btn--blue" @click="openWindow">Add investment</button>
+      <button class="btn btn--yellow" @click="fetchData">Refresh data</button>
+    </header>
+
+    <main role="main">
+      <table id="my-investments">
+        <tr>
+          <th></th>
+          <th></th>
+        </tr>
+        <tr>
+          <td></td>
+        </tr>
+      </table>
+      <table id="currencyRate">
+        <tr>
+          <th colspan="2">Current rate</th>
+        </tr>
+        <tr>
+          <th>Pair</th>
+          <th>Price</th>
+        </tr>
+        <tr>
+          <td>BTC/USD</td>
+          <td>{{ rates.btc }}</td>
+        </tr>
+        <tr>
+          <td>ETH/USD</td>
+          <td>{{ rates.eth }}</td>
+        </tr>
+        <tr>
+          <td>LTC/USD</td>
+          <td>{{ rates.ltc }}</td>
+        </tr>
+        <tr>
+          <td>EOS/USD</td>
+          <td>{{ rates.eos }}</td>
+        </tr>
+        <tr>
+          <td>SKIN/USD</td>
+          <td>{{ rates.skin }}</td>
+        </tr>
+        <tr>
+          <td>PING/USD</td>
+          <td>{{ rates.ping }}</td>
+        </tr>
+        <tr>
+          <td>PLBT/USD</td>
+          <td>{{ rates.plbt }}</td>
+        </tr>
+        <tr>
+          <td>WTT/USD</td>
+          <td>{{ rates.wtt }}</td>
+        </tr>
+        <tr>
+          <td>XTZ/USD</td>
+          <td>{{ rates.xtz }}</td>
+        </tr>
+        <tr>
+          <td>NVST/USD</td>
+          <td>{{ rates.nvst }}</td>
+        </tr>
+        <tr>
+          <td>DIM/USD</td>
+          <td>{{ rates.dim }}</td>
+        </tr>
+      </table>
+    </main>
+
+    <footer class="pagefooter">
+      &copy; 2017 — you are able to use this app in the way you need it.
+    </footer>
+
+    <!-- POPUP -->
+
+    <div class="popup-overlay" v-if="investPopup" @click="closeWindow" v-on:keydown.esc="closeWindow" tabindex="0">
+      <section class="popup">
+        <button type="button" class="popup__close" aria-label="Close" @click="closeWindow"></button>
+
+        <div class="popup__inner">
+          <article class="invest">
+            <form action="#">
+              <div class="invest__screen">
+                <h3>Invested</h3>
+                <div class="invest__columns">
+                  <div class="invest__block">
+                    <label for="crypto-spent" class="invest__label">Invested in crypto</label>
+                    <div class="invest__line">
+                      <input type="number" v-model="investTemplate.cryptoInvestedAmount" id="crypto-spent" class="input-field" placeholder="0.361">
+                      <select class="input-field" v-model="investTemplate.cryptoInvestedSymbol">
+                        <option v-for="currency in currenciesList" :value="currency.symbol">{{ currency.name }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="invest__block">
+                    <label for="usd-spent" class="invest__label">Invested in USD</label>
+                    <div class="invest__line">
+                      <input type="number" v-model="investTemplate.usdInvested" id="usd-spent" class="input-field" :placeholder="0.361 * +rates.btc">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="invest__screen">
+                <h3>Got</h3>
+                <div class="invest__columns">
+                  <div class="invest__block">
+                    <label for="coins-amount" class="invest__label">Coins / tokens amount</label>
+                    <div class="invest__line">
+                      <input type="number" v-model="investTemplate.coinsAmount" id="coins-amount" class="input-field" placeholder="983.4458">
+                    </div>
+                  </div>
+                  <div class="invest__block">
+                    <label for="coins-symbol" class="invest__label">Symbol for coins / tokens<span class="secondary-span">, i.e. BNT for Bancor</span></label>
+                    <div class="invest__line">
+                      <input type="text" v-model="investTemplate.coinsSymbol" id="coins-symbol" class="input-field" placeholder="BNT">
+                    </div>
+                  </div>
+                </div>
+                <p>If you don't know this info yet, it's ok, you can always edit this information.</p>
+              </div>
+
+              <div class="invest__screen">
+                <h3>Name</h3>
+                <label for="invest-name" class="invest__label">And finally, give a name to this investment<span class="secondary-span">, i. e. Bancor ICO</span></label>
+                <div class="invest__line">
+                  <input type="text" v-model="investTemplate.investName" id="invest-name" class="input-field" placeholder="Bancor ICO">
+                </div>
+              </div>
+
+              <p class="invest__done">
+                <button type="button" class="btn btn--yellow" @click="createInvestment">Done!</button>
+              </p>
+            </form>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script src="scripts/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+.pagefooter {
+  background-color: var(--secondary-color);
+  padding: 20px 15px;
+  text-align: center;
+  font-size: 12px;
+  position: relative;
+}
+
+.pagefooter p {
+  margin: 0;
+}

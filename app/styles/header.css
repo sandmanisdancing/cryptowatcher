@@ -1,0 +1,13 @@
+.pageheader {
+  position: relative;
+  z-index: 1;
+  padding: 10px;
+}
+
+.load-status {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  padding: 5px;
+  background-color: var(--bglight-color);
+}
