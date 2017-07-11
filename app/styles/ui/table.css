@@ -1,0 +1,29 @@
+.table {
+  max-width: 100%;
+  min-width: 33%;
+  border-collapse: collapse;
+}
+
+.table + .table {
+  margin-top: 2em;
+}
+
+.table th {
+  text-align: left;
+  border-bottom: 2px solid var(--bg-color);
+  padding: 5px 10px;
+}
+
+.table th + th,
+.table td + td {
+  border-left: 1px solid var(--bg-color);
+}
+
+.table td {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--bg-color);
+}
+
+.table tr:nth-child(even) td {
+  background-color: var(--bglight-color);
+}

@@ -31,31 +31,21 @@ if (!Object.assign) {
 };
 
 const data = {
+  fullData: [],
   loadStatus: null,
   investPopup: false,
-  currenciesList: [],
   myInvestments: [],
+  top10ready: false,
   investTemplate: {
     "id": null,
     "cryptoInvestedAmount": null,
-    "cryptoInvestedSymbol": null,
+    "cryptoInvestedSymbol": "Crypto name",
     "usdInvested": null,
     "coinsAmount": null,
     "coinsSymbol": null,
-    "investName": null
-  },
-  rates: {
-    btc: 0,
-    eth: 0,
-    ltc: 0,
-    eos: 0,
-    skin: 0,
-    ping: 0,
-    plbt: 0,
-    wtt: 0,
-    xtz: 0,
-    nvst: 0,
-    dim: 0
+    "finishDate": null,
+    "usdWithdraw": null,
+    "tokensWithdraw": null
   }
 };
 
@@ -65,10 +55,23 @@ const app = new Vue({
     return data;
   },
 
+  filters: {
+    dateToDays: function(value) {
+      if(!value) return "";
+      let computed = Math.floor((Date.parse(value) - Date.now()) / (60*60*24*1000));
+
+      if(+computed > 0) {
+        return "in " + computed + " day(s)";
+      } else {
+        return "finished " + computed*(-1) + " day(s) ago";
+      }
+    }
+  },
+
   methods: {
     fetchData: function() {
       const request = new XMLHttpRequest();
-      var json, self = this;
+      var self = this;
 
       request.open('GET', 'https://api.coinmarketcap.com/v1/ticker/', true);
       request.send();
@@ -85,10 +88,7 @@ const app = new Vue({
           console.log( request.status + ': ' + request.statusText );
         } else {
           try {
-            json = JSON.parse(request.responseText)
-
-            self.setRates(json);
-            self.getCurrencies(json);
+            self.fullData = JSON.parse(request.responseText);
           } catch (e) {
             console.log("Wrong response " + e.message);
           }
@@ -98,50 +98,41 @@ const app = new Vue({
 
     createInvestment: function() {
       this.investTemplate.id = Date.now();
-
+      if(this.investTemplate.coinsSymbol) this.investTemplate.coinsSymbol = this.investTemplate.coinsSymbol.toUpperCase();
       this.myInvestments.push(this.investTemplate);
+
+      this.saveToLS();
+      this.getMyInvestments();
 
       for (key in this.investTemplate) {
         this.investTemplate[key] = null;
-      }
+      };
+    },
 
-      this.saveToLS();
+    countRate: function(amount, symbol) {
+      let rate = 0;
+
+      this.currenciesList.forEach((item) => {
+        if(item["symbol"] === symbol) {
+          rate = amount * item["price_usd"];
+        }
+      });
+
+      return rate.toFixed(2);
     },
 
     getMyInvestments: function() {
       if(localStorage.getItem("myInvestments")) this.myInvestments = JSON.parse(localStorage.getItem("myInvestments"));
     },
 
-    savetoLS: function() {
+    removeToken: function(index) {
+      this.myInvestments.splice(index, 1);
+
+      this.saveToLS();
+    },
+
+    saveToLS: function() {
       localStorage.setItem("myInvestments", JSON.stringify(this.myInvestments));
-    },
-
-    getCurrencies: function(json) {
-      this.loadStatus = "Get currencies list...";
-
-      json.forEach((item) => {
-        let currency = {};
-        currency["name"] = item["name"];
-        currency["symbol"] = item["symbol"];
-
-        this.currenciesList.push(currency);
-      });
-
-      this.loadStatus = null;
-    },
-
-    setRates: function(json) {
-      this.loadStatus = "Processing rates...";
-
-      for(currency in this.rates) {
-        json.forEach((item) => {
-          if(item["symbol"].toLowerCase() === currency) {
-            this.rates["" + currency] = item["price_usd"];
-          }
-        });
-      }
-
-      this.loadStatus = null;
     },
 
     closeWindow: function(e) {
@@ -156,6 +147,40 @@ const app = new Vue({
       setTimeout(function() {
         if(e.target.matches('button, button *')) document.querySelector('.popup-overlay').focus();
       }, 200);
+    }
+  },
+
+  computed: {
+    currenciesList: function() {
+      this.loadStatus = "Get currencies list...";
+
+      const list = this.fullData.map((item) => {
+        let currency = {};
+        currency["name"] = item["name"];
+        currency["symbol"] = item["symbol"];
+        currency["price_usd"] = item["price_usd"];
+
+        return currency;
+      });
+
+      this.loadStatus = null;
+
+      return list;
+    },
+
+    top10list: function() {
+      this.loadStatus = "Creating top 10 list...";
+
+      const list = {};
+
+      for(let i = 0; i < 10; i++) {
+        list[this.fullData[i].name] = this.fullData[i].price_usd;
+      }
+
+      this.top10ready = true;
+      this.loadStatus = null;
+
+      return list;
     }
   },
 

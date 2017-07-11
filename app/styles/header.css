@@ -1,12 +1,23 @@
 .pageheader {
   position: relative;
   z-index: 1;
-  padding: 10px;
+  padding: 10px 2em;
+  background-color: var(--bglight-color);
+  display: flex;
+  align-items: center;
+}
+
+.pageheader__name {
+  flex-grow: 1;
+}
+
+.pageheader .btn {
+  margin: 0 5px;
 }
 
 .load-status {
   position: absolute;
-  right: 15px;
+  left: 15px;
   top: 15px;
   padding: 5px;
   background-color: var(--bglight-color);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,94 +35,68 @@
 <body>
   <div id="crypto-app" v-cloak>
     <header class="pageheader">
+      <h1 class="pageheader__name">My crypto portfolio</h1>
+
       <div class="load-status" v-if="loadStatus">{{ loadStatus }}</div>
       <button class="btn btn--blue" @click="openWindow">Add investment</button>
       <button class="btn btn--yellow" @click="fetchData">Refresh data</button>
     </header>
 
     <main role="main">
-      <table id="my-investments">
-        <tr>
-          <th>My investments</th>
-        </tr>
-        <tr>
-          <th>Name</th>
-          <th>Invested, crypto</th>
-          <th>Invested, USD</th>
-          <th>Stay, USD</th>
-          <th>Amount</th>
-          <th>Withdraw, USD</th>
-          <th>Withdraw, tkns</th>
-          <th>Now, USD</th>
-          <th>Withdraw + Now</th>
-          <th>Finish in, days</th>
-        </tr>
-        <tr v-for="investment in myInvestments">
-          <td>{{ investment.investName }}</td>
-          <td>{{ investment.cryptoInvestedAmount }} {{ investment.cryptoInvestedSymbol }}</td>
-          <td>{{ investment.usdInvested }}</td>
-          <td>{{ investment.usdInvested }}</td>
-          <td>{{ investment.coinsAmount }}</td>
-          <td>{{  }}</td>
-          <td>{{  }}</td>
-          <td>{{ investment.coinsAmount }}</td>
-          <td>{{ investment.coinsAmount }}</td>
-          <td>{{ investment.coinsAmount }}</td>
-        </tr>
-      </table>
-      <table id="currencyRate">
-        <tr>
-          <th colspan="2">Current rate</th>
-        </tr>
-        <tr>
-          <th>Pair</th>
-          <th>Price</th>
-        </tr>
-        <tr>
-          <td>BTC/USD</td>
-          <td>{{ rates.btc }}</td>
-        </tr>
-        <tr>
-          <td>ETH/USD</td>
-          <td>{{ rates.eth }}</td>
-        </tr>
-        <tr>
-          <td>LTC/USD</td>
-          <td>{{ rates.ltc }}</td>
-        </tr>
-        <tr>
-          <td>EOS/USD</td>
-          <td>{{ rates.eos }}</td>
-        </tr>
-        <tr>
-          <td>SKIN/USD</td>
-          <td>{{ rates.skin }}</td>
-        </tr>
-        <tr>
-          <td>PING/USD</td>
-          <td>{{ rates.ping }}</td>
-        </tr>
-        <tr>
-          <td>PLBT/USD</td>
-          <td>{{ rates.plbt }}</td>
-        </tr>
-        <tr>
-          <td>WTT/USD</td>
-          <td>{{ rates.wtt }}</td>
-        </tr>
-        <tr>
-          <td>XTZ/USD</td>
-          <td>{{ rates.xtz }}</td>
-        </tr>
-        <tr>
-          <td>NVST/USD</td>
-          <td>{{ rates.nvst }}</td>
-        </tr>
-        <tr>
-          <td>DIM/USD</td>
-          <td>{{ rates.dim }}</td>
-        </tr>
-      </table>
+      <section class="portfolio">
+        <table id="my-investments" class="table">
+          <tr>
+            <th>Actions</th>
+            <th>Token symbol</th>
+            <th>Invested, crypto</th>
+            <th>Invested, USD</th>
+            <th>Stay, USD</th>
+            <th>Amount</th>
+            <th>Withdraw, USD</th>
+            <th>Withdraw, tkns</th>
+            <th>Now, USD</th>
+            <th>Withdraw + Now</th>
+            <th>ICO Finish</th>
+          </tr>
+          <tr v-for="(investment, index) in myInvestments" :key="investment.id">
+            <td>
+              <button type="button" @click="removeToken(index)" title="Delete">X</button>
+              <button type="button" @click="editToken(index)" title="Edit">E</button>
+            </td>
+            <td>{{ investment.coinsSymbol }}</td>
+            <td>{{ investment.cryptoInvestedAmount }} {{ investment.cryptoInvestedSymbol }}</td>
+            <td>{{ investment.usdInvested }}</td>
+            <td>{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) }}</td>
+            <td>{{ investment.coinsAmount }}</td>
+            <td>{{ investment.usdWithdraw }}</td>
+            <td>{{ investment.tokensWithdraw }}</td>
+            <td>{{ countRate(investment.coinsAmount, investment.coinsSymbol) }}</td>
+            <td>{{ +investment.usdWithdraw + +countRate(investment.coinsAmount, investment.coinsSymbol) }}</td>
+            <td><nobr>{{ investment.finishDate }}</nobr><br>{{ investment.finishDate | dateToDays }}</td>
+          </tr>
+        </table>
+
+        <table id="currencyRate" class="table">
+          <tr>
+            <th colspan="2">Current rate</th>
+          </tr>
+          <tr>
+            <th>Pair</th>
+            <th>Price, USD</th>
+          </tr>
+          <tr v-for="rate in myInvestments">
+            <td>{{ rate.coinsSymbol }}/USD</td>
+            <td>{{ countRate(1, rate.coinsSymbol) }}</td>
+          </tr>
+        </table>
+
+        <table id="top10" class="table" v-if="top10ready">
+          <tr v-for="(key, value) in top10list">
+            <td>{{ value }}</td>
+            <td>{{ key }}</td>
+          </tr>
+        </table>
+      </section>
     </main>
 
     <footer class="pagefooter">
@@ -142,10 +116,11 @@
                 <h3>Invested</h3>
                 <div class="invest__columns">
                   <div class="invest__block">
-                    <label for="crypto-spent" class="invest__label">Invested in crypto</label>
+                    <label for="crypto-spent" class="invest__label">Crypto amount</label>
                     <div class="invest__line">
-                      <input type="number" v-model="investTemplate.cryptoInvestedAmount" id="crypto-spent" class="input-field" placeholder="0.361">
+                      <input type="number" v-model="investTemplate.cryptoInvestedAmount" id="crypto-spent" class="input-field" placeholder="0.361" min="0" step="0.1">
                       <select class="input-field" v-model="investTemplate.cryptoInvestedSymbol">
+                        <option value="Crypto name" disabled>Crypto name</option>
                         <option v-for="currency in currenciesList" :value="currency.symbol">{{ currency.name }}</option>
                       </select>
                     </div>
@@ -153,7 +128,7 @@
                   <div class="invest__block">
                     <label for="usd-spent" class="invest__label">Invested in USD</label>
                     <div class="invest__line">
-                      <input type="number" v-model="investTemplate.usdInvested" id="usd-spent" class="input-field" :placeholder="0.361 * +rates.btc">
+                      <input type="number" v-model="investTemplate.usdInvested" id="usd-spent" class="input-field" :placeholder="0.361 * top10list.Bitcoin" min="0" >
                     </div>
                   </div>
                 </div>
@@ -165,25 +140,23 @@
                   <div class="invest__block">
                     <label for="coins-amount" class="invest__label">Coins / tokens amount</label>
                     <div class="invest__line">
-                      <input type="number" v-model="investTemplate.coinsAmount" id="coins-amount" class="input-field" placeholder="983.4458">
+                      <input type="number" v-model="investTemplate.coinsAmount" id="coins-amount" class="input-field" placeholder="983.4458" min="0">
                     </div>
                   </div>
                   <div class="invest__block">
                     <label for="coins-symbol" class="invest__label">Symbol for coins / tokens<span class="secondary-span">, i.e. BNT for Bancor</span></label>
                     <div class="invest__line">
-                      <input type="text" v-model="investTemplate.coinsSymbol" id="coins-symbol" class="input-field" placeholder="BNT">
+                      <input type="text" v-model="investTemplate.coinsSymbol" id="coins-symbol" class="input-field" placeholder="BNT" required>
                     </div>
                   </div>
                 </div>
-                <p>If you don't know this info yet, it's ok, you can always edit this information.</p>
-              </div>
-
-              <div class="invest__screen">
-                <h3>Name</h3>
-                <label for="invest-name" class="invest__label">And finally, give a name to this investment<span class="secondary-span">, i. e. Bancor ICO</span></label>
-                <div class="invest__line">
-                  <input type="text" v-model="investTemplate.investName" id="invest-name" class="input-field" placeholder="Bancor ICO">
+                <div class="invest__block">
+                  <h3><label for="finish-date" class="invest__label">Finish date</label></h3>
+                  <div class="invest__line">
+                    <input lang="en" type="date" v-model="investTemplate.finishDate" id="finish-date" class="input-field">
+                  </div>
                 </div>
+                <p>If you don’t know all info for now, it's ok, you can always edit this information.</p>
               </div>
 
               <p class="invest__done">
