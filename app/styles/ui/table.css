@@ -27,3 +27,28 @@
 .table tr:nth-child(even) td {
   background-color: var(--bglight-color);
 }
+
+.table__action {
+  width: 86px;
+}
+
+.table__acronym {
+  text-decoration: none;
+  border-bottom: 1px dashed var(--text-color);
+  transition: color .2s, border-color .2s;
+}
+
+.table__acronym:hover {
+  color: var(--main-color);
+  border-bottom-color: var(--main-color);
+  transition: none;
+  cursor: default;
+}
+
+.action-btn {
+
+}
+
+.action-btn svg {
+  display: block;
+}

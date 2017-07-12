@@ -46,22 +46,28 @@
       <section class="portfolio">
         <table id="my-investments" class="table">
           <tr>
-            <th>Actions</th>
-            <th>Token symbol</th>
-            <th>Invested, crypto</th>
-            <th>Invested, USD</th>
-            <th>Stay, USD</th>
-            <th>Amount</th>
-            <th>Withdraw, USD</th>
-            <th>Withdraw, tkns</th>
-            <th>Now, USD</th>
-            <th>Withdraw + Now</th>
-            <th>ICO Finish</th>
+            <th class="table__action">Actions</th>
+            <th class="table__symbol">Coin / token symbol</th>
+            <th class="table__in-crypto">Invested, crypto</th>
+            <th class="table__in-usd">Invested, USD</th>
+            <th class="table__stay-usd">Stay, USD</th>
+            <th class="table__amount">Coins / tokens amount</th>
+            <th class="table__wd-usd">Withdraw, USD</th>
+            <th class="table__wd-coins">Withdraw, coins / tokens</th>
+            <th class="table__now">Now, USD</th>
+            <th class="table__wd-now">Withdraw + Now, USD</th>
+            <th class="table__finish">ICO Finish</th>
           </tr>
           <tr v-for="(investment, index) in myInvestments" :key="investment.id">
             <td>
-              <button type="button" @click="removeToken(index)" title="Delete">X</button>
-              <button type="button" @click="editToken(index)" title="Edit">E</button>
+              <button class="action-btn" type="button" @click="removeToken(index)" title="Delete">
+                <svg version="1.1" width="15" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+                  <g><path d="M815.3,80.3h-190V10H372.6v70.3h-190v69.3h632.7V80.3z"></path><path d="M816.9,203.6H120v101.9h63.3V990H817V305.5h63V203.6L816.9,203.6L816.9,203.6z M365.6,890.8h-85.5V304.5h85.5V890.8z M542.5,890.8H457V304.5h85.5V890.8z M722.3,890.8h-85.5V304.5h85.5V890.8z"></path></g></svg>
+              </button>
+              <button class="action-btn" type="button" @click="editToken(index)" title="Edit">
+                <svg version="1.1" width="15" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+                  <g><path d="M984.1,122.3C946.5,84.5,911.4,42.1,867.8,11c-40-8.3-59.2,34.9-86.7,55.1c46.4,53.9,100.5,101.5,150.4,152.5C954.1,191.7,1007.7,164.1,984.1,122.3z M959.3,325.9c-31.7,31.8-64.5,62.8-95.1,95.8c-0.8,127.5,0.3,255-0.4,382.6c-0.6,47-41.8,88.7-88.8,90.3c-193.4,0.8-387,0.8-580.4,0.1c-52.2-1.4-94-51.4-89.9-102.7c-0.1-184.6-0.1-369.1,0-553.5c-4-51.1,38-100.3,89.6-102.1c128.1-1.7,256.3,0.1,384.3-0.9c33.2-30,63.9-62.9,95.7-94.5c-170.6,0-341-0.9-511.6,0.5c-79.6,1.4-151,71-152.4,151C10.1,407.7,9.5,622.8,10.7,838c0.3,77.5,66.1,144.7,142.4,152h670.2c72.3-12.7,134.3-75.8,135.2-150.9C960.7,668.1,959,496.9,959.3,325.9z M908.2,242.2C858,191.7,807.4,141.5,756.6,91.5C645.4,201.9,534,312,423.4,423c50.1,50.4,100.4,100.6,151.3,150.3C686,463.1,797.2,352.6,908.2,242.2z M341.2,654.6c68.1-18.5,104.4-30.2,172.5-48.5c18.2-5.8,30.3-9.3,39.7-13c-48.2-45.9-103.6-102.5-151.7-148.8C381.4,514.4,361.4,584.5,341.2,654.6z" style="fill:#000"></path></g></svg>
+              </button>
             </td>
             <td>{{ investment.coinsSymbol }}</td>
             <td>{{ investment.cryptoInvestedAmount }} {{ investment.cryptoInvestedSymbol }}</td>
@@ -69,10 +75,10 @@
             <td>{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) }}</td>
             <td>{{ investment.coinsAmount }}</td>
             <td>{{ investment.usdWithdraw }}</td>
-            <td>{{ investment.tokensWithdraw }}</td>
-            <td>{{ countRate(investment.coinsAmount, investment.coinsSymbol) }}</td>
-            <td>{{ +investment.usdWithdraw + +countRate(investment.coinsAmount, investment.coinsSymbol) }}</td>
-            <td><nobr>{{ investment.finishDate }}</nobr><br>{{ investment.finishDate | dateToDays }}</td>
+            <td>{{ investment.coinsWithdraw }}</td>
+            <td>{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) }}</td>
+            <td>{{ +investment.usdWithdraw + +countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) }}</td>
+            <td><acronym class="table__acronym" :title="investment.finishDate | dateToDays"><nobr>{{ investment.finishDate }}</nobr></acronym></td>
           </tr>
         </table>
 
@@ -90,7 +96,14 @@
           </tr>
         </table>
 
-        <table id="top10" class="table" v-if="top10ready">
+        <table id="top10" class="table">
+          <tr>
+            <th colspan="2">Top 10 by market cap</th>
+          </tr>
+          <tr>
+            <th>Pair</th>
+            <th>Price, USD</th>
+          </tr>
           <tr v-for="(key, value) in top10list">
             <td>{{ value }}</td>
             <td>{{ key }}</td>
@@ -111,15 +124,16 @@
 
         <div class="popup__inner">
           <article class="invest">
-            <form action="#">
+            <form action="#" @submit.prevent="createInvestment">
               <div class="invest__screen">
                 <h3>Invested</h3>
                 <div class="invest__columns">
                   <div class="invest__block">
                     <label for="crypto-spent" class="invest__label">Crypto amount</label>
                     <div class="invest__line">
-                      <input type="number" v-model="investTemplate.cryptoInvestedAmount" id="crypto-spent" class="input-field" placeholder="0.361" min="0" step="0.1">
-                      <select class="input-field" v-model="investTemplate.cryptoInvestedSymbol">
+                      <input type="hidden" v-model="investTemplate.id">
+                      <input type="number" v-model="investTemplate.cryptoInvestedAmount" id="crypto-spent" class="input-field" placeholder="0.361" min="0" step="0.00000001">
+                      <select class="input-field" v-model="investTemplate.cryptoInvestedSymbol" required="true">
                         <option value="Crypto name" disabled>Crypto name</option>
                         <option v-for="currency in currenciesList" :value="currency.symbol">{{ currency.name }}</option>
                       </select>
@@ -128,7 +142,7 @@
                   <div class="invest__block">
                     <label for="usd-spent" class="invest__label">Invested in USD</label>
                     <div class="invest__line">
-                      <input type="number" v-model="investTemplate.usdInvested" id="usd-spent" class="input-field" :placeholder="0.361 * top10list.Bitcoin" min="0" >
+                      <input type="number" v-model="investTemplate.usdInvested" id="usd-spent" class="input-field" :placeholder="0.361 * top10list.Bitcoin" min="0" step="0.01">
                     </div>
                   </div>
                 </div>
@@ -140,7 +154,7 @@
                   <div class="invest__block">
                     <label for="coins-amount" class="invest__label">Coins / tokens amount</label>
                     <div class="invest__line">
-                      <input type="number" v-model="investTemplate.coinsAmount" id="coins-amount" class="input-field" placeholder="983.4458" min="0">
+                      <input type="number" v-model="investTemplate.coinsAmount" id="coins-amount" class="input-field" placeholder="983.4458" min="0" step="0.00000001">
                     </div>
                   </div>
                   <div class="invest__block">
@@ -153,14 +167,32 @@
                 <div class="invest__block">
                   <h3><label for="finish-date" class="invest__label">Finish date</label></h3>
                   <div class="invest__line">
-                    <input lang="en" type="date" v-model="investTemplate.finishDate" id="finish-date" class="input-field">
+                    <input type="date" v-model="investTemplate.finishDate" id="finish-date" class="input-field">
                   </div>
                 </div>
                 <p>If you don’t know all info for now, it's ok, you can always edit this information.</p>
               </div>
 
+              <div class="invest__screen">
+                <h3>Withdraw</h3>
+                <div class="invest__columns">
+                  <div class="invest__block">
+                    <label for="tokens-withdraw" class="invest__label">Withdraw, tokens</label>
+                    <div class="invest__line">
+                      <input type="number" v-model="investTemplate.coinsWithdraw" id="tokens-withdraw" class="input-field" min="0" step="0.00000001">
+                    </div>
+                  </div>
+                  <div class="invest__block">
+                    <label for="usd-withdraw" class="invest__label">Withdraw, USD</label>
+                    <div class="invest__line">
+                      <input type="number" v-model="investTemplate.usdWithdraw" id="usd-withdraw" class="input-field" min="0" step="0.01">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <p class="invest__done">
-                <button type="button" class="btn btn--yellow" @click="createInvestment">Done!</button>
+                <button class="btn btn--yellow">Save</button>
               </p>
             </form>
           </article>

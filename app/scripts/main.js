@@ -35,7 +35,7 @@ const data = {
   loadStatus: null,
   investPopup: false,
   myInvestments: [],
-  top10ready: false,
+  top10list: null,
   investTemplate: {
     "id": null,
     "cryptoInvestedAmount": null,
@@ -45,7 +45,7 @@ const data = {
     "coinsSymbol": null,
     "finishDate": null,
     "usdWithdraw": null,
-    "tokensWithdraw": null
+    "coinsWithdraw": null
   }
 };
 
@@ -58,12 +58,17 @@ const app = new Vue({
   filters: {
     dateToDays: function(value) {
       if(!value) return "";
-      let computed = Math.floor((Date.parse(value) - Date.now()) / (60*60*24*1000));
+      let computed = Math.ceil((Date.parse(value) - Date.now()) / (60*60*24*1000)),
+          day = " day";
+
+      if(+computed != 1 && +computed != -1 && +computed != 0) day = " days";
 
       if(+computed > 0) {
-        return "in " + computed + " day(s)";
+        return "finish in " + computed + day;
+      } else if (+computed == 0) {
+        return "finish today";
       } else {
-        return "finished " + computed*(-1) + " day(s) ago";
+        return "finished " + Math.abs(computed) + day + " ago";
       }
     }
   },
@@ -89,6 +94,9 @@ const app = new Vue({
         } else {
           try {
             self.fullData = JSON.parse(request.responseText);
+            self.createTop10list();
+
+            self.loadStatus = null;
           } catch (e) {
             console.log("Wrong response " + e.message);
           }
@@ -96,17 +104,64 @@ const app = new Vue({
       }
     },
 
-    createInvestment: function() {
-      this.investTemplate.id = Date.now();
-      if(this.investTemplate.coinsSymbol) this.investTemplate.coinsSymbol = this.investTemplate.coinsSymbol.toUpperCase();
-      this.myInvestments.push(this.investTemplate);
+    createTop10list: function() {
+      this.loadStatus = "Creating top 10 list...";
 
+      const list = {};
+
+      for(let i = 0; i < 10; i++) {
+        list[this.fullData[i].name] = this.fullData[i].price_usd;
+      }
+
+      this.loadStatus = null;
+      this.top10list = list;
+    },
+
+    createInvestment: function(e) {
+      // this method is used both to create and to edit investment entry
+
+      // if ID is empty we assign to it current timestamp
+      // that is how I detect this is editing or creating of investment entry
+      if(!this.investTemplate.id) this.investTemplate.id = Date.now();
+
+      // converting symbol to uppercase, so it is possible to search through coinmarketcap API JSON
+      if(this.investTemplate.coinsSymbol) this.investTemplate.coinsSymbol = this.investTemplate.coinsSymbol.toUpperCase();
+
+      // if myInvestments are empty, just push new entry
+      // and if not, start this checking
+      if(this.myInvestments.length) {
+
+        // this is for editing existing element,
+        // there is need to check if is it already in myInvestments
+        let elementExists = this.myInvestments.some((item) => {
+          return item["id"] === this.investTemplate.id;
+        });
+
+        // and if it is - write new data into investment entry
+        if(elementExists) {
+          this.myInvestments.forEach((item, index) => {
+            if(item["id"] === this.investTemplate.id) {
+              Object.assign(item, this.investTemplate);
+            }
+          });
+        } else {
+          this.myInvestments.push(this.investTemplate)
+        }
+      } else {
+        this.myInvestments.push(this.investTemplate);
+      }
+
+      // then push to localStorage
       this.saveToLS();
+      // and read it from LS
       this.getMyInvestments();
 
+      // clear form
       for (key in this.investTemplate) {
         this.investTemplate[key] = null;
       };
+
+      e.target.reset();
     },
 
     countRate: function(amount, symbol) {
@@ -129,6 +184,14 @@ const app = new Vue({
       this.myInvestments.splice(index, 1);
 
       this.saveToLS();
+    },
+
+    editToken: function(index) {
+      for(key in this.myInvestments[index]) {
+        this.investTemplate[key] = this.myInvestments[index][key];
+      }
+
+      this.investPopup = true;
     },
 
     saveToLS: function() {
@@ -163,21 +226,6 @@ const app = new Vue({
         return currency;
       });
 
-      this.loadStatus = null;
-
-      return list;
-    },
-
-    top10list: function() {
-      this.loadStatus = "Creating top 10 list...";
-
-      const list = {};
-
-      for(let i = 0; i < 10; i++) {
-        list[this.fullData[i].name] = this.fullData[i].price_usd;
-      }
-
-      this.top10ready = true;
       this.loadStatus = null;
 
       return list;
