@@ -79,7 +79,7 @@
           <tbody>
             <tr v-for="(investment, index) in myInvestments" :key="investment.id">
               <td>
-                <button class="action-btn" type="button" @click="removeToken(index)" title="Delete">
+                <button class="action-btn" type="button" @click="askRemoveToken(index)" title="Delete">
                   <svg version="1.1" width="15" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
                     <g><path d="M815.3,80.3h-190V10H372.6v70.3h-190v69.3h632.7V80.3z"></path><path d="M816.9,203.6H120v101.9h63.3V990H817V305.5h63V203.6L816.9,203.6L816.9,203.6z M365.6,890.8h-85.5V304.5h85.5V890.8z M542.5,890.8H457V304.5h85.5V890.8z M722.3,890.8h-85.5V304.5h85.5V890.8z"></path></g></svg>
                 </button>
@@ -90,7 +90,7 @@
               </td>
               <td>
                 <template v-if="investment.url">
-                  <a :href="investment.url" target="_blank">{{ investment.coinsSymbol }}</a>
+                  <a :title="investment.url" :href="investment.url" target="_blank">{{ investment.coinsSymbol }}</a>
                 </template>
                 <template v-else>{{ investment.coinsSymbol }}</template>
               </td>
@@ -159,9 +159,9 @@
 
     <!-- POPUP -->
 
-    <div class="popup-overlay" v-if="investPopup" @click="closeWindow" v-on:keydown.esc="closeWindow" tabindex="0">
+    <div class="popup-overlay" v-if="investPopup" @click="closeWindow('investPopup', $event)" v-on:keydown.esc="closeWindow('investPopup', $event)" tabindex="0">
       <section class="popup">
-        <button type="button" class="popup__close" aria-label="Close dialog" title="Close dialog" @click="closeWindow"></button>
+        <button type="button" class="popup__close" aria-label="Close dialog" title="Close dialog" @click="closeWindow('investPopup', $event)"></button>
 
         <div class="popup__inner">
           <article class="invest">
@@ -173,7 +173,7 @@
                     <label for="crypto-spent" class="invest__label">Crypto quantity</label>
                     <div class="invest__line">
                       <input type="hidden" v-model="investTemplate.id">
-                      <input type="number" v-model="investTemplate.cryptoInvestedAmount" id="crypto-spent" class="input-field" placeholder="0.361" min="0" step="0.00000001">
+                      <input type="number" v-model.number="investTemplate.cryptoInvestedAmount" id="crypto-spent" class="input-field" placeholder="0.361" min="0" step="any">
                       <select class="input-field" v-model="investTemplate.cryptoInvestedSymbol" required="true">
                         <option value="Crypto name" disabled>Crypto name</option>
                         <option v-for="currency in currencyList" :value="currency.symbol">{{ currency.name }}</option>
@@ -183,7 +183,7 @@
                   <div class="invest__block">
                     <label for="usd-spent" class="invest__label">Invested in USD</label>
                     <div class="invest__line">
-                      <input type="number" v-model="investTemplate.usdInvested" id="usd-spent" class="input-field" :placeholder="756.15" min="0" step="0.01">
+                      <input type="number" v-model.number="investTemplate.usdInvested" id="usd-spent" class="input-field" :placeholder="756.15" min="0" step="any">
                     </div>
                   </div>
                 </div>
@@ -195,7 +195,7 @@
                   <div class="invest__block">
                     <label for="coins-amount" class="invest__label">Coins / tokens quantity</label>
                     <div class="invest__line">
-                      <input type="number" v-model="investTemplate.coinsAmount" id="coins-amount" class="input-field" placeholder="983.4458" min="0" step="0.00000001">
+                      <input type="number" v-model.number="investTemplate.coinsAmount" id="coins-amount" class="input-field" placeholder="983.4458" min="0" step="any">
                     </div>
                   </div>
                   <div class="invest__block">
@@ -232,13 +232,13 @@
                   <div class="invest__block">
                     <label for="tokens-withdraw" class="invest__label">Sold, quantity</label>
                     <div class="invest__line">
-                      <input type="number" v-model="investTemplate.coinsWithdraw" id="tokens-withdraw" class="input-field" min="0" step="0.00000001">
+                      <input type="number" v-model.number="investTemplate.coinsWithdraw" id="tokens-withdraw" class="input-field" min="0" step="any">
                     </div>
                   </div>
                   <div class="invest__block">
                     <label for="usd-withdraw" class="invest__label">Sell sum, USD</label>
                     <div class="invest__line">
-                      <input type="number" v-model="investTemplate.usdWithdraw" id="usd-withdraw" class="input-field" min="0" step="0.01">
+                      <input type="number" v-model.number="investTemplate.usdWithdraw" id="usd-withdraw" class="input-field" min="0" step="any">
                     </div>
                   </div>
                 </div>
@@ -249,6 +249,17 @@
               </p>
             </form>
           </article>
+        </div>
+      </section>
+    </div>
+
+    <div class="popup-overlay" v-if="deletePopup" @click="closeWindow('deletePopup', $event)" v-on:keydown.esc="closeWindow('deletePopup', $event)" tabindex="0">
+      <section class="popup popup--delete">
+        <button type="button" class="popup__close" aria-label="Close dialog" title="Close dialog" @click="closeWindow('deletePopup', $event)"></button>
+
+        <div class="popup__inner">
+          <p>Are you sure you want to delete this entry?</p>
+          <button class="btn btn--warning" type="button" @click="removeToken(deleteIndex)">Yes, delete it</button>
         </div>
       </section>
     </div>

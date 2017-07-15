@@ -23,6 +23,10 @@
   background-color: var(--bglight-color);
 }
 
+.table tr:hover td {
+  background-color: #e5e6ea;
+}
+
 .table__action {
   width: 86px;
 }
@@ -30,10 +34,6 @@
 .table__wd-usd,
 .table__finish {
   border-left: 2px solid var(--bg-color);
-}
-
-.action-btn {
-
 }
 
 .action-btn svg {

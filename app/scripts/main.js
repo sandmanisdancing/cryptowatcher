@@ -35,6 +35,8 @@ const data = {
   loadStatus: null,
   loadFlag: false,
   investPopup: false,
+  deletePopup: false,
+  deleteIndex: null,
   myInvestments: [],
   top10list: null,
   currencyList: null,
@@ -234,10 +236,17 @@ const app = new Vue({
       }
     },
 
+    askRemoveToken: function(index) {
+      this.deletePopup = true;
+
+      this.deleteIndex = index;
+    },
+
     removeToken: function(index) {
       this.myInvestments.splice(index, 1);
-
       this.saveToLS("myInvestments");
+      this.deletePopup = false;
+      this.deleteIndex = null;
     },
 
     editToken: function(index) {
@@ -248,9 +257,9 @@ const app = new Vue({
       this.investPopup = true;
     },
 
-    closeWindow: function(e) {
+    closeWindow: function(popup, e) {
       if(e.target.matches('.popup-overlay') || e.target.matches('.popup__close')) {
-        this.investPopup = false;
+        this[popup] = false;
 
         this.clearInvestTemplate();
       }

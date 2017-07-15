@@ -1,4 +1,5 @@
 @import url(ui/table.css);
+@import url(ui/popup.css);
 
 .checkbox,
 .checkbox-s {
@@ -100,19 +101,30 @@
 }
 
 .btn--alt {
-  background-color: var(--secondary-color);
+  background-image: linear-gradient(to right, var(--secondary-color), var(--secondarydark-color));
 }
 
 .btn--alt:hover {
-  background-color: var(--main-color);
+  background-image: none;
+  background-color: var(--secondarydark-color);
 }
 
 .btn--main {
-  background-color: var(--main-color);
+  background-image: linear-gradient(to right, var(--main-color), var(--maindark-color));
 }
 
 .btn--main:hover {
-  background-color: var(--secondary-color);
+  background-image: none;
+  background-color: var(--maindark-color);
+}
+
+.btn--warning {
+  background-image: linear-gradient(to right, var(--warning-color), var(--warningdark-color));
+}
+
+.btn--warning:hover {
+  background-image: none;
+  background-color: var(--warningdark-color);
 }
 
 .ui-ol {
@@ -167,77 +179,6 @@
   margin-top: .7em;
 }
 
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5);
-  z-index: 100;
-}
-
-.popup {
-  border-radius: 5px;
-  box-shadow: 2px 0 4px rgba(0,0,0,.1), -2px 0 4px rgba(0,0,0,.1);
-  position: absolute;
-  width: 640px;
-  height: 700px;
-  max-height: 100%;
-  max-width: 100%;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-}
-
-.popup__close {
-  position: absolute;
-  right: -45px;
-  top: 0;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 2px solid var(--main-color);
-  background-color: #fff;
-  z-index: 1;
-}
-
-.popup__close:before,
-.popup__close:after {
-  position: absolute;
-  content: ' ';
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  margin: auto;
-  height: 2px;
-  width: 16px;
-  background-color: var(--main-color);
-  transform: rotate(45deg);
-  transform-origin: 50% 50%;
-}
-
-.popup__close:after {
-  transform: rotate(-45deg);
-}
-
-.popup__inner {
-  overflow: auto;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-}
-
 .secondary-span {
   color: var(--bg-color);
 }
@@ -262,8 +203,12 @@ select.input-field {
   color: transparent;
 }
 
-a:link {
+a {
   color: var(--link-color);
+}
+
+a:hover {
+  color: var(--warning-color);
 }
 
 .acronym {
