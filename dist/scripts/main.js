@@ -9650,19 +9650,22 @@ if (!Object.assign) {
 var _data = {
   fullData: [],
   loadStatus: null,
+  loadFlag: false,
   investPopup: false,
   myInvestments: [],
   top10list: null,
+  currencyList: null,
   investTemplate: {
     "id": null,
-    "cryptoInvestedAmount": null,
+    "cryptoInvestedAmount": 0,
     "cryptoInvestedSymbol": "Crypto name",
     "usdInvested": null,
-    "coinsAmount": null,
+    "coinsAmount": 0,
     "coinsSymbol": null,
     "finishDate": null,
-    "usdWithdraw": null,
-    "coinsWithdraw": null
+    "url": null,
+    "usdWithdraw": 0,
+    "coinsWithdraw": 0
   }
 };
 
@@ -9709,12 +9712,16 @@ var app = new Vue({
         if (this.status != 200) {
           self.loadStatus = "Error!";
           console.log(request.status + ': ' + request.statusText);
+
+          self.loadFlag = true;
         } else {
           try {
             self.fullData = JSON.parse(request.responseText);
             self.createTop10list();
+            self.createCurrencyList();
 
             self.loadStatus = null;
+            self.loadFlag = true;
           } catch (e) {
             console.log("Wrong response " + e.message);
           }
@@ -9735,12 +9742,30 @@ var app = new Vue({
       this.top10list = list;
     },
 
+    createCurrencyList: function createCurrencyList() {
+      this.loadStatus = "Get currencies list...";
+
+      var list = this.fullData.map(function (item) {
+        var currency = {};
+        currency["name"] = item["name"];
+        currency["symbol"] = item["symbol"];
+        currency["price_usd"] = item["price_usd"];
+
+        return currency;
+      });
+
+      this.loadStatus = null;
+      this.currencyList = list;
+
+      this.saveToLS("currencyList");
+    },
+
     createInvestment: function createInvestment(e) {
       var _this = this;
 
       // this method is used both to create and to edit investment entry
 
-      // if ID is empty we assign to it current timestamp
+      // if ID is empty - assign to it current timestamp
       // that is how I detect this is editing or creating of investment entry
       if (!this.investTemplate.id) this.investTemplate.id = Date.now();
 
@@ -9772,38 +9797,56 @@ var app = new Vue({
       }
 
       // then push to localStorage
-      this.saveToLS();
+      this.saveToLS("myInvestments");
       // and read it from LS
-      this.getMyInvestments();
-
+      this.readFromLS("myInvestments");
       // clear form
-      for (key in this.investTemplate) {
-        this.investTemplate[key] = null;
-      };
+      this.investPopup = false;
+    },
 
-      e.target.reset();
+    clearInvestTemplate: function clearInvestTemplate(e) {
+      this.investTemplate["id"] = null, this.investTemplate["cryptoInvestedAmount"] = 0, this.investTemplate["cryptoInvestedSymbol"] = "Crypto name", this.investTemplate["usdInvested"] = null, this.investTemplate["coinsAmount"] = 0, this.investTemplate["coinsSymbol"] = null, this.investTemplate["finishDate"] = null, this.investTemplate["url"] = null, this.investTemplate["usdWithdraw"] = 0, this.investTemplate["coinsWithdraw"] = 0;
     },
 
     countRate: function countRate(amount, symbol) {
       var rate = 0;
 
-      this.currenciesList.forEach(function (item) {
-        if (item["symbol"] === symbol) {
-          rate = amount * item["price_usd"];
-        }
-      });
+      if (!amount) amount = 0;
 
-      return rate.toFixed(2);
+      if (this.currencyList) {
+        this.currencyList.forEach(function (item) {
+          if (item["symbol"] === symbol) {
+            rate = amount * item["price_usd"];
+          }
+        });
+
+        return Math.round(rate * 100) / 100;
+      }
     },
 
-    getMyInvestments: function getMyInvestments() {
-      if (localStorage.getItem("myInvestments")) this.myInvestments = JSON.parse(localStorage.getItem("myInvestments"));
+    countSum: function countSum(a, b) {
+      if (!a) a = 0;
+      if (!b) b = 0;
+
+      var sum = parseFloat(a) + parseFloat(b);
+
+      return sum.toFixed(2);
+    },
+
+    saveToLS: function saveToLS(name) {
+      localStorage.setItem(name, JSON.stringify(this[name]));
+    },
+
+    readFromLS: function readFromLS(name) {
+      if (localStorage.getItem(name)) {
+        this[name] = JSON.parse(localStorage.getItem(name));
+      }
     },
 
     removeToken: function removeToken(index) {
       this.myInvestments.splice(index, 1);
 
-      this.saveToLS();
+      this.saveToLS("myInvestments");
     },
 
     editToken: function editToken(index) {
@@ -9814,13 +9857,11 @@ var app = new Vue({
       this.investPopup = true;
     },
 
-    saveToLS: function saveToLS() {
-      localStorage.setItem("myInvestments", JSON.stringify(this.myInvestments));
-    },
-
     closeWindow: function closeWindow(e) {
       if (e.target.matches('.popup-overlay') || e.target.matches('.popup__close')) {
         this.investPopup = false;
+
+        this.clearInvestTemplate();
       }
     },
 
@@ -9834,26 +9875,30 @@ var app = new Vue({
   },
 
   computed: {
-    currenciesList: function currenciesList() {
-      this.loadStatus = "Get currencies list...";
+    totalPortfolioValue: function totalPortfolioValue() {
+      var portfolio = this.myInvestments,
+          result = void 0,
+          self = this;
 
-      var list = this.fullData.map(function (item) {
-        var currency = {};
-        currency["name"] = item["name"];
-        currency["symbol"] = item["symbol"];
-        currency["price_usd"] = item["price_usd"];
+      if (portfolio.length) {
+        if (portfolio.length > 1) {
+          result = portfolio.reduce(function (a, b) {
+            return +self.countRate(a.coinsAmount - a.coinsWithdraw, a.coinsSymbol) + +self.countRate(b.coinsAmount - b.coinsWithdraw, b.coinsSymbol);
+          });
+        } else {
+          result = portfolio.reduce(function (a, b) {
+            return +self.countRate(a.coinsAmount - a.coinsWithdraw, a.coinsSymbol) + +self.countRate(b.coinsAmount - b.coinsWithdraw, b.coinsSymbol);
+          }, 0);
+        }
 
-        return currency;
-      });
-
-      this.loadStatus = null;
-
-      return list;
+        return Math.round(result * 100) / 100;
+      }
     }
   },
 
   created: function created() {
-    this.getMyInvestments();
+    this.readFromLS("myInvestments");
+    this.readFromLS("currencyList");
     this.fetchData();
 
     console.log('App created...');

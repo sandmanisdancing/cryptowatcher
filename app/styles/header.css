@@ -17,8 +17,9 @@
 
 .load-status {
   position: absolute;
-  left: 15px;
-  top: 15px;
+  left: 0;
+  top: 0;
   padding: 5px;
-  background-color: var(--bglight-color);
+  background-color: var(--secondary-color);
+  color: #fff;
 }

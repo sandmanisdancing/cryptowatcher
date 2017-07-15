@@ -4,3 +4,16 @@
 @import url(footer.css);
 @import url(addinvest.css);
 @import url(portfolio.css);
+
+.columns {
+  display: flex;
+  margin: 2em;
+}
+
+.insights {
+  flex-grow: 1;
+}
+
+.market-info {
+
+}

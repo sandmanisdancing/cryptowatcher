@@ -79,12 +79,14 @@
   font-size: 16px;
 	font-weight: bold;
 	padding: 13px 25px;
-	border-radius: 50px;
+	border-radius: 5px;
 	text-align: center;
-	transition: background .15s, color .15s, transform .15s;
+	transition: background .1s, color .1s, transform .15s;
 	border: none;
 	position: relative;
+  display: inline-flex;
 	align-items: center;
+  color: #fff;
 }
 
 .btn:hover {
@@ -97,24 +99,20 @@
   color: var(--bg-color);
 }
 
-.btn--yellow {
-  color: var(--text-color);
+.btn--alt {
   background-color: var(--secondary-color);
 }
 
-.btn--yellow:hover {
-  background-color: var(--main-color);
-  color: #fff;
-}
-
-.btn--blue {
-  color: #fff;
+.btn--alt:hover {
   background-color: var(--main-color);
 }
 
-.btn--blue:hover {
+.btn--main {
+  background-color: var(--main-color);
+}
+
+.btn--main:hover {
   background-color: var(--secondary-color);
-  color: var(--text-color);
 }
 
 .ui-ol {
@@ -248,6 +246,11 @@
   padding: 0 7px;
   height: 30px;
   font-size: 15px;
+  max-width: 140px;
+}
+
+select.input-field {
+  max-width: none;
 }
 
 .input-field::placeholder {
@@ -257,4 +260,22 @@
 
 .input-field:focus::placeholder {
   color: transparent;
+}
+
+a:link {
+  color: var(--link-color);
+}
+
+.acronym {
+  text-decoration: none;
+  color: var(--link-color);
+  border-bottom: 1px dashed var(--link-color);
+  transition: color .2s, border-color .2s;
+}
+
+.acronym:hover {
+  color: var(--secondary-color);
+  border-bottom-color: var(--secondary-color);
+  transition: none;
+  cursor: default;
 }

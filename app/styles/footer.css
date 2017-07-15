@@ -1,11 +1,16 @@
 .pagefooter {
   background-color: var(--secondary-color);
-  padding: 20px 15px;
-  text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  color: #fff;
 }
 
-.pagefooter p {
-  margin: 0;
+.pagefooter__copy {
+  padding: 0 15px;
+}
+
+.pagefooter__donate {
+  padding: 0 15px;
 }
