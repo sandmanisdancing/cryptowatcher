@@ -181,6 +181,8 @@ const app = new Vue({
       // and read it from LS
       this.readFromLS("myInvestments");
       // clear form
+      this.clearInvestTemplate();
+      // close dialog
       this.investPopup = false;
     },
 
