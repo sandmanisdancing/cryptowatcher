@@ -9883,7 +9883,11 @@ var app = new Vue({
       if (portfolio.length) {
         if (portfolio.length > 1) {
           result = portfolio.reduce(function (a, b) {
-            return +self.countRate(a.coinsAmount - a.coinsWithdraw, a.coinsSymbol) + +self.countRate(b.coinsAmount - b.coinsWithdraw, b.coinsSymbol);
+            if (isNaN(a.coinsAmount)) {
+              return a + self.countRate(+b.coinsAmount - +b.coinsWithdraw, b.coinsSymbol);
+            } else {
+              return self.countRate(+a.coinsAmount - +a.coinsWithdraw, a.coinsSymbol) + self.countRate(+b.coinsAmount - +b.coinsWithdraw, b.coinsSymbol);
+            }
           });
         } else {
           result = portfolio.reduce(function (a, b) {
