@@ -1,0 +1,7 @@
+.pageheader {
+  padding: 10px 2em;
+}
+
+.pageheader__buttons {
+  flex-basis: auto;
+}

@@ -1,0 +1,8 @@
+.columns {
+  display: flex;
+  margin: 1em;
+}
+
+.insights {
+  flex-grow: 1;
+}

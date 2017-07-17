@@ -38,8 +38,6 @@ const fs = require('fs'),
       autoprefixer = require('autoprefixer'),
       cssimport = require('postcss-import'),
       cssvars = require('postcss-custom-properties'),
-      // inlinesource = require('gulp-inline-source'),
-      // gcmq = require('gulp-group-css-media-queries'),
 
       $ = gulpLoadPlugins(),
       browserSync = bs.create(),
@@ -47,48 +45,29 @@ const fs = require('fs'),
 
 
 // Optimize images
-gulp.task('images', ['webp'], () =>
-  gulp.src(['app/images/**/*.{jpg,png,svg}', '!app/images/sprite/*', '!app/images/svg/*'])
+gulp.task('images', () => {
+  var sink = $.clone.sink();
+
+  return gulp.src(['app/images/**/*.{jpg,png,svg}', '!app/images/sprite/*'])
     .pipe($.cache($.imagemin({
       progressive: true,
-      interlaced: true
+      optimizationLevel: 3
     })))
-    .pipe(gulp.dest('dist/images'))
-    .pipe(browserSync.stream())
-    .pipe($.size({title: 'images'}))
-);
-
-// Convert images to WebP
-gulp.task('webp', () => {
-  return gulp.src(['app/images/**/*.{jpg,png}', '!app/images/sprite/*'])
+    .pipe(sink)
     .pipe($.webp({
       quality: 85
     }))
+    .pipe(sink.tap())
     .pipe(gulp.dest('dist/images'))
-    .pipe($.size({title: 'webp'}));
-});
+    .pipe(browserSync.stream())
+    .pipe($.size({title: 'images'}));
+  }
+);
 
 // Clean cache
 gulp.task('cleanCache', () => {
   return $.cache.clearAll();
 });
-
-// Sprite images
-// gulp.task('sprite', () => {
-//   var spriteData =
-//   gulp.src('app/images/sprite/*.*') // raw images for sprite path
-//   .pipe($.spritesmith({
-//     imgName: 'sprite.png',
-//     cssName: '_sprite.scss',
-//     cssFormat: 'scss',
-//     padding: 3,
-//     cssTemplate: 'scss.template.mustache',
-//     algorithm: 'binary-tree'
-//   }));
-//
-//   spriteData.img.pipe(gulp.dest('app/images/')); // path for compiled sprite image
-//   spriteData.css.pipe(gulp.dest('app/styles/')); // path for compiled sprite variables
-// });
 
 // Copy fonts to dist
 gulp.task('fonts', () => {
@@ -96,13 +75,6 @@ gulp.task('fonts', () => {
     .pipe(gulp.dest('dist/fonts'))
     .pipe($.size({title: 'fonts'}));
 });
-
-// SVG copy
-// gulp.task('svgCopy', () => {
-//   return gulp.src(['app/images/svg/**'])
-//     .pipe(gulp.dest('dist/images/svg'))
-//     .pipe($.size({title: 'copy SVG'}));
-// });
 
 // Copy all files from the root level (app)
 gulp.task('copy', ['fonts'], () =>
@@ -121,16 +93,17 @@ gulp.task('styles', () => {
   var plugins = [
     cssimport,
     autoprefixer({browsers: ['> 1%'], cascade: false}),
-    cssvars
+    cssvars({
+      preserve: true
+    })
   ];
 
   return gulp.src([
     'app/styles/main.css',
     'app/styles/desktop.css'
   ])
-    // .pipe($.newer('.tmp/styles'))
-    // .pipe(gulp.dest('.tmp/styles'))
     .pipe($.postcss(plugins))
+    .on('error', handleError)
     .pipe($.if('*.css', $.cssnano({
       discardUnused: false
     })))
@@ -168,13 +141,11 @@ gulp.task('critical', () => {
 // `.babelrc` file.
 var scriptsArray = [
   './app/scripts/vue.js',
-  // './app/scripts/vue.min.js',
   './app/scripts/dragscroll.js',
   './app/scripts/main.js'
 ];
 
 var scriptsArrayProd = [
-  // './app/scripts/vue.js',
   './app/scripts/vue.min.js',
   './app/scripts/dragscroll.js',
   './app/scripts/main.js'
@@ -250,13 +221,6 @@ gulp.task('html', () => {
     .pipe(gulp.dest('dist'));
 });
 
-// Inline styles and scripts in html-file
-// gulp.task('inline', () => {
-//   return gulp.src('dist/*.html')
-//   .pipe(inlinesource())
-//   .pipe(gulp.dest('dist/'));
-// });
-
 // Clean output directory
 gulp.task('clean', cb => del(['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
 
@@ -297,11 +261,8 @@ gulp.task('default', ['clean'], cb =>
 gulp.task('build', ['clean'], cb =>
   runSequence(
     ['cleanCache', 'html', 'scriptsProd', 'images', 'styles'],
-    ['copy'],
+    'copy',
     'generate-service-worker',
-    // , 'critical'
-    // 'inline',
-    // 'cleanAfter',
     cb
   )
 );
@@ -317,7 +278,7 @@ gulp.task('generate-service-worker', ['copy-sw-scripts'], () => {
 
   return swPrecache.write(filepath, {
     // Used to avoid cache conflicts when serving on localhost.
-    cacheId: pkg.name || 'kyivstar-app',
+    cacheId: pkg.name || 'cryptowatcher-app',
     // sw-toolbox.js needs to be listed first. It sets up methods used in runtime-caching.js.
     importScripts: [
       'scripts/sw/sw-toolbox.js',

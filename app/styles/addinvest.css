@@ -22,6 +22,7 @@
 
 .invest__columns {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .invest__block {
@@ -42,4 +43,5 @@
 
 .invest__done {
   margin-top: 2em;
+  margin-bottom: 0;
 }

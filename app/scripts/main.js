@@ -64,16 +64,16 @@ const app = new Vue({
     dateToDays: function(value) {
       if(!value) return "";
       let computed = Math.ceil((Date.parse(value) - Date.now()) / (60*60*24*1000)),
-          day = " day";
+        day = ' day';
 
-      if(+computed != 1 && +computed != -1 && +computed != 0) day = " days";
+      if(+computed !== 1 && +computed !== -1 && +computed !== 0) day = " days";
 
       if(+computed > 0) {
         return "finish in " + computed + day;
-      } else if (+computed == 0) {
-        return "finish today";
+      } else if (+computed === 0) {
+        return 'finish today';
       } else {
-        return "finished " + Math.abs(computed) + day + " ago";
+        return 'finished ' + Math.abs(computed) + day + ' ago';
       }
     }
   },
@@ -86,8 +86,8 @@ const app = new Vue({
       request.open('GET', 'https://api.coinmarketcap.com/v1/ticker/', true);
       request.send();
 
-      request.onreadystatechange = function() {
-        if (request.readyState != 4) {
+      request.onreadystatechange = function () {
+        if (request.readyState !== 4) {
           self.loadStatus = "Loading...";
 
           return;
@@ -133,7 +133,8 @@ const app = new Vue({
         let currency = {};
         currency["name"] = item["name"];
         currency["symbol"] = item["symbol"];
-        currency["price_usd"] = item["price_usd"];
+        currency["price_usd"] = +item["price_usd"];
+        currency["percent_change_24h"] = +item["percent_change_24h"];
 
         return currency;
       });
@@ -214,6 +215,20 @@ const app = new Vue({
         });
 
         return Math.round(rate * 100) / 100;
+      }
+    },
+
+    show24hChange: function(symbol) {
+      let change = 'not ranked';
+
+      if(this.currencyList) {
+        this.currencyList.forEach((item) => {
+          if(item["symbol"] === symbol) {
+            change = item["percent_change_24h"];
+          }
+        });
+
+        return change;
       }
     },
 

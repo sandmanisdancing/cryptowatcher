@@ -25,15 +25,18 @@
 
 .popup__close {
   position: absolute;
-  right: -45px;
-  top: 0;
+  right: 15px;
+  top: 15px;
   width: 35px;
   height: 35px;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 2px solid var(--main-color);
-  background-color: #fff;
+  border-radius: 5px;
+  border: none;
+  background-image: linear-gradient(9deg, var(--main-color), var(--maindark-color));
   z-index: 1;
+}
+
+.popup__close:hover {
+  background: var(--maindark-color);
 }
 
 .popup__close:before,
@@ -47,7 +50,7 @@
   margin: auto;
   height: 2px;
   width: 16px;
-  background-color: var(--main-color);
+  background-color: #fff;
   transform: rotate(45deg);
   transform-origin: 50% 50%;
 }

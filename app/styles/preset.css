@@ -43,20 +43,16 @@ input, button, textarea, select {
 
 main {
   position: relative;
+  flex-grow: 1;
 }
 
 #crypto-app {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
-#crypto-app[v-cloak] .popup-overlay {
+#crypto-app[v-cloak] {
   display: none;
-}
-
-p {
-  margin: 0;
-}
-
-* + p {
-  margin-top: 1em;
 }

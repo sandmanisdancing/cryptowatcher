@@ -1,0 +1,7 @@
+.popup__close {
+  right: 30px;
+}
+
+.action-btn:nth-child(2) {
+  margin-top: 0;
+}

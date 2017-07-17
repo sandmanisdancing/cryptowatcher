@@ -1,9 +1,10 @@
 .pageheader {
   position: relative;
   z-index: 1;
-  padding: 10px 2em;
+  padding: 1em;
   background-color: var(--bglight-color);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 }
 
@@ -11,8 +12,12 @@
   flex-grow: 1;
 }
 
-.pageheader .btn {
-  margin: 0 5px;
+.pageheader__buttons {
+  flex-basis: 100%;
+}
+
+.pageheader__buttons .btn + .btn {
+  margin-left: 10px;
 }
 
 .load-status {
