@@ -104,7 +104,7 @@
                 <span class="table__positive-change" v-if="show24hChange(investment.coinsSymbol) >= 0">
                   (+{{ show24hChange(investment.coinsSymbol) }}%)
                 </span>
-                <span class="table__positive-change" v-else-if="show24hChange(investment.coinsSymbol) < 0">
+                <span class="table__negative-change" v-else-if="show24hChange(investment.coinsSymbol) < 0">
                   ({{ show24hChange(investment.coinsSymbol) }}%)
                 </span>
                 <span class="table__negative-change" v-else>
@@ -147,17 +147,26 @@
           <table id="top10" class="table">
             <thead>
               <tr>
-                <th colspan="2">Top 10 by market capitalization</th>
+                <th colspan="3">Top 10 by market capitalization</th>
               </tr>
               <tr>
                 <th>Coin</th>
                 <th>Price, USD</th>
+                <th>24h change</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(key, value) in top10list">
-                <td>{{ value }}</td>
-                <td>{{ key }}</td>
+              <tr v-for="n in 10">
+                <td>{{ currencyList[n-1].name }}</td>
+                <td>{{ currencyList[n-1].price_usd }}</td>
+                <td>
+                  <span class="table__positive-change" v-if="currencyList[n-1].percent_change_24h >= 0">
+                    {{ currencyList[n-1].percent_change_24h }}%
+                  </span>
+                  <span class="table__negative-change" v-else-if="currencyList[n-1].percent_change_24h < 0">
+                    {{ currencyList[n-1].percent_change_24h }}%
+                  </span>
+                </td>
               </tr>
             </tbody>
           </table>

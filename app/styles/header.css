@@ -24,7 +24,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  padding: 5px;
+  padding: 5px 10px;
   background-color: var(--secondary-color);
   color: #fff;
 }
