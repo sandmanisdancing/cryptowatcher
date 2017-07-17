@@ -1,8 +1,10 @@
 .columns {
   display: flex;
+  flex-wrap: wrap;
   margin: 1em;
 }
 
 .insights {
-  flex-grow: 1;
+  flex-shrink: 0;
+  min-width: 50%;
 }

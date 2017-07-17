@@ -5,3 +5,8 @@
 .action-btn:nth-child(2) {
   margin-top: 0;
 }
+
+.market-info {
+  margin-left: 1em;
+  margin-top: 0;
+}

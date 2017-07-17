@@ -1,4 +1,5 @@
 .market-info {
-  margin-left: 1em;
   min-height: 375px;
+  flex-grow: 1;
+  margin-top: 2em;
 }

@@ -9693,6 +9693,12 @@ var app = new Vue({
       } else {
         return 'finished ' + Math.abs(computed) + day + ' ago';
       }
+    },
+
+    bigNumber: function bigNumber(value) {
+      var parts = value.toString().split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
     }
   },
 
@@ -9753,6 +9759,7 @@ var app = new Vue({
         currency["symbol"] = item["symbol"];
         currency["price_usd"] = +item["price_usd"];
         currency["percent_change_24h"] = +item["percent_change_24h"];
+        currency["market_cap_usd"] = +item["market_cap_usd"];
 
         return currency;
       });
