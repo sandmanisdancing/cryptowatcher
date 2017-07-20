@@ -5,10 +5,11 @@
   display: flex;
   flex-wrap: wrap;
   color: #fff;
+  padding: 15px 0;
 }
 
 .pagefooter__copy {
-  padding: 0 15px;
+  padding: 0 15px 20px;
 }
 
 .pagefooter__donate {
