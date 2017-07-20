@@ -1,7 +1,16 @@
 .pageheader {
   padding: 10px 2em;
+  min-height: 130px;
 }
 
 .pageheader__buttons {
   flex-basis: auto;
+}
+
+.btn[data-visible="desktop"] {
+  display: inline-flex;
+}
+
+.btn[data-visible="mobile"] {
+  display: none;
 }

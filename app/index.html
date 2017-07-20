@@ -7,7 +7,7 @@
 
   <title>Your Crypto investments watcher</title>
 
-  <!-- <link rel="canonical" href="https://atlas.kyivstar.ua"> -->
+  <link rel="canonical" href="https://sandmanisdancing.github.io/cryptowatcher/dist">
   <link rel="manifest" href="manifest.json">
 
   <!-- PWA icons, uncomment for production -->
@@ -20,19 +20,15 @@
   <meta name="msapplication-TileColor" content="#229fff">
 
   <!-- shortcut icon, uncomment for production -->
-  <link rel="shortcut icon" href="images/icons/icon-32x32.png" type="image/ico">
-
-
-
-  <!-- preload and prefetch, uncomment for production -->
-  <!-- <link rel="dns-prefetch" href="//cdn.kyivstar.ua"> -->
-  <!-- <link rel="preload" href="fonts/museo300.woff2" as="font" type="font/woff2" crossorigin="">
-  <link rel="preload" href="fonts/museo700.woff2" as="font" type="font/woff2" crossorigin=""> -->
-
+  <!-- <link rel="shortcut icon" href="images/icons/icon-32x32.png" type="image/ico"> -->
 
   <link rel="stylesheet" type="text/css" href="styles/main.css" media="all">
   <link rel="stylesheet" type="text/css" href="styles/desktop.css" media="(min-width: 700px)">
+
+  <link rel="preload" href="https://www.gstatic.com/firebasejs/4.1.3/firebase.js" as="script">
   <link rel="preload" href="scripts/main.js" as="script">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Dosis:400,700" as="style">
 
   <link href="https://fonts.googleapis.com/css?family=Dosis:400,700" rel="stylesheet">
 
@@ -49,12 +45,22 @@
 <body>
   <div id="crypto-app" v-cloak>
     <header class="pageheader">
-      <h1 class="pageheader__name">My crypto portfolio</h1>
+      <div class="pageheader__left-column">
+        <h1 class="pageheader__name">My crypto portfolio</h1>
+        <div class="pageheader__user" v-if="authentication.isSignedIn">
+          {{ authentication.user.email }}
+        </div>
+      </div>
 
       <div class="pageheader__buttons">
         <div class="load-status" v-if="loadStatus">{{ loadStatus }}</div>
+
         <button class="btn btn--main" @click="openWindow">Add investment</button>
         <button class="btn btn--alt" @click="fetchData">Refresh data</button>
+
+        <button data-visible="desktop" class="btn btn--main" @click="signIn" v-if="!authentication.isSignedIn">Sign in with Google</button>
+        <button data-visible="mobile" class="btn btn--main" @click="signIn('mobile')" v-if="!authentication.isSignedIn">Sign in with Google</button>
+        <button class="btn btn--warning" @click="signOut" v-else>Sign out</button>
       </div>
     </header>
 
@@ -297,19 +303,7 @@
   </div>
 
 
-  <!-- <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
-  <script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyB4IbUCWaMDlIbhxlwckAY-_kQ59a-NyCg",
-    authDomain: "cryptowatcher-86395.firebaseapp.com",
-    databaseURL: "https://cryptowatcher-86395.firebaseio.com",
-    projectId: "cryptowatcher-86395",
-    storageBucket: "",
-    messagingSenderId: "48789523257"
-  };
-  firebase.initializeApp(config);
-  </script> -->
+  <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js" defer></script>
   <script src="scripts/main.js" defer></script>
 </body>
 </html>

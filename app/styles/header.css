@@ -8,8 +8,18 @@
   align-items: center;
 }
 
-.pageheader__name {
+.pageheader__left-column {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.pageheader__name {
+  margin: auto 0;
+}
+
+.pageheader__user {
+  margin: .66em 0;
 }
 
 .pageheader__buttons {
@@ -27,4 +37,8 @@
   padding: 5px 10px;
   background-color: var(--secondary-color);
   color: #fff;
+}
+
+.btn[data-visible="desktop"] {
+  display: none;
 }

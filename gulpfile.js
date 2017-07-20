@@ -53,11 +53,11 @@ gulp.task('images', () => {
       progressive: true,
       optimizationLevel: 3
     })))
-    .pipe(sink)
-    .pipe($.webp({
-      quality: 85
-    }))
-    .pipe(sink.tap())
+    // .pipe(sink)
+    // .pipe($.webp({
+    //   quality: 85
+    // }))
+    // .pipe(sink.tap())
     .pipe(gulp.dest('dist/images'))
     .pipe(browserSync.stream())
     .pipe($.size({title: 'images'}));
@@ -109,7 +109,7 @@ gulp.task('styles', () => {
     })))
     .pipe($.size({title: 'styles'}))
     .pipe(gulp.dest('dist/styles'))
-    .pipe(browserSync.stream({match: '**/*.css'}));
+    .pipe(browserSync.stream());
 });
 
 gulp.task('critical', () => {
