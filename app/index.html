@@ -58,8 +58,7 @@
         <button class="btn btn--main" @click="openWindow">Add investment</button>
         <button class="btn btn--alt" @click="fetchData">Refresh data</button>
 
-        <button data-visible="desktop" class="btn btn--main" @click="signIn" v-if="!authentication.isSignedIn">Sign in with Google</button>
-        <button data-visible="mobile" class="btn btn--main" @click="signIn('mobile')" v-if="!authentication.isSignedIn">Sign in with Google</button>
+        <button class="btn btn--main" @click="signIn" v-if="!authentication.isSignedIn">Sign in with Google</button>
         <button class="btn btn--warning" @click="signOut" v-else>Sign out</button>
       </div>
     </header>

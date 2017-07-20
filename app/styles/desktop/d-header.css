@@ -6,11 +6,3 @@
 .pageheader__buttons {
   flex-basis: auto;
 }
-
-.btn[data-visible="desktop"] {
-  display: inline-flex;
-}
-
-.btn[data-visible="mobile"] {
-  display: none;
-}

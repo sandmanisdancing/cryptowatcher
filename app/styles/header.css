@@ -38,7 +38,3 @@
   background-color: var(--secondary-color);
   color: #fff;
 }
-
-.btn[data-visible="desktop"] {
-  display: none;
-}
