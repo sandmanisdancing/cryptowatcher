@@ -24,10 +24,20 @@
 
 .pageheader__buttons {
   flex-basis: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pageheader__buttons--si .btn {
+  flex-grow: 1;
 }
 
 .pageheader__buttons .btn + .btn {
   margin-left: 10px;
+}
+
+.btn[data-device="desktop"] {
+  display: none;
 }
 
 .load-status {

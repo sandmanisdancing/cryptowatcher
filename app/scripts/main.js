@@ -119,8 +119,6 @@ const app = new Vue({
         if (this.status != 200) {
           self.loadStatus = "Error!";
           console.log( request.status + ': ' + request.statusText );
-
-          self.loadFlag = true;
         } else {
           try {
             self.fullData = JSON.parse(request.responseText);
@@ -128,7 +126,6 @@ const app = new Vue({
             self.createCurrencyList();
 
             self.loadStatus = null;
-            self.loadFlag = true;
           } catch (e) {
             console.log("Wrong response " + e.message);
           }
@@ -142,39 +139,33 @@ const app = new Vue({
 
       // console.log(device)
 
-      // if(device === 'mobile') {
-      //   firebase.auth().signInWithRedirect(provider).then(function (result) {
-      //     // The signed-in user info.
-      //     var user = result.user;
-      //
-      //     self.authentication.user = user;
-      //     self.authentication.isSignedIn = true;
-      //
-      //     self.saveToLS("authentication");
-      //   }).catch(function (error) {
-      //     // Handle Errors here.
-      //     var errorCode = error.code,
-      //     errorMessage = error.message,
-      //     // The email of the user's account used.
-      //     email = error.email,
-      //     // The firebase.auth.AuthCredential type that was used.
-      //     credential = error.credential;
-      //   });
-      // } else {
+      if(device === 'mobile') {
+        firebase.auth().signInWithRedirect(provider).then(function (result) {
+          // The signed-in user info.
+          var user = result.user;
+
+          self.authentication.isSignedIn = true;
+        }).catch(function (error) {
+          // Handle Errors here.
+          var errorCode = error.code,
+          errorMessage = error.message,
+          // The email of the user's account used.
+          email = error.email,
+          // The firebase.auth.AuthCredential type that was used.
+          credential = error.credential;
+        });
+      } else {
         firebase.auth().signInWithPopup(provider).then(function (result) {
           var user = result.user;
 
-          self.authentication.user = user;
           self.authentication.isSignedIn = true;
-
-          self.saveToLS("authentication");
         }).catch(function (error) {
           var errorCode = error.code,
           errorMessage = error.message,
           email = error.email,
           credential = error.credential;
         });
-      // }
+      }
     },
 
     signOut: function () {
@@ -183,17 +174,28 @@ const app = new Vue({
       firebase.auth().signOut().then(function() {
         self.authentication.user = null;
         self.authentication.isSignedIn = false;
-
-        self.saveToLS("authentication");
       }).catch(function(error) {
         // An error happened.
       });
 
       this.myInvestments = [];
+      this.saveToLS('myInvestments');
     },
 
     checkIsSignedIn: function () {
-      this.readFromLS('authentication');
+      var self = this;
+      self.loadStatus = 'Authentication...';
+
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          self.authentication.user = user;
+          self.authentication.isSignedIn = true;
+
+          self.readUserData();
+        } else {
+          self.authentication.isSignedIn = false;
+        }
+      });
     },
 
     writeUserData: function () {
@@ -425,7 +427,6 @@ const app = new Vue({
 
   created: function () {
     this.checkIsSignedIn();
-    if(this.authentication.isSignedIn) this.readUserData();
 
     this.readFromLS("myInvestments");
     this.readFromLS("currencyList");

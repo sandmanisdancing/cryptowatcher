@@ -1,7 +1,7 @@
 .btn {
   font-size: 16px;
 	font-weight: bold;
-	padding: 13px 25px;
+	padding: 9px 10px;
 	border-radius: 5px;
 	text-align: center;
 	transition: background .1s, color .1s, transform .15s;
@@ -10,6 +10,7 @@
   display: inline-flex;
 	align-items: center;
   color: #fff;
+  justify-content: center;
 }
 
 .btn:hover {
