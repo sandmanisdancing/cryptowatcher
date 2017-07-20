@@ -1,0 +1,19 @@
+.popup__close {
+  right: 30px;
+}
+
+.action-btn:nth-child(2) {
+  margin-top: 0;
+}
+
+.market-info {
+  margin-top: 0;
+}
+
+.btn {
+  padding: 13px 25px;
+}
+
+.action-btn {
+  padding: 5px 6px;
+}

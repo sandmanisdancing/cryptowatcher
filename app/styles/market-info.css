@@ -1,0 +1,7 @@
+.market-info {
+  min-height: 375px;
+  flex-grow: 1;
+  margin-top: 2em;
+  max-width: 100%;
+  overflow: auto;
+}

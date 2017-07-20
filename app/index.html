@@ -7,7 +7,7 @@
 
   <title>Your Crypto investments watcher</title>
 
-  <!-- <link rel="canonical" href="https://atlas.kyivstar.ua"> -->
+  <link rel="canonical" href="https://sandmanisdancing.github.io/cryptowatcher/dist">
   <link rel="manifest" href="manifest.json">
 
   <!-- PWA icons, uncomment for production -->
@@ -20,19 +20,15 @@
   <meta name="msapplication-TileColor" content="#229fff">
 
   <!-- shortcut icon, uncomment for production -->
-  <link rel="shortcut icon" href="images/icons/icon-32x32.png" type="image/ico">
-
-
-
-  <!-- preload and prefetch, uncomment for production -->
-  <!-- <link rel="dns-prefetch" href="//cdn.kyivstar.ua"> -->
-  <!-- <link rel="preload" href="fonts/museo300.woff2" as="font" type="font/woff2" crossorigin="">
-  <link rel="preload" href="fonts/museo700.woff2" as="font" type="font/woff2" crossorigin=""> -->
-
+  <!-- <link rel="shortcut icon" href="images/icons/icon-32x32.png" type="image/ico"> -->
 
   <link rel="stylesheet" type="text/css" href="styles/main.css" media="all">
   <link rel="stylesheet" type="text/css" href="styles/desktop.css" media="(min-width: 700px)">
+
+  <link rel="preload" href="https://www.gstatic.com/firebasejs/4.1.3/firebase.js" as="script">
   <link rel="preload" href="scripts/main.js" as="script">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Dosis:400,700" as="style">
 
   <link href="https://fonts.googleapis.com/css?family=Dosis:400,700" rel="stylesheet">
 
@@ -44,22 +40,36 @@
 
   ga('create', 'UA-102622704-1', 'auto');
   ga('send', 'pageview');
-
   </script>
 </head>
 <body>
   <div id="crypto-app" v-cloak>
     <header class="pageheader">
-      <h1 class="pageheader__name">My crypto portfolio</h1>
-
       <div class="load-status" v-if="loadStatus">{{ loadStatus }}</div>
-      <button class="btn btn--main" @click="openWindow">Add investment</button>
-      <button class="btn btn--alt" @click="fetchData">Refresh data</button>
+
+      <div class="pageheader__left-column">
+        <h1 class="pageheader__name">My crypto portfolio</h1>
+        <div class="pageheader__user" v-if="authentication.isSignedIn">
+          {{ authentication.user.email }}
+        </div>
+        <div class="pageheader__user" v-else>
+          Not signed in.
+        </div>
+      </div>
+
+      <div class="pageheader__buttons" :class="{ 'pageheader__buttons--si': authentication.isSignedIn }">
+        <button class="btn btn--main" @click="openWindow">Add investment</button>
+        <button class="btn btn--alt" @click="fetchData">Refresh data</button>
+
+        <button data-device="desktop" class="btn btn--main" @click="signIn" v-if="!authentication.isSignedIn">Sign in with Google</button>
+        <button data-device="mobile" class="btn btn--main" @click="signIn('mobile')" v-if="!authentication.isSignedIn">Sign in with Google</button>
+        <button class="btn btn--warning" @click="signOut" v-else>Sign out</button>
+      </div>
     </header>
 
     <main role="main">
       <section class="portfolio">
-        <table id="my-investments" class="table">
+        <table id="my-investments" class="table" v-if="myInvestments.length">
           <thead>
             <tr>
               <th class="table__action">Actions</th>
@@ -78,15 +88,17 @@
           </thead>
           <tbody>
             <tr v-for="(investment, index) in myInvestments" :key="investment.id">
-              <td>
-                <button class="action-btn" type="button" @click="askRemoveToken(index)" title="Delete">
-                  <svg version="1.1" width="15" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
-                    <g><path d="M815.3,80.3h-190V10H372.6v70.3h-190v69.3h632.7V80.3z"></path><path d="M816.9,203.6H120v101.9h63.3V990H817V305.5h63V203.6L816.9,203.6L816.9,203.6z M365.6,890.8h-85.5V304.5h85.5V890.8z M542.5,890.8H457V304.5h85.5V890.8z M722.3,890.8h-85.5V304.5h85.5V890.8z"></path></g></svg>
-                </button>
-                <button class="action-btn" type="button" @click="editToken(index)" title="Edit">
-                  <svg version="1.1" width="15" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
-                    <g><path d="M984.1,122.3C946.5,84.5,911.4,42.1,867.8,11c-40-8.3-59.2,34.9-86.7,55.1c46.4,53.9,100.5,101.5,150.4,152.5C954.1,191.7,1007.7,164.1,984.1,122.3z M959.3,325.9c-31.7,31.8-64.5,62.8-95.1,95.8c-0.8,127.5,0.3,255-0.4,382.6c-0.6,47-41.8,88.7-88.8,90.3c-193.4,0.8-387,0.8-580.4,0.1c-52.2-1.4-94-51.4-89.9-102.7c-0.1-184.6-0.1-369.1,0-553.5c-4-51.1,38-100.3,89.6-102.1c128.1-1.7,256.3,0.1,384.3-0.9c33.2-30,63.9-62.9,95.7-94.5c-170.6,0-341-0.9-511.6,0.5c-79.6,1.4-151,71-152.4,151C10.1,407.7,9.5,622.8,10.7,838c0.3,77.5,66.1,144.7,142.4,152h670.2c72.3-12.7,134.3-75.8,135.2-150.9C960.7,668.1,959,496.9,959.3,325.9z M908.2,242.2C858,191.7,807.4,141.5,756.6,91.5C645.4,201.9,534,312,423.4,423c50.1,50.4,100.4,100.6,151.3,150.3C686,463.1,797.2,352.6,908.2,242.2z M341.2,654.6c68.1-18.5,104.4-30.2,172.5-48.5c18.2-5.8,30.3-9.3,39.7-13c-48.2-45.9-103.6-102.5-151.7-148.8C381.4,514.4,361.4,584.5,341.2,654.6z" style="fill:#000"></path></g></svg>
-                </button>
+              <td class="table__action-td">
+                <div class="table__action-div">
+                  <button class="btn btn--warning action-btn action-btn--delete" type="button" @click="askRemoveToken(index)" title="Delete">
+                    <svg version="1.1" width="18" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+                      <g><path d="M815.3,80.3h-190V10H372.6v70.3h-190v69.3h632.7V80.3z"></path><path d="M816.9,203.6H120v101.9h63.3V990H817V305.5h63V203.6L816.9,203.6L816.9,203.6z M365.6,890.8h-85.5V304.5h85.5V890.8z M542.5,890.8H457V304.5h85.5V890.8z M722.3,890.8h-85.5V304.5h85.5V890.8z"></path></g></svg>
+                  </button>
+                  <button class="btn btn--alt action-btn action-btn--edit" type="button" @click="editToken(index)" title="Edit">
+                    <svg version="1.1" width="18" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+                      <g><path d="M984.1,122.3C946.5,84.5,911.4,42.1,867.8,11c-40-8.3-59.2,34.9-86.7,55.1c46.4,53.9,100.5,101.5,150.4,152.5C954.1,191.7,1007.7,164.1,984.1,122.3z M959.3,325.9c-31.7,31.8-64.5,62.8-95.1,95.8c-0.8,127.5,0.3,255-0.4,382.6c-0.6,47-41.8,88.7-88.8,90.3c-193.4,0.8-387,0.8-580.4,0.1c-52.2-1.4-94-51.4-89.9-102.7c-0.1-184.6-0.1-369.1,0-553.5c-4-51.1,38-100.3,89.6-102.1c128.1-1.7,256.3,0.1,384.3-0.9c33.2-30,63.9-62.9,95.7-94.5c-170.6,0-341-0.9-511.6,0.5c-79.6,1.4-151,71-152.4,151C10.1,407.7,9.5,622.8,10.7,838c0.3,77.5,66.1,144.7,142.4,152h670.2c72.3-12.7,134.3-75.8,135.2-150.9C960.7,668.1,959,496.9,959.3,325.9z M908.2,242.2C858,191.7,807.4,141.5,756.6,91.5C645.4,201.9,534,312,423.4,423c50.1,50.4,100.4,100.6,151.3,150.3C686,463.1,797.2,352.6,908.2,242.2z M341.2,654.6c68.1-18.5,104.4-30.2,172.5-48.5c18.2-5.8,30.3-9.3,39.7-13c-48.2-45.9-103.6-102.5-151.7-148.8C381.4,514.4,361.4,584.5,341.2,654.6z"></path></g></svg>
+                  </button>
+                </div>
               </td>
               <td>
                 <template v-if="investment.url">
@@ -98,7 +110,18 @@
               <td>{{ investment.usdInvested }}</td>
               <td>{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) }}</td>
               <td>{{ Math.round((investment.coinsAmount - investment.coinsWithdraw) * 1000) / 1000 }}</td>
-              <td>{{ countRate(1, investment.coinsSymbol) }}</td>
+              <td>
+                {{ countRate(1, investment.coinsSymbol) }}
+                <span class="table__positive-change" v-if="show24hChange(investment.coinsSymbol) >= 0">
+                  (+{{ show24hChange(investment.coinsSymbol) }}%)
+                </span>
+                <span class="table__negative-change" v-else-if="show24hChange(investment.coinsSymbol) < 0">
+                  ({{ show24hChange(investment.coinsSymbol) }}%)
+                </span>
+                <span class="table__negative-change" v-else>
+                  ({{ show24hChange(investment.coinsSymbol) }})
+                </span>
+              </td>
               <td>{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) }}</td>
               <td class="table__wd-usd">{{ investment.usdWithdraw }}</td>
               <td>{{ investment.coinsWithdraw }}</td>
@@ -107,10 +130,15 @@
             </tr>
           </tbody>
         </table>
+
+        <div v-else>
+          <p class="portfolio__empty">You have not investments right now, please add some information:</p>
+          <button class="btn btn--main" @click="openWindow">Add investment</button>
+        </p>
       </section>
 
       <div class="columns">
-        <section class="insights">
+        <section class="insights" v-if="myInvestments.length">
           <table class="table" id="invest-calcs">
             <thead>
               <tr>
@@ -130,17 +158,28 @@
           <table id="top10" class="table">
             <thead>
               <tr>
-                <th colspan="2">Top 10 by market capitalization</th>
+                <th colspan="4">Top 10 by market capitalization</th>
               </tr>
               <tr>
                 <th>Coin</th>
                 <th>Price, USD</th>
+                <th>24h change</th>
+                <th>Market cap, USD</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(key, value) in top10list">
-                <td>{{ value }}</td>
-                <td>{{ key }}</td>
+              <tr v-for="n in 10">
+                <td>{{ currencyList[n-1].name }}</td>
+                <td>{{ currencyList[n-1].price_usd }}</td>
+                <td>
+                  <span class="table__positive-change" v-if="currencyList[n-1].percent_change_24h >= 0">
+                    {{ currencyList[n-1].percent_change_24h }}%
+                  </span>
+                  <span class="table__negative-change" v-else-if="currencyList[n-1].percent_change_24h < 0">
+                    {{ currencyList[n-1].percent_change_24h }}%
+                  </span>
+                </td>
+                <td>{{ currencyList[n-1].market_cap_usd | bigNumber }}</td>
               </tr>
             </tbody>
           </table>
@@ -149,7 +188,10 @@
     </main>
 
     <footer class="pagefooter">
-      <p class="pagefooter__copy">&copy; 2017 — you are able to use this app in the way you need it.</p>
+      <div class="pagefooter__copy">
+        <p>&copy; 2017 — you are able to use this app in the way you need.</p>
+        <p>Built with <a href="http://coinmarketcap.com/" target="_blank">Coinmarketcap API</a> and <a href="http://vuejs.org/" target="_blank">Vue.js</a>.</p>
+      </div>
       <div class="pagefooter__donate">
         <p>Donations are always appreciated.</p>
         <p>ETH <strong>0x0d342fee3b6b14d8ffa9d3f4c8803649f40d649e</strong></p>
@@ -266,19 +308,7 @@
   </div>
 
 
-  <!-- <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
-  <script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyB4IbUCWaMDlIbhxlwckAY-_kQ59a-NyCg",
-    authDomain: "cryptowatcher-86395.firebaseapp.com",
-    databaseURL: "https://cryptowatcher-86395.firebaseio.com",
-    projectId: "cryptowatcher-86395",
-    storageBucket: "",
-    messagingSenderId: "48789523257"
-  };
-  firebase.initializeApp(config);
-  </script> -->
+  <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js" defer></script>
   <script src="scripts/main.js" defer></script>
 </body>
 </html>

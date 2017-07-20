@@ -2,7 +2,6 @@
   "presets": ["es2015"],
   "ignore": [
     "scripts/vue.js",
-    "scripts/vue.min.js",
-    "scripts/dragscroll.js"
+    "scripts/vue.min.js"
   ]
 }

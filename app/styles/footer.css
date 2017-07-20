@@ -1,5 +1,5 @@
 .pagefooter {
-  background-image: linear-gradient(to right, var(--secondary-color), var(--secondarydark-color));
+  background-image: linear-gradient(45deg, var(--secondary-color), var(--secondarydark-color));
   font-size: 14px;
   position: relative;
   display: flex;
@@ -8,10 +8,13 @@
   padding: 15px 0;
 }
 
-.pagefooter__copy {
-  padding: 0 15px 20px;
+.pagefooter__copy,
+.pagefooter__donate,
+.pagefooter__credits {
+  padding: 0 15px;
 }
 
-.pagefooter__donate {
-  padding: 0 15px;
+.pagefooter a {
+  color: #fff;
+  font-weight: bold;
 }

@@ -1,7 +1,8 @@
+@import url(ui/buttons.css);
 @import url(ui/table.css);
 @import url(ui/popup.css);
 
-.checkbox,
+/*.checkbox,
 .checkbox-s {
   position: relative;
 }
@@ -74,60 +75,9 @@
 	font-weight: bold;
 	text-align: center;
 	margin: 0 auto .7em;
-}
+}*/
 
-.btn {
-  font-size: 16px;
-	font-weight: bold;
-	padding: 13px 25px;
-	border-radius: 5px;
-	text-align: center;
-	transition: background .1s, color .1s, transform .15s;
-	border: none;
-	position: relative;
-  display: inline-flex;
-	align-items: center;
-  color: #fff;
-}
-
-.btn:hover {
-  transition: none;
-}
-
-.btn[disabled],
-.btn[disabled]:hover {
-  background-color: var(--bglight-color);
-  color: var(--bg-color);
-}
-
-.btn--alt {
-  background-image: linear-gradient(to right, var(--secondary-color), var(--secondarydark-color));
-}
-
-.btn--alt:hover {
-  background-image: none;
-  background-color: var(--secondarydark-color);
-}
-
-.btn--main {
-  background-image: linear-gradient(to right, var(--main-color), var(--maindark-color));
-}
-
-.btn--main:hover {
-  background-image: none;
-  background-color: var(--maindark-color);
-}
-
-.btn--warning {
-  background-image: linear-gradient(to right, var(--warning-color), var(--warningdark-color));
-}
-
-.btn--warning:hover {
-  background-image: none;
-  background-color: var(--warningdark-color);
-}
-
-.ui-ol {
+/*.ui-ol {
 	counter-reset: custom-ol;
 }
 
@@ -177,7 +127,7 @@
 
 .ui-ul li + li {
   margin-top: .7em;
-}
+}*/
 
 .secondary-span {
   color: var(--bg-color);

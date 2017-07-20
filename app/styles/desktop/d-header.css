@@ -1,0 +1,21 @@
+.pageheader {
+  padding: 10px 2em;
+  min-height: 130px;
+}
+
+.pageheader__buttons {
+  flex-basis: auto;
+  justify-content: flex-end;
+}
+
+.pageheader__buttons--si .btn {
+  flex-grow: 0;
+}
+
+.btn[data-device="desktop"] {
+  display: inline-flex;
+}
+
+.btn[data-device="mobile"] {
+  display: none;
+}

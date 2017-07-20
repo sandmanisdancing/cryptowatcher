@@ -1,12 +1,33 @@
+@import url(desktop/d-ui.css);
+@import url(desktop/d-header.css);
+@import url(desktop/d-portfolio.css);
+@import url(desktop/d-insights.css);
+
+:root {
+  --text-color: #3b4952;
+
+  --main-color: #1b9c22;
+  --maindark-color: #06520b;
+
+  --secondary-color: #a008b7;
+  --secondarydark-color: #5d046b;
+
+  --warning-color: #cd0000;
+  --warningdark-color: #7b0000;
+
+  --bg-color: #d1d7db;
+  --bglight-color: #f7f8fb;
+  --link-color: #4079ea;
+}
+
 #crypto-app {
   max-width: 1350px;
-	box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1), -2px 0 4px rgba(0, 0, 0, 0.1);
   margin: auto;
   background-color: #fff;
 }
 
 body, html {
-  /*background-color: var(--bglight-color);*/
+  background-color: var(--bglight-color);
 }
 
 .center {
@@ -15,11 +36,10 @@ body, html {
   margin: 0 auto;
 }
 
-.sect-header {
-  font-size: 36px;
-  margin-bottom: 1em;
+.pagefooter {
+  padding: 1em;
 }
 
-.pagefooter {
-  padding: 25px 15px;
+.columns {
+  margin: 2em;
 }
