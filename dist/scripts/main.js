@@ -9750,41 +9750,42 @@ var app = new Vue({
       };
     },
 
-    signIn: function signIn(device) {
+    signIn: function signIn() {
       var provider = new firebase.auth.GoogleAuthProvider();
       var self = this;
 
       // console.log(device)
+      firebase.auth().signInWithRedirect(provider).then(function (result) {
+        // The signed-in user info.
+        var user = result.user;
 
-      if (device === 'mobile') {
-        firebase.auth().signInWithRedirect(provider).then(function (result) {
-          // The signed-in user info.
-          var user = result.user;
+        self.authentication.isSignedIn = true;
+      }).catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code,
+            errorMessage = error.message,
 
-          self.authentication.isSignedIn = true;
-        }).catch(function (error) {
-          // Handle Errors here.
-          var errorCode = error.code,
-              errorMessage = error.message,
+        // The email of the user's account used.
+        email = error.email,
 
-          // The email of the user's account used.
-          email = error.email,
+        // The firebase.auth.AuthCredential type that was used.
+        credential = error.credential;
+      });
 
-          // The firebase.auth.AuthCredential type that was used.
-          credential = error.credential;
-        });
-      } else {
-        firebase.auth().signInWithPopup(provider).then(function (result) {
-          var user = result.user;
-
-          self.authentication.isSignedIn = true;
-        }).catch(function (error) {
-          var errorCode = error.code,
-              errorMessage = error.message,
-              email = error.email,
-              credential = error.credential;
-        });
-      }
+      // if(device === 'mobile') {
+      //
+      // } else {
+      //   firebase.auth().signInWithPopup(provider).then(function (result) {
+      //     var user = result.user;
+      //
+      //     self.authentication.isSignedIn = true;
+      //   }).catch(function (error) {
+      //     var errorCode = error.code,
+      //     errorMessage = error.message,
+      //     email = error.email,
+      //     credential = error.credential;
+      //   });
+      // }
     },
 
     signOut: function signOut() {

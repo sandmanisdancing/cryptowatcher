@@ -60,9 +60,9 @@
       <div class="pageheader__buttons" :class="{ 'pageheader__buttons--si': authentication.isSignedIn }">
         <button class="btn btn--main" @click="openWindow">Add investment</button>
         <button class="btn btn--alt" @click="fetchData">Refresh data</button>
-
-        <button data-device="desktop" class="btn btn--main" @click="signIn" v-if="!authentication.isSignedIn">Sign in with Google</button>
-        <button data-device="mobile" class="btn btn--main" @click="signIn('mobile')" v-if="!authentication.isSignedIn">Sign in with Google</button>
+<!-- data-device="desktop" -->
+        <button  class="btn btn--main" @click="signIn" v-if="!authentication.isSignedIn">Sign in with Google</button>
+        <!-- <button data-device="mobile" class="btn btn--main" @click="signIn('mobile')" v-if="!authentication.isSignedIn">Sign in with Google</button> -->
         <button class="btn btn--warning" @click="signOut" v-else>Sign out</button>
       </div>
     </header>
