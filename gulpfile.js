@@ -46,7 +46,7 @@ const fs = require('fs'),
 
 // Optimize images
 gulp.task('images', () => {
-  var sink = $.clone.sink();
+  // var sink = $.clone.sink();
 
   return gulp.src(['app/images/**/*.{jpg,png,svg}', '!app/images/sprite/*'])
     .pipe($.cache($.imagemin({

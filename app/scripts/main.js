@@ -46,7 +46,6 @@ const database = firebase.database();
 const data = {
   fullData: [],
   loadStatus: null,
-  loadFlag: false,
   investPopup: false,
   deletePopup: false,
   deleteIndex: null,
