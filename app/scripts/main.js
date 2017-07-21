@@ -46,6 +46,7 @@ const database = firebase.database();
 const data = {
   fullData: [],
   loadStatus: null,
+  loadFlag: false,
   investPopup: false,
   deletePopup: false,
   deleteIndex: null,
@@ -132,40 +133,49 @@ const app = new Vue({
       }
     },
 
-    signIn: function () {
+    signIn: function (device) {
       var provider = new firebase.auth.GoogleAuthProvider();
       var self = this;
 
       // console.log(device)
-      firebase.auth().signInWithRedirect(provider).then(function (result) {
-        // The signed-in user info.
-        var user = result.user;
 
-        self.authentication.isSignedIn = true;
-      }).catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code,
-        errorMessage = error.message,
-        // The email of the user's account used.
-        email = error.email,
-        // The firebase.auth.AuthCredential type that was used.
-        credential = error.credential;
-      });
+      if(device === 'mobile') {
+        firebase.auth().signInWithRedirect(provider).then(function (result) {
+          // The signed-in user info.
+          var user = result.user;
 
-      // if(device === 'mobile') {
-      //
-      // } else {
-      //   firebase.auth().signInWithPopup(provider).then(function (result) {
-      //     var user = result.user;
-      //
-      //     self.authentication.isSignedIn = true;
-      //   }).catch(function (error) {
-      //     var errorCode = error.code,
-      //     errorMessage = error.message,
-      //     email = error.email,
-      //     credential = error.credential;
-      //   });
-      // }
+          self.authentication.isSignedIn = true;
+        }).catch(function (error) {
+          // Handle Errors here.
+          var errorCode = error.code,
+          errorMessage = error.message,
+          // The email of the user's account used.
+          email = error.email,
+          // The firebase.auth.AuthCredential type that was used.
+          credential = error.credential;
+
+          console.log('errorCode: ' + errorCode + '\n'
+          + 'errorMessage: ' + errorMessage + '\n'
+          + 'email: ' + email + '\n'
+          + 'credential: ' + credential);
+        });
+      } else {
+        firebase.auth().signInWithPopup(provider).then(function (result) {
+          var user = result.user;
+
+          self.authentication.isSignedIn = true;
+        }).catch(function (error) {
+          var errorCode = error.code,
+          errorMessage = error.message,
+          email = error.email,
+          credential = error.credential;
+
+          console.log('errorCode: ' + errorCode + '\n'
+          + 'errorMessage: ' + errorMessage + '\n'
+          + 'email: ' + email + '\n'
+          + 'credential: ' + credential);
+        });
+      }
     },
 
     signOut: function () {
@@ -176,6 +186,8 @@ const app = new Vue({
         self.authentication.isSignedIn = false;
       }).catch(function(error) {
         // An error happened.
+
+        console.log('Sign out error: ', error);
       });
 
       this.myInvestments = [];
@@ -295,7 +307,7 @@ const app = new Vue({
       // close dialog
       this.investPopup = false;
       // if signed in, write whole investment table to DB
-      if(this.authentication.isSignedIn) this.writeUserData();
+      if(this.user.isSignedIn) this.writeUserData();
     },
 
     clearInvestTemplate: function (e) {
