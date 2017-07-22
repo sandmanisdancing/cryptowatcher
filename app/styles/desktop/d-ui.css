@@ -17,3 +17,7 @@
 .action-btn {
   padding: 5px 6px;
 }
+
+.table__action-div {
+  justify-content: space-between;
+}

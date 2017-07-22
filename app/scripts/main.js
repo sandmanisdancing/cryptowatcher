@@ -307,7 +307,7 @@ const app = new Vue({
       // close dialog
       this.investPopup = false;
       // if signed in, write whole investment table to DB
-      if(this.user.isSignedIn) this.writeUserData();
+      if(this.authentication.isSignedIn) this.writeUserData();
     },
 
     clearInvestTemplate: function (e) {
@@ -383,6 +383,8 @@ const app = new Vue({
       this.saveToLS("myInvestments");
       this.deletePopup = false;
       this.deleteIndex = null;
+      // if signed in, write whole investment table to DB
+      if(this.authentication.isSignedIn) this.writeUserData();
     },
 
     editToken: function (index) {
