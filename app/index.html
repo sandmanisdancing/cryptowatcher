@@ -73,15 +73,15 @@
           <thead>
             <tr>
               <th class="table__action">Act</th>
-              <th class="table__symbol">Coin / token symbol</th>
+              <th class="table__symbol">Symbol</th>
               <th class="table__in-crypto">Invested, crypto</th>
               <th class="table__in-usd">Invested, USD</th>
               <th class="table__stay-usd">Current crypto value, USD</th>
-              <th class="table__amount">Coins / tokens quantity</th>
-              <th class="table__current-price">Current price, USD</th>
+              <th class="table__amount">Quantity</th>
+              <th class="table__current-price">Price, USD</th>
               <th class="table__now">Total, USD</th>
               <th class="table__wd-usd">Sell sum, USD</th>
-              <th class="table__wd-coins">Sold, coins / tokens</th>
+              <th class="table__wd-coins">Sold, coins&nbsp;/ tokens</th>
               <th class="table__wd-now">Sold + total, USD</th>
               <th class="table__finish">ICO finish date</th>
             </tr>
@@ -106,21 +106,15 @@
                 </template>
                 <template v-else>{{ investment.coinsSymbol }}</template>
               </td>
-              <td>{{ investment.cryptoInvestedAmount }} {{ investment.cryptoInvestedSymbol }}</td>
+              <td>{{ investment.cryptoInvestedAmount | roundToThreeDigits }} {{ investment.cryptoInvestedSymbol }}</td>
               <td>{{ investment.usdInvested }}</td>
               <td>{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) }}</td>
-              <td>{{ Math.round((investment.coinsAmount - investment.coinsWithdraw) * 1000) / 1000 }}</td>
-              <td>
+              <td>{{ (investment.coinsAmount - investment.coinsWithdraw) | roundToThreeDigits }}</td>
+              <td class="table__curr-price-td">
                 {{ countRate(1, investment.coinsSymbol) }}
-                <span class="table__positive-change" v-if="show24hChange(investment.coinsSymbol) >= 0">
-                  (+{{ show24hChange(investment.coinsSymbol) }}%)
-                </span>
-                <span class="table__negative-change" v-else-if="show24hChange(investment.coinsSymbol) < 0">
-                  ({{ show24hChange(investment.coinsSymbol) }}%)
-                </span>
-                <span class="table__negative-change" v-else>
-                  ({{ show24hChange(investment.coinsSymbol) }})
-                </span>
+                (<span class="table__positive-change" v-if="show24hChange(investment.coinsSymbol) >= 0">+{{ show24hChange(investment.coinsSymbol) }}%</span>
+                <span class="table__negative-change" v-else-if="show24hChange(investment.coinsSymbol) < 0">{{ show24hChange(investment.coinsSymbol) }}%</span>
+                <span class="table__negative-change" v-else>{{ show24hChange(investment.coinsSymbol) }}</span>)
               </td>
               <td>{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) }}</td>
               <td class="table__wd-usd">{{ investment.usdWithdraw }}</td>
@@ -139,7 +133,7 @@
 
       <div class="columns">
         <section class="insights" v-if="myInvestments.length">
-          <table class="table" id="invest-calcs">
+          <table class="table table--right-align" id="invest-calcs">
             <thead>
               <tr>
                 <th colspan="2">Insights</th>
@@ -162,24 +156,19 @@
               </tr>
               <tr>
                 <th>Coin</th>
-                <th>Price, USD</th>
-                <th>24h change</th>
                 <th>Market cap, USD</th>
+                <th>Price, USD</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="n in 10">
                 <td>{{ currencyList[n-1].name }}</td>
-                <td>{{ currencyList[n-1].price_usd }}</td>
-                <td>
-                  <span class="table__positive-change" v-if="currencyList[n-1].percent_change_24h >= 0">
-                    {{ currencyList[n-1].percent_change_24h }}%
-                  </span>
-                  <span class="table__negative-change" v-else-if="currencyList[n-1].percent_change_24h < 0">
-                    {{ currencyList[n-1].percent_change_24h }}%
-                  </span>
-                </td>
                 <td>{{ currencyList[n-1].market_cap_usd | bigNumber }}</td>
+                <td class="table__curr-price-td">
+                  {{ currencyList[n-1].price_usd }}
+                  (<span class="table__positive-change" v-if="currencyList[n-1].percent_change_24h >= 0">{{ currencyList[n-1].percent_change_24h }}%</span>
+                  <span class="table__negative-change" v-else-if="currencyList[n-1].percent_change_24h < 0">{{ currencyList[n-1].percent_change_24h }}%</span>)
+                </td>
               </tr>
             </tbody>
           </table>

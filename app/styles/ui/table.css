@@ -40,6 +40,10 @@
   justify-content: center;
 }
 
+.table__curr-price-td {
+  white-space: nowrap;
+}
+
 .table__wd-usd,
 .table__finish {
   border-left: 2px solid var(--bg-color);
@@ -66,4 +70,8 @@
 
 .action-btn:nth-child(2) {
   margin-top: 5px;
+}
+
+.table--right-align td:last-child {
+  text-align: right;
 }
