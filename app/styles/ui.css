@@ -174,3 +174,7 @@ a:hover {
   transition: none;
   cursor: default;
 }
+
+.fiat__fraction {
+  font-size: .7em
+}

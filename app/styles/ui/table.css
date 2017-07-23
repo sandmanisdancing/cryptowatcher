@@ -75,3 +75,8 @@
 .table--right-align td:last-child {
   text-align: right;
 }
+
+.table .fiat {
+  display: block;
+  text-align: right;
+}

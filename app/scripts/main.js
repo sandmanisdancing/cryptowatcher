@@ -102,6 +102,34 @@ const app = new Vue({
 
     roundToThreeDigits: function (value) {
       return Math.round((value) * 1000) / 1000;
+    },
+
+    tofix2: function (value) {
+      if(isNaN(value)) value = 0;
+
+      let fixed = parseFloat(value).toFixed(2),
+          fixedInt = fixed.slice(0,2),
+          fixedFloat = fixed.slice(2,4);
+
+      return fixed;
+    },
+
+    tofixWhole: function (value) {
+      if(isNaN(value)) value = 0;
+
+      let fixed = parseFloat(value).toFixed(2),
+          fixedInt = fixed.split('.')[0];
+
+      return fixedInt;
+    },
+
+    tofixFraction: function (value) {
+      if(isNaN(value)) value = 0;
+
+      let fixed = parseFloat(value).toFixed(2),
+          fixedInt = fixed.split('.')[1];
+
+      return fixedInt;
     }
   },
 
@@ -339,7 +367,7 @@ const app = new Vue({
           }
         });
 
-        return rate.toFixed(2);
+        return rate;
       }
     },
 
@@ -363,7 +391,7 @@ const app = new Vue({
 
       let sum = parseFloat(a) + parseFloat(b);
 
-      return sum.toFixed(2);
+      return sum;
     },
 
     saveToLS: function (name) {
@@ -426,19 +454,20 @@ const app = new Vue({
         if(portfolio.length > 1) {
           result = portfolio.reduce(function (a, b) {
             if(isNaN(a.coinsAmount)) {
-              return a + self.countRate(+b.coinsAmount - +b.coinsWithdraw, b.coinsSymbol);
+              return a + +self.countRate(+b.coinsAmount - +b.coinsWithdraw, b.coinsSymbol);
             } else {
-              return self.countRate(+a.coinsAmount - +a.coinsWithdraw, a.coinsSymbol) + self.countRate(+b.coinsAmount - +b.coinsWithdraw, b.coinsSymbol)
+              return +self.countRate(+a.coinsAmount - +a.coinsWithdraw, a.coinsSymbol)
+              + +self.countRate(+b.coinsAmount - +b.coinsWithdraw, b.coinsSymbol)
             }
           });
         } else {
           result = portfolio.reduce(function (a, b) {
-            return +self.countRate(a.coinsAmount - a.coinsWithdraw, a.coinsSymbol) +
-            +self.countRate(b.coinsAmount - b.coinsWithdraw, b.coinsSymbol)
+            return +self.countRate(+a.coinsAmount - +a.coinsWithdraw, a.coinsSymbol) +
+            +self.countRate(+b.coinsAmount - +b.coinsWithdraw, b.coinsSymbol)
           }, 0);
         }
 
-        return Math.round(result * 100) / 100;
+        return result;
       }
     }
   },

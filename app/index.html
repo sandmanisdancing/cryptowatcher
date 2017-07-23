@@ -107,19 +107,31 @@
                 <template v-else>{{ investment.coinsSymbol }}</template>
               </td>
               <td>{{ investment.cryptoInvestedAmount | roundToThreeDigits }} {{ investment.cryptoInvestedSymbol }}</td>
-              <td>{{ investment.usdInvested }}</td>
-              <td>{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) }}</td>
+              <td>
+                <span class="fiat"><span class="fiat__whole">{{ investment.usdInvested | tofixWhole }}</span>.<span class="fiat__fraction">{{ investment.usdInvested | tofixFraction }}</span></span>
+              </td>
+              <td>
+                <span class="fiat"><span class="fiat__whole">{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) | tofixFraction }}</span>
+              </td>
               <td>{{ (investment.coinsAmount - investment.coinsWithdraw) | roundToThreeDigits }}</td>
               <td class="table__curr-price-td">
-                {{ countRate(1, investment.coinsSymbol) }}
+                {{ countRate(1, investment.coinsSymbol) | tofix2 }}
                 (<span class="table__positive-change" v-if="show24hChange(investment.coinsSymbol) >= 0">+{{ show24hChange(investment.coinsSymbol) }}%</span>
                 <span class="table__negative-change" v-else-if="show24hChange(investment.coinsSymbol) < 0">{{ show24hChange(investment.coinsSymbol) }}%</span>
                 <span class="table__negative-change" v-else>{{ show24hChange(investment.coinsSymbol) }}</span>)
               </td>
-              <td>{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) }}</td>
-              <td class="table__wd-usd">{{ investment.usdWithdraw }}</td>
+              <td>
+                <span class="fiat"><span class="fiat__whole">{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) | tofixFraction }}</span></span>
+              </td>
+              <td class="table__wd-usd">
+                <span class="fiat">
+                  <span class="fiat__whole">{{ investment.usdWithdraw | tofixWhole }}</span>.<span class="fiat__fraction">{{ investment.usdWithdraw | tofixFraction }}</span>
+                </span>
+              </td>
               <td>{{ investment.coinsWithdraw }}</td>
-              <td>{{ countSum(investment.usdWithdraw, countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol)) }}</td>
+              <td>
+                <span class="fiat"><span class="fiat__whole">{{ countSum(investment.usdWithdraw, countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol)) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countSum(investment.usdWithdraw, countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol)) | tofixFraction }}</span></span>
+              </td>
               <td class="table__finish"><acronym class="acronym" :title="investment.finishDate | dateToDays"><nobr>{{ investment.finishDate }}</nobr></acronym></td>
             </tr>
           </tbody>
@@ -142,7 +154,7 @@
             <tbody>
               <tr>
                 <td>Total portfolio value, USD</td>
-                <td>{{ totalPortfolioValue }}</td>
+                <td>{{ totalPortfolioValue | tofix2 }}</td>
               </tr>
             </tbody>
           </table>
@@ -165,7 +177,7 @@
                 <td>{{ currencyList[n-1].name }}</td>
                 <td>{{ currencyList[n-1].market_cap_usd | bigNumber }}</td>
                 <td class="table__curr-price-td">
-                  {{ currencyList[n-1].price_usd }}
+                  {{ currencyList[n-1].price_usd | tofix2 }}
                   (<span class="table__positive-change" v-if="currencyList[n-1].percent_change_24h >= 0">{{ currencyList[n-1].percent_change_24h }}%</span>
                   <span class="table__negative-change" v-else-if="currencyList[n-1].percent_change_24h < 0">{{ currencyList[n-1].percent_change_24h }}%</span>)
                 </td>
@@ -183,7 +195,7 @@
       </div>
       <div class="pagefooter__donate">
         <p>Donations are always appreciated.</p>
-        <p>ETH <strong>0x0d342fee3b6b14d8ffa9d3f4c8803649f40d649e</strong></p>
+        <p>ETH <strong>0x9e41B796ac20320b462F9aCf896717c04302672C</strong></p>
         <p>BTC <strong>14r4xFYtQHtGCPrNjV6z2XkvL3fJLCUPNi</strong></p>
       </div>
     </footer>
