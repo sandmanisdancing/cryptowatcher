@@ -98,6 +98,10 @@ const app = new Vue({
       var parts = value.toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
+    },
+
+    roundToThreeDigits: function (value) {
+      return Math.round((value) * 1000) / 1000;
     }
   },
 
@@ -335,12 +339,12 @@ const app = new Vue({
           }
         });
 
-        return Math.round(rate * 100) / 100;
+        return rate.toFixed(2);
       }
     },
 
     show24hChange: function (symbol) {
-      let change = 'not ranked';
+      let change = 'not listed';
 
       if(this.currencyList) {
         this.currencyList.forEach((item) => {
