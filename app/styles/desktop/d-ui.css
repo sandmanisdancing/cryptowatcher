@@ -21,3 +21,7 @@
 .table__action-div {
   justify-content: space-between;
 }
+
+.pagefooter {
+  font-size: 14px;
+}

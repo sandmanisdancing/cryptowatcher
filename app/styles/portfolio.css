@@ -1,5 +1,8 @@
 .portfolio {
   margin: 1em;
+}
+
+.portfolio__table-holder {
   overflow-x: auto;
 }
 
@@ -8,4 +11,15 @@
   color: rgba(0,0,0,.3);
   font-weight: bold;
   margin-top: 0;
+}
+
+.portfolio__filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5em;
+}
+
+.portfolio__search {
+  margin-right: 24px;
 }

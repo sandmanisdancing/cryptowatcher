@@ -68,7 +68,11 @@ const data = {
   authentication: {
     user: null,
     isSignedIn: false
-  }
+  },
+  tableFiltering: {
+    notListed: true
+  },
+  search: ""
 };
 
 const app = new Vue({
@@ -95,9 +99,7 @@ const app = new Vue({
     },
 
     bigNumber: function (value) {
-      var parts = value.toString().split(".");
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      return parts.join(".");
+      return (value/1000000000).toFixed(3) + 'B';
     },
 
     roundToThreeDigits: function (value) {
@@ -445,6 +447,24 @@ const app = new Vue({
   },
 
   computed: {
+    filteredCustomers: function () {
+      var self = this;
+
+      // console.log('filter: ', )
+
+      if (this.tableFiltering.notListed) {
+        return this.myInvestments.filter(function(investment) {
+          return investment.coinsSymbol.toLowerCase().indexOf(self.search.toLowerCase())>=0;
+        });
+      } else {
+        return this.myInvestments.filter(function(investment) {
+          if (self.countRate(1, investment.coinsSymbol) !== 0) {
+            return investment.coinsSymbol.toLowerCase().indexOf(self.search.toLowerCase())>=0;
+          }
+        });
+      }
+    },
+
     totalPortfolioValue: function () {
       let portfolio = this.myInvestments,
           result,
