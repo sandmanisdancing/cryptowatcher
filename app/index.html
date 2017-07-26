@@ -299,9 +299,9 @@
 
     <div class="popup-overlay" v-if="transactionPopup" @click="closeWindow('transactionPopup', $event)" v-on:keydown.esc="closeWindow('transactionPopup', $event)" tabindex="0">
       <section class="popup popup--transaction">
-        <button type="button" class="popup__close" aria-label="Close dialog" title="Close dialog" @click="closeWindow('transactionPopup', $event)"></button>
-
         <div class="popup__inner">
+          <button type="button" class="popup__close" aria-label="Close dialog" title="Close dialog" @click="closeWindow('transactionPopup', $event)"></button>
+
           <form action="#" @submit.prevent="createTransaction">
             <div class="invest__screen">
               <h3>Sold</h3>

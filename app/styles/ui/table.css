@@ -47,7 +47,6 @@
 .table__action-div {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
 }
 
 .table__curr-price-td {
@@ -65,21 +64,6 @@
 
 .table__positive-change {
   color: var(--main-color);
-}
-
-.action-btn svg {
-  display: block;
-  fill: #fff;
-}
-
-.action-btn {
-  border: none;
-  padding: 5px 6px;
-  border-radius: 3px;
-}
-
-.action-btn:nth-child(2) {
-  margin-top: 5px;
 }
 
 .table--right-align td:last-child {

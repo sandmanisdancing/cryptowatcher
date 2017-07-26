@@ -49,3 +49,15 @@
   background-image: none;
   background-color: var(--warningdark-color);
 }
+
+.action-btn svg {
+  display: block;
+  fill: #fff;
+}
+
+.action-btn {
+  border: none;
+  padding: 5px 6px;
+  border-radius: 3px;
+  margin: 2px auto;
+}
