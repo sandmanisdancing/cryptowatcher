@@ -1,7 +1,3 @@
-.popup__close {
-  right: 30px;
-}
-
 .action-btn:nth-child(2) {
   margin-top: 0;
 }
@@ -18,8 +14,22 @@
   padding: 5px 6px;
 }
 
+.table__action {
+  width: 110px;
+}
+
+.table__action-td {
+  position: relative;
+  padding: 5px;
+}
+
 .table__action-div {
   justify-content: space-between;
+  transform: scale(0);
+}
+
+.table tr:hover td .table__action-div {
+  transform: scale(1);
 }
 
 .pagefooter {

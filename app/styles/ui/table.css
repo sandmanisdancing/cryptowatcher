@@ -11,18 +11,28 @@
   text-align: left;
   border-bottom: 2px solid var(--bg-color);
   padding: 5px 10px;
+  vertical-align: bottom;
 }
 
-.table td {
+.table__td {
   padding: 5px 10px;
+  background-color: #fff;
   border-bottom: 1px solid var(--bg-color);
 }
 
-.table tr:nth-child(even) td {
+.table__t-name {
+  width: 190px;
+}
+
+.table__t-price {
+  width: 135px;
+}
+
+.table tr:nth-child(even) .table__td {
   background-color: var(--bglight-color);
 }
 
-.table tr:hover td {
+.table tr:hover .table__td {
   background-color: #e5e6ea;
 }
 

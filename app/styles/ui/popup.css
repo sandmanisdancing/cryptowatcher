@@ -13,7 +13,7 @@
   box-shadow: 2px 0 4px rgba(0,0,0,.1), -2px 0 4px rgba(0,0,0,.1);
   position: absolute;
   width: 640px;
-  height: 700px;
+  height: 565px;
   max-height: 100%;
   max-width: 100%;
   left: 0;
@@ -83,4 +83,8 @@
 
 .popup--delete .btn {
   align-self: flex-start;
+}
+
+.popup--transaction {
+  height: 390px;
 }

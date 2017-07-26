@@ -5,3 +5,18 @@
   max-width: 100%;
   overflow: auto;
 }
+
+.market-info__search {
+  margin: .1em 0 1em;
+  padding: 0 0 1em 10px;
+}
+
+.market-info__search-field {
+  margin-left: 15px;
+  max-width: 300px;
+  width: 300px;
+}
+
+.market-info__search-label {
+  font-weight: bold;
+}

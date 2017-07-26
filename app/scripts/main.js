@@ -46,12 +46,11 @@ const database = firebase.database();
 const data = {
   fullData: [],
   loadStatus: null,
-  loadFlag: false,
   investPopup: false,
   deletePopup: false,
   deleteIndex: null,
+  transactionPopup: false,
   myInvestments: [],
-  top10list: null,
   currencyList: null,
   investTemplate: {
     "id": null,
@@ -63,7 +62,9 @@ const data = {
     "finishDate": null,
     "url": null,
     "usdWithdraw": 0,
-    "coinsWithdraw": 0
+    "coinsWithdraw": 0,
+    "usdWithdrawTemp": 0,
+    "coinsWithdrawTemp": 0
   },
   authentication: {
     user: null,
@@ -72,7 +73,8 @@ const data = {
   tableFiltering: {
     notListed: true
   },
-  search: ""
+  searchInv: "",
+  searchMarket: ""
 };
 
 const app = new Vue({
@@ -117,7 +119,7 @@ const app = new Vue({
     },
 
     tofixWhole: function (value) {
-      if(isNaN(value)) value = 0;
+      if(!value) value = 0;
 
       let fixed = parseFloat(value).toFixed(2),
           fixedInt = fixed.split('.')[0];
@@ -126,7 +128,7 @@ const app = new Vue({
     },
 
     tofixFraction: function (value) {
-      if(isNaN(value)) value = 0;
+      if(!value) value = 0;
 
       let fixed = parseFloat(value).toFixed(2),
           fixedInt = fixed.split('.')[1];
@@ -156,7 +158,6 @@ const app = new Vue({
         } else {
           try {
             self.fullData = JSON.parse(request.responseText);
-            self.createTop10list();
             self.createCurrencyList();
 
             self.loadStatus = null;
@@ -265,19 +266,6 @@ const app = new Vue({
       this.loadStatus = null;
     },
 
-    createTop10list: function () {
-      this.loadStatus = "Creating top 10 list...";
-
-      const list = {};
-
-      for(let i = 0; i < 10; i++) {
-        list[this.fullData[i].name] = this.fullData[i].price_usd;
-      }
-
-      this.loadStatus = null;
-      this.top10list = list;
-    },
-
     createCurrencyList: function () {
       this.loadStatus = "Get currencies list...";
 
@@ -344,6 +332,26 @@ const app = new Vue({
       if(this.authentication.isSignedIn) this.writeUserData();
     },
 
+    createTransaction: function () {
+      this.myInvestments.forEach((item, index) => {
+        if(item["id"] === this.investTemplate.id) {
+          item["coinsWithdraw"] += this.investTemplate["coinsWithdrawTemp"];
+          item["usdWithdraw"] += this.investTemplate["usdWithdrawTemp"];
+        }
+      });
+
+      // then push to localStorage
+      this.saveToLS("myInvestments");
+      // and read it from LS
+      this.readFromLS("myInvestments");
+      // clear form
+      this.clearInvestTemplate();
+      // close dialog
+      this.transactionPopup = false;
+      // if signed in, write whole investment table to DB
+      if(this.authentication.isSignedIn) this.writeUserData();
+    },
+
     clearInvestTemplate: function (e) {
       this.investTemplate["id"] = null,
       this.investTemplate["cryptoInvestedAmount"] = 0,
@@ -354,7 +362,9 @@ const app = new Vue({
       this.investTemplate["finishDate"] = null,
       this.investTemplate["url"] = null,
       this.investTemplate["usdWithdraw"] = 0,
-      this.investTemplate["coinsWithdraw"] = 0
+      this.investTemplate["coinsWithdraw"] = 0,
+      this.investTemplate["usdWithdrawTemp"] = 0,
+      this.investTemplate["coinsWithdrawTemp"] = 0
     },
 
     countRate: function (amount, symbol) {
@@ -429,6 +439,14 @@ const app = new Vue({
       this.investPopup = true;
     },
 
+    makeTransaction: function (index) {
+      for(key in this.myInvestments[index]) {
+        this.investTemplate[key] = this.myInvestments[index][key];
+      }
+
+      this.transactionPopup = true;
+    },
+
     closeWindow: function (popup, e) {
       if(e.target.matches('.popup-overlay') || e.target.matches('.popup__close')) {
         this[popup] = false;
@@ -447,22 +465,36 @@ const app = new Vue({
   },
 
   computed: {
-    filteredCustomers: function () {
+    coinsSold: function () {
+      return +this.investTemplate.coinsWithdraw + +this.investTemplate.coinsWithdrawTemp;
+    },
+
+    usdGot() {
+      return this.investTemplate.usdWithdraw + this.investTemplate.usdWithdrawTemp;
+    },
+
+    filteredInvestments: function () {
       var self = this;
 
-      // console.log('filter: ', )
-
       if (this.tableFiltering.notListed) {
-        return this.myInvestments.filter(function(investment) {
-          return investment.coinsSymbol.toLowerCase().indexOf(self.search.toLowerCase())>=0;
+        return this.myInvestments.filter(function (investment) {
+          return investment.coinsSymbol.toLowerCase().indexOf(self.searchInv.toLowerCase())>=0;
         });
       } else {
-        return this.myInvestments.filter(function(investment) {
+        return this.myInvestments.filter(function (investment) {
           if (self.countRate(1, investment.coinsSymbol) !== 0) {
-            return investment.coinsSymbol.toLowerCase().indexOf(self.search.toLowerCase())>=0;
+            return investment.coinsSymbol.toLowerCase().indexOf(self.searchInv.toLowerCase())>=0;
           }
         });
       }
+    },
+
+    currencyListSearch: function () {
+      var self = this;
+
+      return this.currencyList.filter(function (node) {
+        return node.name.toLowerCase().indexOf(self.searchMarket.toLowerCase())>=0;
+      });
     },
 
     totalPortfolioValue: function () {
