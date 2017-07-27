@@ -112,10 +112,11 @@
                 </td>
                 <td class="table__td">{{ (investment.coinsAmount - investment.coinsWithdraw) | roundToThreeDigits }}</td>
                 <td class="table__td table__curr-price-td">
-                  {{ countRate(1, investment.coinsSymbol) | tofix2 }}
-                  (<span class="table__positive-change" v-if="show24hChange(investment.coinsSymbol) >= 0">+{{ show24hChange(investment.coinsSymbol) }}%</span>
-                  <span class="table__negative-change" v-else-if="show24hChange(investment.coinsSymbol) < 0">{{ show24hChange(investment.coinsSymbol) }}%</span>
-                  <span class="table__negative-change" v-else>{{ show24hChange(investment.coinsSymbol) }}</span>)
+                  <a target="_blank" title="Link to the list of markets" :href="showName(investment.coinsSymbol)" v-if="showName(investment.coinsSymbol)">{{ countRate(1, investment.coinsSymbol) | tofix2 }}</a>
+                  <span v-else>{{ countRate(1, investment.coinsSymbol) | tofix2 }}</span>
+                  <template v-if="show24hChange(investment.coinsSymbol) !== 0">
+                    &nbsp;(<span :class="[show24hChange(investment.coinsSymbol) >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ show24hChange(investment.coinsSymbol) }}%</span>)
+                  </template>
                 </td>
                 <td class="table__td">
                   <span class="fiat"><span class="fiat__whole">{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) | tofixFraction }}</span></span>

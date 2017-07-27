@@ -17,7 +17,6 @@
 .table__td {
   padding: 5px 10px;
   background-color: #fff;
-  border-bottom: 1px solid var(--bg-color);
 }
 
 .table__t-name {
