@@ -8,15 +8,17 @@
 
 .market-info__search {
   margin: .1em 0 1em;
-  padding: 0 0 1em 10px;
+  padding: 0 0 0 10px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .market-info__search-field {
-  margin-left: 15px;
   max-width: 300px;
   width: 300px;
 }
 
 .market-info__search-label {
   font-weight: bold;
+  margin: 0 15px 15px 0;
 }
