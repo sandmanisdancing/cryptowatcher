@@ -129,6 +129,10 @@
   margin-top: .7em;
 }*/
 
+strong, b, h1, h2, h3 {
+  font-weight: 500;
+}
+
 .secondary-span {
   color: var(--bg-color);
 }
@@ -164,17 +168,51 @@ a:hover {
 }
 
 .acronym {
+  position: relative;
+}
+
+.acronym__text {
   text-decoration: none;
+  white-space: nowrap;
   color: var(--link-color);
   border-bottom: 1px dashed var(--link-color);
   transition: color .2s, border-color .2s;
 }
 
-.acronym:hover {
+.acronym__text:hover {
   color: var(--secondary-color);
   border-bottom-color: var(--secondary-color);
   transition: none;
   cursor: default;
+}
+
+.acronym__tooltip {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.acronym:hover .acronym__tooltip,
+.acronym:focus .acronym__tooltip {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  width: auto;
+  padding: 5px 6px;
+  margin: 2px auto;
+  border: 1px solid var(--bg-color);
+  background-color: #fff;
+  white-space: nowrap;
+  font-size: 12px;
+  bottom: 1.7em;
 }
 
 .fiat__fraction {

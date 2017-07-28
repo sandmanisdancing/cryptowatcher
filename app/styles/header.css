@@ -16,6 +16,7 @@
 
 .pageheader__name {
   margin: auto 0;
+  font-weight: 500;
 }
 
 .pageheader__user {
@@ -26,6 +27,7 @@
   flex-basis: 100%;
   display: flex;
   justify-content: space-between;
+  margin-top: 1em;
 }
 
 .pageheader__buttons--si .btn {

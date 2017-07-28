@@ -1,7 +1,9 @@
 {
-  "name": "Cryptowatcher",
+  "name": "My Cryptowatcher",
   "short_name": "Cryptowatcher",
-  "description": "Watch your crypto assets.",
+  "description": "Watch your cryptocurrencies and assets.",
+  "background_color": "#a008b7",
+  "theme_color": "#a008b7",
   "icons": [{
     "src": "images/icons/icon-128x128.png",
       "sizes": "128x128",
@@ -23,8 +25,6 @@
       "sizes": "256x256",
       "type": "image/png"
     }],
-  "start_url": "/index.html",
-  "display": "standalone",
-  "background_color": "#a008b7",
-  "theme_color": "#a008b7"
+  "start_url": "/",
+  "display": "standalone"
 }

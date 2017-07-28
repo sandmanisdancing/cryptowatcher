@@ -6,6 +6,7 @@
 .pageheader__buttons {
   flex-basis: auto;
   justify-content: flex-end;
+  margin-top: 0;
 }
 
 .pageheader__buttons--si .btn {

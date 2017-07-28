@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-  <title>Your Crypto investments watcher</title>
+  <title>My Cryptowatcher</title>
 
   <link rel="canonical" href="https://sandmanisdancing.github.io/cryptowatcher/dist">
   <link rel="manifest" href="manifest.json">
@@ -13,11 +13,11 @@
   <!-- PWA icons, uncomment for production -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Your Crypto investments watcher">
+  <meta name="apple-mobile-web-app-title" content="My Cryptowatcher">
   <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
 
   <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
-  <meta name="msapplication-TileColor" content="#229fff">
+  <meta name="msapplication-TileColor" content="#a008b7">
 
   <!-- shortcut icon, uncomment for production -->
   <!-- <link rel="shortcut icon" href="images/icons/icon-32x32.png" type="image/ico"> -->
@@ -28,18 +28,38 @@
   <link rel="preload" href="https://www.gstatic.com/firebasejs/4.1.3/firebase.js" as="script">
   <link rel="preload" href="scripts/main.js" as="script">
   <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css?family=Dosis:400,700" as="style">
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed:400,500" as="style">
 
-  <link href="https://fonts.googleapis.com/css?family=Dosis:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed:400,500" rel="stylesheet">
 
   <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-102622704-1', 'auto');
-  ga('send', 'pageview');
+    ga('create', 'UA-102622704-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script>
+    var script = document.createElement('script');
+
+    script.onload = function () {
+      var fontRegular = new FontFaceObserver('Fira Sans Condensed'),
+      fontItalic = new FontFaceObserver('Fira Sans Condensed');
+
+      Promise.all([fontRegular.load(), fontItalic.load()])
+      .then(function () {
+        sessionStorage.fontsLoaded = true;
+
+        document.body.classList.add('fonts-loaded');
+      }).catch(function () {
+        sessionStorage.fontsLoaded = false;
+      });
+    }
+
+    script.src = "/scripts/fontfaceobserver.js";
+    document.head.appendChild(script);
   </script>
 </head>
 <body>
@@ -83,14 +103,14 @@
               <tr>
                 <th class="table__th table__th--symbol">Symbol</th>
                 <th class="table__th table__th--in-crypto">Invested, crypto</th>
-                <th class="table__th table__th--in-usd">Invested, USD</th>
-                <th class="table__th table__th--stay-usd">Current crypto value, USD</th>
+                <th class="table__th table__th--in-usd">Invested</th>
+                <th class="table__th table__th--stay-usd">Current crypto value</th>
                 <th class="table__th table__th--quantity">Quantity</th>
-                <th class="table__th table__th--current-price">Price, USD</th>
-                <th class="table__th table__th--total-usd">Total, USD</th>
-                <th class="table__th table__th--sell-usd">Sale, USD</th>
+                <th class="table__th table__th--current-price">Price</th>
+                <th class="table__th table__th--total-usd">Total</th>
+                <th class="table__th table__th--sell-usd">Sale</th>
                 <th class="table__th table__th--sell-coins">Sale, coins&nbsp;/ tokens</th>
-                <th class="table__th table__th--sell-total">Sale + total, USD</th>
+                <th class="table__th table__th--sell-total">Sale + total</th>
                 <th class="table__th table__th--finish">ICO finish date</th>
                 <th class="table__th table__th--action">Act</th>
               </tr>
@@ -110,32 +130,35 @@
                 </td>
                 <td class="table__td">{{ investment.cryptoInvestedAmount | roundToThreeDigits }}&nbsp;{{ investment.cryptoInvestedSymbol }}</td>
                 <td class="table__td">
-                  <span class="fiat"><span class="fiat__whole">{{ investment.usdInvested | tofixWhole }}</span>.<span class="fiat__fraction">{{ investment.usdInvested | tofixFraction }}</span></span>
+                  <span class="fiat"><span class="fiat__whole">${{ investment.usdInvested | tofixWhole }}</span>.<span class="fiat__fraction">{{ investment.usdInvested | tofixFraction }}</span></span>
                 </td>
                 <td class="table__td">
-                  <span class="fiat"><span class="fiat__whole">{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) | tofixFraction }}</span>
+                  <span class="fiat"><span class="fiat__whole">${{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) | tofixFraction }}</span>
                 </td>
                 <td class="table__td">{{ (investment.coinsAmount - investment.coinsWithdraw) | roundToThreeDigits }}</td>
                 <td class="table__td table__td--current-price">
-                  <a target="_blank" rel="noopener" title="Link to the list of markets" :href="showMarketsLink(investment.coinsSymbol)" v-if="showMarketsLink(investment.coinsSymbol)">{{ countRate(1, investment.coinsSymbol) | tofix2 }}</a>
-                  <span v-else>{{ countRate(1, investment.coinsSymbol) | tofix2 }}</span>
+                  <a target="_blank" rel="noopener" title="Link to the list of markets" :href="showMarketsLink(investment.coinsSymbol)" v-if="showMarketsLink(investment.coinsSymbol)">${{ countRate(1, investment.coinsSymbol) | tofix2 }}</a>
+                  <span v-else>${{ countRate(1, investment.coinsSymbol) | tofix2 }}</span>
                   <template v-if="show24hChange(investment.coinsSymbol) !== 0">
                     &nbsp;(<span :class="[show24hChange(investment.coinsSymbol) >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ show24hChange(investment.coinsSymbol) }}%</span>)
                   </template>
                 </td>
                 <td class="table__td">
-                  <span class="fiat"><span class="fiat__whole">{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) | tofixFraction }}</span></span>
+                  <span class="fiat"><span class="fiat__whole">${{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) | tofixFraction }}</span></span>
                 </td>
                 <td class="table__td table__td--sell-usd">
-                  <span class="fiat">
-                    <span class="fiat__whole">{{ investment.usdWithdraw | tofixWhole }}</span>.<span class="fiat__fraction">{{ investment.usdWithdraw | tofixFraction }}</span>
-                  </span>
+                  <span class="fiat"><span class="fiat__whole">${{ investment.usdWithdraw | tofixWhole }}</span>.<span class="fiat__fraction">{{ investment.usdWithdraw | tofixFraction }}</span></span>
                 </td>
                 <td class="table__td">{{ investment.coinsWithdraw }}</td>
                 <td class="table__td">
-                  <span class="fiat"><span class="fiat__whole">{{ countSum(investment.usdWithdraw, countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol)) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countSum(investment.usdWithdraw, countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol)) | tofixFraction }}</span></span>
+                  <span class="fiat"><span class="fiat__whole">${{ countSum(investment.usdWithdraw, countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol)) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countSum(investment.usdWithdraw, countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol)) | tofixFraction }}</span></span>
                 </td>
-                <td class="table__td table__td--finish"><acronym class="acronym" :title="investment.finishDate | dateToDays"><nobr>{{ investment.finishDate }}</nobr></acronym></td>
+                <td class="table__td table__td--finish">
+                  <acronym class="acronym" tabindex="0" v-if="investment.finishDate">
+                    <span class="acronym__tooltip">{{ investment.finishDate | dateToDays }}</span>
+                    <span class="acronym__text">{{ investment.finishDate }}</span>
+                  </acronym>
+                </td>
                 <td class="table__td table__td--action">
                   <div class="table__action-div">
                     <button class="btn btn--main action-btn" type="button" @click="makeTransaction(index)" title="Transaction">
@@ -194,8 +217,8 @@
             <thead>
               <tr>
                 <th class="table__th">Coin</th>
-                <th class="table__th">Market cap, USD</th>
-                <th class="table__th">Price, USD</th>
+                <th class="table__th">Market cap</th>
+                <th class="table__th">Price</th>
               </tr>
             </thead>
             <tbody>
@@ -207,9 +230,9 @@
                     <span class="table__symbol-name">{{ currencyListSearch[n-1].name }}</span>
                   </span>
                 </td>
-                <td class="table__td">{{ currencyListSearch[n-1].market_cap_usd | bigNumber }}</td>
+                <td class="table__td">${{ currencyListSearch[n-1].market_cap_usd | bigNumber }}</td>
                 <td class="table__td table__td--price">
-                  {{ currencyListSearch[n-1].price_usd | tofix2 }}&nbsp;(<span :class="[currencyListSearch[n-1].percent_change_24h >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ currencyListSearch[n-1].percent_change_24h }}%</span>)
+                  ${{ currencyListSearch[n-1].price_usd | tofix2 }}&nbsp;(<span :class="[currencyListSearch[n-1].percent_change_24h >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ currencyListSearch[n-1].percent_change_24h }}%</span>)
                 </td>
               </tr>
             </tbody>
@@ -335,7 +358,7 @@
 
             <div class="invest__screen">
               <h3>Result</h3>
-              <p>Totl sold, coins / tokens: {{ coinsSold }}</p>
+              <p>Total sold, coins / tokens: {{ coinsSold }}</p>
               <p>Total sell sum, USD: {{ usdGot }}</p>
             </div>
 

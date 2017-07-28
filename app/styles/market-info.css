@@ -1,5 +1,5 @@
 .market-info {
-  min-height: 375px;
+  min-height: 475px;
   flex-grow: 1;
   margin-top: 2em;
   max-width: 100%;
@@ -13,12 +13,7 @@
   flex-wrap: wrap;
 }
 
-.market-info__search-field {
-  max-width: 300px;
-  width: 300px;
-}
-
 .market-info__search-label {
-  font-weight: bold;
-  margin: 4px 15px 11px 0;
+  font-weight: 500;
+  margin: auto 15px auto 0;
 }

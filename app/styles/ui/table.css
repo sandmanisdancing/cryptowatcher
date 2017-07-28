@@ -12,12 +12,13 @@
   border-bottom: 2px solid var(--bg-color);
   padding: 5px 10px;
   vertical-align: bottom;
+  font-weight: 500;
 }
 
 .table__td {
   padding: 5px 10px;
   background-color: #fff;
-  height: 35px;
+  height: 40px;
 }
 
 .table tr:nth-child(even) .table__td {

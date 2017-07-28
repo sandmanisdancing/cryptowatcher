@@ -109,7 +109,7 @@ gulp.task('styles', () => {
     })))
     .pipe($.size({title: 'styles'}))
     .pipe(gulp.dest('dist/styles'))
-    .pipe(browserSync.stream());
+    .pipe(browserSync.stream({match: "**/*.css"}));
 });
 
 gulp.task('critical', () => {
@@ -141,21 +141,18 @@ gulp.task('critical', () => {
 // `.babelrc` file.
 var scriptsArray = [
   './app/scripts/vue.js',
-  './app/scripts/dragscroll.js',
   './app/scripts/main.js'
 ];
 
 var scriptsArrayProd = [
   './app/scripts/vue.min.js',
-  './app/scripts/dragscroll.js',
   './app/scripts/main.js'
 ];
 
-// Copy basket.js
+// Copy
 gulp.task('copyScripts', () => {
     gulp.src([
-      './app/scripts/fontfaceobserver.min.js',
-      './app/scripts/fontfacesnippet.js',
+      './app/scripts/fontfaceobserver.js'
     ])
       .pipe($.size({title: 'copyScripts'}))
       .pipe(gulp.dest('dist/scripts'))

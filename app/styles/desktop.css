@@ -2,7 +2,7 @@
 @import url(desktop/d-header.css);
 @import url(desktop/d-portfolio.css);
 @import url(desktop/d-insights.css);
-/*@import url(desktop/d-market-info.css);*/
+@import url(desktop/d-market-info.css);
 
 
 :root {
