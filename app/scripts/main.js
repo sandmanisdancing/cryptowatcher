@@ -448,15 +448,27 @@ const app = new Vue({
       if(name.length) return 'https://coinmarketcap.com/assets/' + name[0].name.toLowerCase() + '/#markets';
     },
 
+    detectPixelRatio: function () {
+      const pixelRatio = window.devicePixelRatio || 1;
+
+      this.pixelRatio = pixelRatio;
+    },
+
     showCoinImage: function (symbol, isInvestment) {
+      if (this.pixelRatio > 1) {
+        size = 32;
+      } else {
+        size = 16;
+      }
+
       if(isInvestment === undefined) {
         let name = this.fullData.filter((item) => {
           if (item["symbol"] == symbol) return item;
         });
 
-        if(name.length) return 'https://files.coinmarketcap.com/static/img/coins/16x16/' + name[0].name.toLowerCase() + '.png';
+        if(name.length) return 'https://files.coinmarketcap.com/static/img/coins/' + size + 'x' + size + '/' + name[0].name.toLowerCase() + '.png';
       } else {
-        return 'https://files.coinmarketcap.com/static/img/coins/16x16/' + symbol + '.png';
+        return 'https://files.coinmarketcap.com/static/img/coins/' + size + 'x' + size + '/' + symbol + '.png';
       }
     },
 
@@ -529,7 +541,7 @@ const app = new Vue({
 
   created: function () {
     this.checkIsSignedIn();
-
+    this.detectPixelRatio();
     this.readFromLS("myInvestments");
     this.readFromLS("fullData");
     this.fetchData();

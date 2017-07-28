@@ -17,14 +17,13 @@
 .table__td {
   padding: 5px 10px;
   background-color: #fff;
-  height: 42px;
+  height: 35px;
 }
 
 .table tr:nth-child(even) .table__td {
   background-color: var(--bglight-color);
 }
 
-.table tr:hover .table__td,
 .table tr.table__row-active .table__td {
   background-color: #e5e6ea;
 }
@@ -40,12 +39,12 @@
 .table__td--action {
   text-align: center;
   width: 116px;
-  min-height: 32px;
 }
 
 .table__action-div {
   display: flex;
   flex-wrap: wrap;
+  min-height: 32px;
 }
 
 .table__td--current-price {
@@ -82,6 +81,7 @@
 .table__symbol-icon {
   width: 16px;
   font-size: 12px;
+  text-align: center;
 }
 
 .table__symbol-name {

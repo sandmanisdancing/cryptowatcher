@@ -99,7 +99,7 @@
               <tr v-for="(investment, index) in filteredInvestments" :key="investment.id" @click="highlightRow" class="table__row">
                 <td class="table__td table__td--symbol">
                   <span class="table__symbol">
-                    <img class="table__symbol-icon" :src="showCoinImage(investment.coinsSymbol)" :alt="investment.coinsSymbol + ' icon'" v-if="showCoinImage(investment.coinsSymbol)">
+                    <img class="table__symbol-icon" :src="showCoinImage(investment.coinsSymbol)" :src="showCoinImage(investment.coinsSymbol)" :alt="investment.coinsSymbol + ' icon'" v-if="showCoinImage(investment.coinsSymbol)">
                     <span v-else class="table__symbol-icon">&minus;</span>
 
                     <template v-if="investment.url">
@@ -203,6 +203,7 @@
                 <td class="table__td table__td--name">
                   <span class="table__symbol">
                     <img class="table__symbol-icon" :src="showCoinImage(currencyListSearch[n-1].id, false)" :alt="currencyListSearch[n-1].name + ' icon'">
+
                     <span class="table__symbol-name">{{ currencyListSearch[n-1].name }}</span>
                   </span>
                 </td>
