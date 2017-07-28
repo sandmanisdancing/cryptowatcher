@@ -46,18 +46,18 @@ const fs = require('fs'),
 
 // Optimize images
 gulp.task('images', () => {
-  // var sink = $.clone.sink();
+  var sink = $.clone.sink();
 
   return gulp.src(['app/images/**/*.{jpg,png,svg}', '!app/images/sprite/*'])
     .pipe($.cache($.imagemin({
       progressive: true,
       optimizationLevel: 3
     })))
-    // .pipe(sink)
-    // .pipe($.webp({
-    //   quality: 85
-    // }))
-    // .pipe(sink.tap())
+    .pipe(sink)
+    .pipe($.webp({
+      quality: 85
+    }))
+    .pipe(sink.tap())
     .pipe(gulp.dest('dist/images'))
     .pipe(browserSync.stream())
     .pipe($.size({title: 'images'}));
