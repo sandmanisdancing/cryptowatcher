@@ -463,12 +463,24 @@ const app = new Vue({
       }, 200);
     },
 
-    showName: function (symbol) {
+    showMarketsLink: function (symbol) {
       let name = this.currencyList.filter((item) => {
         if (item["symbol"] == symbol) return item;
       });
 
       if(name.length) return 'https://coinmarketcap.com/assets/' + name[0].name.toLowerCase() + '/#markets';
+    },
+
+    showCoinImage: function (symbol) {
+      let name = this.currencyList.filter((item) => {
+        if (item["symbol"] == symbol) return item;
+      });
+
+      if(name.length) return 'https://files.coinmarketcap.com/static/img/coins/16x16/' + name[0].name.toLowerCase() + '.png';
+    },
+
+    highlightRow: function (e) {
+      e.target.closest('.table__row').classList.toggle('table__row-active');
     }
   },
 
