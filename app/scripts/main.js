@@ -51,7 +51,6 @@ const data = {
   deleteIndex: null,
   transactionPopup: false,
   myInvestments: [],
-  currencyList: null,
   investTemplate: {
     "id": null,
     "cryptoInvestedAmount": 0,
@@ -158,7 +157,7 @@ const app = new Vue({
         } else {
           try {
             self.fullData = JSON.parse(request.responseText);
-            self.createCurrencyList();
+            self.saveToLS('fullData')
 
             self.loadStatus = null;
           } catch (e) {
@@ -171,8 +170,6 @@ const app = new Vue({
     signIn: function (device) {
       var provider = new firebase.auth.GoogleAuthProvider();
       var self = this;
-
-      // console.log(device)
 
       if(device === 'mobile') {
         firebase.auth().signInWithRedirect(provider).then(function (result) {
@@ -266,26 +263,6 @@ const app = new Vue({
       this.loadStatus = null;
     },
 
-    createCurrencyList: function () {
-      this.loadStatus = "Get currencies list...";
-
-      const list = this.fullData.map((item) => {
-        let currency = {};
-        currency["name"] = item["name"];
-        currency["symbol"] = item["symbol"];
-        currency["price_usd"] = +item["price_usd"];
-        currency["percent_change_24h"] = +item["percent_change_24h"];
-        currency["market_cap_usd"] = +item["market_cap_usd"];
-
-        return currency;
-      });
-
-      this.loadStatus = null;
-      this.currencyList = list;
-
-      this.saveToLS("currencyList");
-    },
-
     createInvestment: function (e) {
       // this method is used both to create and to edit investment entry
 
@@ -372,8 +349,8 @@ const app = new Vue({
 
       if(!amount) amount = 0;
 
-      if(this.currencyList) {
-        this.currencyList.forEach((item) => {
+      if(this.fullData) {
+        this.fullData.forEach((item) => {
           if(item["symbol"] === symbol) {
             rate = amount * item["price_usd"];
           }
@@ -386,10 +363,10 @@ const app = new Vue({
     show24hChange: function (symbol) {
       let change = 0;
 
-      if(this.currencyList) {
-        this.currencyList.forEach((item) => {
+      if(this.fullData) {
+        this.fullData.forEach((item) => {
           if(item["symbol"] === symbol) {
-            change = item["percent_change_24h"];
+            if(item["percent_change_24h"]) change = item["percent_change_24h"];
           }
         });
 
@@ -464,19 +441,23 @@ const app = new Vue({
     },
 
     showMarketsLink: function (symbol) {
-      let name = this.currencyList.filter((item) => {
+      let name = this.fullData.filter((item) => {
         if (item["symbol"] == symbol) return item;
       });
 
       if(name.length) return 'https://coinmarketcap.com/assets/' + name[0].name.toLowerCase() + '/#markets';
     },
 
-    showCoinImage: function (symbol) {
-      let name = this.currencyList.filter((item) => {
-        if (item["symbol"] == symbol) return item;
-      });
+    showCoinImage: function (symbol, isInvestment) {
+      if(isInvestment === undefined) {
+        let name = this.fullData.filter((item) => {
+          if (item["symbol"] == symbol) return item;
+        });
 
-      if(name.length) return 'https://files.coinmarketcap.com/static/img/coins/16x16/' + name[0].name.toLowerCase() + '.png';
+        if(name.length) return 'https://files.coinmarketcap.com/static/img/coins/16x16/' + name[0].name.toLowerCase() + '.png';
+      } else {
+        return 'https://files.coinmarketcap.com/static/img/coins/16x16/' + symbol + '.png';
+      }
     },
 
     highlightRow: function (e) {
@@ -512,9 +493,11 @@ const app = new Vue({
     currencyListSearch () {
       var self = this;
 
-      return this.currencyList.filter(function (node) {
-        return node.name.toLowerCase().indexOf(self.searchMarket.toLowerCase())>=0;
-      });
+      if(this.fullData) {
+        return this.fullData.filter(function (node) {
+          return node.name.toLowerCase().indexOf(self.searchMarket.toLowerCase())>=0;
+        });
+      }
     },
 
     totalPortfolioValue () {
@@ -548,7 +531,7 @@ const app = new Vue({
     this.checkIsSignedIn();
 
     this.readFromLS("myInvestments");
-    this.readFromLS("currencyList");
+    this.readFromLS("fullData");
     this.fetchData();
 
     console.log('App created...');

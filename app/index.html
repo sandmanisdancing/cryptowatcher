@@ -103,7 +103,7 @@
                     <span v-else class="table__symbol-icon">&minus;</span>
 
                     <template v-if="investment.url">
-                      <a class="table__symbol-name" :title="investment.url" :href="investment.url" target="_blank">{{ investment.coinsSymbol }}</a>
+                      <a class="table__symbol-name" :title="investment.url" :href="investment.url" target="_blank" rel="noopener">{{ investment.coinsSymbol }}</a>
                     </template>
                     <span class="table__symbol-name" v-else>{{ investment.coinsSymbol }}</span>
                   </span>
@@ -117,7 +117,7 @@
                 </td>
                 <td class="table__td">{{ (investment.coinsAmount - investment.coinsWithdraw) | roundToThreeDigits }}</td>
                 <td class="table__td table__td--current-price">
-                  <a target="_blank" title="Link to the list of markets" :href="showMarketsLink(investment.coinsSymbol)" v-if="showMarketsLink(investment.coinsSymbol)">{{ countRate(1, investment.coinsSymbol) | tofix2 }}</a>
+                  <a target="_blank" rel="noopener" title="Link to the list of markets" :href="showMarketsLink(investment.coinsSymbol)" v-if="showMarketsLink(investment.coinsSymbol)">{{ countRate(1, investment.coinsSymbol) | tofix2 }}</a>
                   <span v-else>{{ countRate(1, investment.coinsSymbol) | tofix2 }}</span>
                   <template v-if="show24hChange(investment.coinsSymbol) !== 0">
                     &nbsp;(<span :class="[show24hChange(investment.coinsSymbol) >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ show24hChange(investment.coinsSymbol) }}%</span>)
@@ -200,7 +200,12 @@
             </thead>
             <tbody>
               <tr v-for="n in 10" v-if="currencyListSearch[n-1]">
-                <td class="table__td table__td--name">{{ currencyListSearch[n-1].name }}</td>
+                <td class="table__td table__td--name">
+                  <span class="table__symbol">
+                    <img class="table__symbol-icon" :src="showCoinImage(currencyListSearch[n-1].id, false)" :alt="currencyListSearch[n-1].name + ' icon'">
+                    <span class="table__symbol-name">{{ currencyListSearch[n-1].name }}</span>
+                  </span>
+                </td>
                 <td class="table__td">{{ currencyListSearch[n-1].market_cap_usd | bigNumber }}</td>
                 <td class="table__td table__td--price">
                   {{ currencyListSearch[n-1].price_usd | tofix2 }}
@@ -216,7 +221,7 @@
     <footer class="pagefooter">
       <div class="pagefooter__copy">
         <p>&copy; 2017 — you are able to use this app in the way you need.</p>
-        <p>Built with <a href="http://coinmarketcap.com/" target="_blank">Coinmarketcap API</a> and <a href="http://vuejs.org/" target="_blank">Vue.js</a>.</p>
+        <p>Built with <a href="http://coinmarketcap.com/" target="_blank" rel="noopener">Coinmarketcap API</a> and <a href="http://vuejs.org/" target="_blank" rel="noopener">Vue.js</a>.</p>
       </div>
       <div class="pagefooter__donate">
         <p>Donations are always appreciated.</p>
@@ -244,7 +249,7 @@
                       <input type="number" v-model.number="investTemplate.cryptoInvestedAmount" id="crypto-spent" class="input-field" placeholder="0.361" min="0" step="any">
                       <select class="input-field" v-model="investTemplate.cryptoInvestedSymbol" required="true">
                         <option value="Crypto name" disabled>Crypto name</option>
-                        <option v-for="currency in currencyList" :value="currency.symbol">{{ currency.name }}</option>
+                        <option v-for="currency in fullData" :value="currency.symbol">{{ currency.name }}</option>
                       </select>
                     </div>
                   </div>
