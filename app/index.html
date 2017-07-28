@@ -32,35 +32,8 @@
 
   <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed:400,500" rel="stylesheet">
 
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-102622704-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-  <script>
-    var script = document.createElement('script');
-
-    script.onload = function () {
-      var fontRegular = new FontFaceObserver('Fira Sans Condensed'),
-      fontItalic = new FontFaceObserver('Fira Sans Condensed');
-
-      Promise.all([fontRegular.load(), fontItalic.load()])
-      .then(function () {
-        sessionStorage.fontsLoaded = true;
-
-        document.body.classList.add('fonts-loaded');
-      }).catch(function () {
-        sessionStorage.fontsLoaded = false;
-      });
-    }
-
-    script.src = "/dist/scripts/fontfaceobserver.js";
-    document.head.appendChild(script);
-  </script>
+  <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-102622704-1', 'auto');ga('send', 'pageview');</script>
+  <script>var script = document.createElement('script');script.onload = function () {var fontRegular = new FontFaceObserver('Fira Sans Condensed'),fontItalic = new FontFaceObserver('Fira Sans Condensed');Promise.all([fontRegular.load(), fontItalic.load()]).then(function () {sessionStorage.fontsLoaded = true;document.body.classList.add('fonts-loaded');}).catch(function () {sessionStorage.fontsLoaded = false;});}script.src = "dist/scripts/fontfaceobserver.js";document.head.appendChild(script);</script>
 </head>
 <body>
   <div id="crypto-app" v-cloak>
