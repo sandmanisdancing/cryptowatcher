@@ -138,6 +138,8 @@
   height: 30px;
   font-size: 15px;
   max-width: 140px;
+  border-radius: 0;
+  border: 1px solid var(--bg-color);
 }
 
 select.input-field {

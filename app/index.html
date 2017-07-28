@@ -108,7 +108,7 @@
                     <span class="table__symbol-name" v-else>{{ investment.coinsSymbol }}</span>
                   </span>
                 </td>
-                <td class="table__td">{{ investment.cryptoInvestedAmount | roundToThreeDigits }} {{ investment.cryptoInvestedSymbol }}</td>
+                <td class="table__td">{{ investment.cryptoInvestedAmount | roundToThreeDigits }}&nbsp;{{ investment.cryptoInvestedSymbol }}</td>
                 <td class="table__td">
                   <span class="fiat"><span class="fiat__whole">{{ investment.usdInvested | tofixWhole }}</span>.<span class="fiat__fraction">{{ investment.usdInvested | tofixFraction }}</span></span>
                 </td>
@@ -209,8 +209,7 @@
                 </td>
                 <td class="table__td">{{ currencyListSearch[n-1].market_cap_usd | bigNumber }}</td>
                 <td class="table__td table__td--price">
-                  {{ currencyListSearch[n-1].price_usd | tofix2 }}
-                  (<span :class="[currencyListSearch[n-1].percent_change_24h >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ currencyListSearch[n-1].percent_change_24h }}%</span>)
+                  {{ currencyListSearch[n-1].price_usd | tofix2 }}&nbsp;(<span :class="[currencyListSearch[n-1].percent_change_24h >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ currencyListSearch[n-1].percent_change_24h }}%</span>)
                 </td>
               </tr>
             </tbody>
