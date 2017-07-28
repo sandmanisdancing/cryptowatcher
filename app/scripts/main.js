@@ -384,7 +384,7 @@ const app = new Vue({
     },
 
     show24hChange: function (symbol) {
-      let change = 'not listed';
+      let change = 0;
 
       if(this.currencyList) {
         this.currencyList.forEach((item) => {
@@ -461,19 +461,39 @@ const app = new Vue({
       setTimeout(function () {
         if(e.target.matches('button, button *')) document.querySelector('.popup-overlay').focus();
       }, 200);
+    },
+
+    showMarketsLink: function (symbol) {
+      let name = this.currencyList.filter((item) => {
+        if (item["symbol"] == symbol) return item;
+      });
+
+      if(name.length) return 'https://coinmarketcap.com/assets/' + name[0].name.toLowerCase() + '/#markets';
+    },
+
+    showCoinImage: function (symbol) {
+      let name = this.currencyList.filter((item) => {
+        if (item["symbol"] == symbol) return item;
+      });
+
+      if(name.length) return 'https://files.coinmarketcap.com/static/img/coins/16x16/' + name[0].name.toLowerCase() + '.png';
+    },
+
+    highlightRow: function (e) {
+      e.target.closest('.table__row').classList.toggle('table__row-active');
     }
   },
 
   computed: {
-    coinsSold: function () {
+    coinsSold () {
       return +this.investTemplate.coinsWithdraw + +this.investTemplate.coinsWithdrawTemp;
     },
 
-    usdGot() {
-      return this.investTemplate.usdWithdraw + this.investTemplate.usdWithdrawTemp;
+    usdGot () {
+      return +this.investTemplate.usdWithdraw + +this.investTemplate.usdWithdrawTemp;
     },
 
-    filteredInvestments: function () {
+    filteredInvestments () {
       var self = this;
 
       if (this.tableFiltering.notListed) {
@@ -489,7 +509,7 @@ const app = new Vue({
       }
     },
 
-    currencyListSearch: function () {
+    currencyListSearch () {
       var self = this;
 
       return this.currencyList.filter(function (node) {
@@ -497,7 +517,7 @@ const app = new Vue({
       });
     },
 
-    totalPortfolioValue: function () {
+    totalPortfolioValue () {
       let portfolio = this.myInvestments,
           result,
           self = this;

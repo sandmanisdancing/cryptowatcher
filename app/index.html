@@ -81,27 +81,32 @@
           <table id="my-investments" class="table" v-if="myInvestments.length">
             <thead>
               <tr>
-                <th class="table__symbol">Symbol</th>
-                <th class="table__in-crypto">Invested, crypto</th>
-                <th class="table__in-usd">Invested, USD</th>
-                <th class="table__stay-usd">Current crypto value, USD</th>
-                <th class="table__amount">Quantity</th>
-                <th class="table__current-price">Price, USD</th>
-                <th class="table__now">Total, USD</th>
-                <th class="table__wd-usd">Sell sum, USD</th>
-                <th class="table__wd-coins">Sold, coins&nbsp;/ tokens</th>
-                <th class="table__wd-now">Sold + total, USD</th>
-                <th class="table__finish">ICO finish date</th>
-                <th class="table__action">Act</th>
+                <th class="table__th table__th--symbol">Symbol</th>
+                <th class="table__th table__th--in-crypto">Invested, crypto</th>
+                <th class="table__th table__th--in-usd">Invested, USD</th>
+                <th class="table__th table__th--stay-usd">Current crypto value, USD</th>
+                <th class="table__th table__th--quantity">Quantity</th>
+                <th class="table__th table__th--current-price">Price, USD</th>
+                <th class="table__th table__th--total-usd">Total, USD</th>
+                <th class="table__th table__th--sell-usd">Sale, USD</th>
+                <th class="table__th table__th--sell-coins">Sale, coins&nbsp;/ tokens</th>
+                <th class="table__th table__th--sell-total">Sale + total, USD</th>
+                <th class="table__th table__th--finish">ICO finish date</th>
+                <th class="table__th table__th--action">Act</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(investment, index) in filteredInvestments" :key="investment.id">
-                <td class="table__td">
-                  <template v-if="investment.url">
-                    <a :title="investment.url" :href="investment.url" target="_blank">{{ investment.coinsSymbol }}</a>
-                  </template>
-                  <template v-else>{{ investment.coinsSymbol }}</template>
+              <tr v-for="(investment, index) in filteredInvestments" :key="investment.id" @click="highlightRow" class="table__row">
+                <td class="table__td table__td--symbol">
+                  <span class="table__symbol">
+                    <img class="table__symbol-icon" :src="showCoinImage(investment.coinsSymbol)" :alt="investment.coinsSymbol + ' icon'" v-if="showCoinImage(investment.coinsSymbol)">
+                    <span v-else class="table__symbol-icon">&minus;</span>
+
+                    <template v-if="investment.url">
+                      <a class="table__symbol-name" :title="investment.url" :href="investment.url" target="_blank">{{ investment.coinsSymbol }}</a>
+                    </template>
+                    <span class="table__symbol-name" v-else>{{ investment.coinsSymbol }}</span>
+                  </span>
                 </td>
                 <td class="table__td">{{ investment.cryptoInvestedAmount | roundToThreeDigits }} {{ investment.cryptoInvestedSymbol }}</td>
                 <td class="table__td">
@@ -111,16 +116,17 @@
                   <span class="fiat"><span class="fiat__whole">{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countRate(investment.cryptoInvestedAmount, investment.cryptoInvestedSymbol) | tofixFraction }}</span>
                 </td>
                 <td class="table__td">{{ (investment.coinsAmount - investment.coinsWithdraw) | roundToThreeDigits }}</td>
-                <td class="table__td table__curr-price-td">
-                  {{ countRate(1, investment.coinsSymbol) | tofix2 }}
-                  (<span class="table__positive-change" v-if="show24hChange(investment.coinsSymbol) >= 0">+{{ show24hChange(investment.coinsSymbol) }}%</span>
-                  <span class="table__negative-change" v-else-if="show24hChange(investment.coinsSymbol) < 0">{{ show24hChange(investment.coinsSymbol) }}%</span>
-                  <span class="table__negative-change" v-else>{{ show24hChange(investment.coinsSymbol) }}</span>)
+                <td class="table__td table__td--current-price">
+                  <a target="_blank" title="Link to the list of markets" :href="showMarketsLink(investment.coinsSymbol)" v-if="showMarketsLink(investment.coinsSymbol)">{{ countRate(1, investment.coinsSymbol) | tofix2 }}</a>
+                  <span v-else>{{ countRate(1, investment.coinsSymbol) | tofix2 }}</span>
+                  <template v-if="show24hChange(investment.coinsSymbol) !== 0">
+                    &nbsp;(<span :class="[show24hChange(investment.coinsSymbol) >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ show24hChange(investment.coinsSymbol) }}%</span>)
+                  </template>
                 </td>
                 <td class="table__td">
                   <span class="fiat"><span class="fiat__whole">{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol) | tofixFraction }}</span></span>
                 </td>
-                <td class="table__td table__wd-usd">
+                <td class="table__td table__td--sell-usd">
                   <span class="fiat">
                     <span class="fiat__whole">{{ investment.usdWithdraw | tofixWhole }}</span>.<span class="fiat__fraction">{{ investment.usdWithdraw | tofixFraction }}</span>
                   </span>
@@ -129,8 +135,8 @@
                 <td class="table__td">
                   <span class="fiat"><span class="fiat__whole">{{ countSum(investment.usdWithdraw, countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol)) | tofixWhole }}</span>.<span class="fiat__fraction">{{ countSum(investment.usdWithdraw, countRate(investment.coinsAmount - investment.coinsWithdraw, investment.coinsSymbol)) | tofixFraction }}</span></span>
                 </td>
-                <td class="table__td table__finish"><acronym class="acronym" :title="investment.finishDate | dateToDays"><nobr>{{ investment.finishDate }}</nobr></acronym></td>
-                <td class="table__td table__action-td">
+                <td class="table__td table__td--finish"><acronym class="acronym" :title="investment.finishDate | dateToDays"><nobr>{{ investment.finishDate }}</nobr></acronym></td>
+                <td class="table__td table__td--action">
                   <div class="table__action-div">
                     <button class="btn btn--main action-btn" type="button" @click="makeTransaction(index)" title="Transaction">
                       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="18" height="18" viewBox="0 0 45 45" xml:space="preserve">
@@ -166,7 +172,7 @@
           <table class="table table--right-align" id="invest-calcs">
             <thead>
               <tr>
-                <th colspan="2">Insights</th>
+                <th class="table__th" colspan="2">Insights</th>
               </tr>
             </thead>
             <tbody>
@@ -187,16 +193,16 @@
           <table id="top10" class="table">
             <thead>
               <tr>
-                <th>Coin</th>
-                <th>Market cap, USD</th>
-                <th>Price, USD</th>
+                <th class="table__th">Coin</th>
+                <th class="table__th">Market cap, USD</th>
+                <th class="table__th">Price, USD</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="n in 10" v-if="currencyListSearch[n-1]">
-                <td class="table__td table__t-name">{{ currencyListSearch[n-1].name }}</td>
+                <td class="table__td table__td--name">{{ currencyListSearch[n-1].name }}</td>
                 <td class="table__td">{{ currencyListSearch[n-1].market_cap_usd | bigNumber }}</td>
-                <td class="table__td table__t-price">
+                <td class="table__td table__td--price">
                   {{ currencyListSearch[n-1].price_usd | tofix2 }}
                   (<span :class="[currencyListSearch[n-1].percent_change_24h >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ currencyListSearch[n-1].percent_change_24h }}%</span>)
                 </td>

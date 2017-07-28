@@ -7,7 +7,7 @@
   margin-top: 2em;
 }
 
-.table th {
+.table__th {
   text-align: left;
   border-bottom: 2px solid var(--bg-color);
   padding: 5px 10px;
@@ -17,31 +17,30 @@
 .table__td {
   padding: 5px 10px;
   background-color: #fff;
-  border-bottom: 1px solid var(--bg-color);
-}
-
-.table__t-name {
-  width: 190px;
-}
-
-.table__t-price {
-  width: 135px;
+  height: 42px;
 }
 
 .table tr:nth-child(even) .table__td {
   background-color: var(--bglight-color);
 }
 
-.table tr:hover .table__td {
+.table tr:hover .table__td,
+.table tr.table__row-active .table__td {
   background-color: #e5e6ea;
 }
 
-.table__action {
-  width: 86px;
+.table__td--name {
+  width: 190px;
 }
 
-.table__action-td {
+.table__td--price {
+  width: 135px;
+}
+
+.table__td--action {
   text-align: center;
+  width: 116px;
+  min-height: 32px;
 }
 
 .table__action-div {
@@ -49,12 +48,12 @@
   flex-wrap: wrap;
 }
 
-.table__curr-price-td {
+.table__td--current-price {
   white-space: nowrap;
 }
 
-.table__wd-usd,
-.table__finish {
+.table__td--sell-usd,
+.table__td--finish {
   border-left: 2px solid var(--bg-color);
 }
 
@@ -73,4 +72,19 @@
 .table .fiat {
   display: block;
   text-align: right;
+}
+
+.table__symbol {
+  display: flex;
+  align-items: center;
+}
+
+.table__symbol-icon {
+  width: 16px;
+  font-size: 12px;
+}
+
+.table__symbol-name {
+  vertical-align: middle;
+  margin-left: 8px;
 }
