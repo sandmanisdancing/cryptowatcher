@@ -50,6 +50,7 @@ const data = {
   deletePopup: false,
   deleteIndex: null,
   transactionPopup: false,
+  signInPopup: false,
   myInvestments: [],
   investTemplate: {
     "id": null,
@@ -472,8 +473,14 @@ const app = new Vue({
       }
     },
 
-    highlightRow: function (e) {
-      e.target.closest('.table__row').classList.toggle('table__row-active');
+    highlightRow: function (index) {
+      index++;
+
+      let rows = document.querySelectorAll('.table--myinv tbody tr:nth-child(' + index + ')');
+
+      [...rows].forEach((item) => {
+        item.classList.toggle('table__row-active');
+      });
     }
   },
 

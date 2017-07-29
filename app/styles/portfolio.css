@@ -2,14 +2,10 @@
   margin: 1em;
 }
 
-.portfolio__table-holder {
-  overflow-x: auto;
-}
-
 .portfolio__empty {
   font-size: 1.5em;
   color: rgba(0,0,0,.5);
-  font-weight: bold;
+  font-weight: 500;
   margin-top: 0;
 }
 
@@ -18,4 +14,13 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5em;
+}
+
+.portfolio__myinv {
+  display: flex;
+}
+
+.portfolio__table-holder {
+  overflow-x: auto;
+  flex-grow: 1;
 }

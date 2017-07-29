@@ -1,5 +1,5 @@
 .table {
-  min-width: 100%;
+  /*min-width: 100%;*/
   border-collapse: collapse;
 }
 
@@ -13,12 +13,13 @@
   padding: 5px 10px;
   vertical-align: bottom;
   font-weight: 500;
+  height: 80px;
 }
 
 .table__td {
   padding: 5px 10px;
   background-color: #fff;
-  height: 40px;
+  height: 44px;
 }
 
 .table tr:nth-child(even) .table__td {
@@ -40,12 +41,24 @@
 .table__td--action {
   text-align: center;
   width: 116px;
+  position: relative;
 }
 
 .table__action-div {
   display: flex;
   flex-wrap: wrap;
   min-height: 32px;
+
+  position: absolute;
+  right: 8px;
+  top: 0;
+  padding: 5px;
+  background-color: inherit;
+}
+
+.table tr.table__row-active .table__action-div {
+  width: 108px;
+  height: 100%;
 }
 
 .table__td--current-price {
@@ -88,4 +101,12 @@
 .table__symbol-name {
   vertical-align: middle;
   margin-left: 8px;
+}
+
+.table--w100 {
+  min-width: 100%;
+}
+
+.table--marketinfo .table__th {
+  height: auto;
 }

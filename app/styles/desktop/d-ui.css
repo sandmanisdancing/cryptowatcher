@@ -14,9 +14,10 @@
   width: 110px;
 }
 
-.table__action-td {
-  position: relative;
-  padding: 5px;
+.table__action-div {
+  position: static;
+  width: auto;
+  padding: 0;
 }
 
 .pagefooter {

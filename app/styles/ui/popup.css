@@ -88,3 +88,7 @@
 .popup--transaction {
   height: 390px;
 }
+
+.popup--sign-in {
+  height: 150px;
+}

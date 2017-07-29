@@ -13,7 +13,7 @@
   --bg-color: #d1d7db;
   --bglight-color: #f7f8fb;
   --link-color: #4079ea;
-  --font-name: 'Fira Sans Condensed', Arial, sans-serif;
+  --font-name: 'Fira Sans Condensed';
 }
 
 *,
@@ -22,34 +22,33 @@
 	box-sizing: border-box;
 }
 
-html {
+body {
   font-weight: 300;
+  font-family: Arial, sans-serif;
   font-size: 16px;
-  line-height: 1.8;
-  font-family: "arial narrow";
-  letter-spacing: 0.35px;
-  word-spacing: -1.1px;
+  line-height: 1.4;
+  letter-spacing: -0.65px;
+  word-spacing: 1.15px;
 }
 
-body.fonts-loaded {
+.fonts-loaded {
   font-family: var(--font-name);
   letter-spacing: normal;
   word-spacing: normal;
-  line-height: 1;
 }
 
 html, body {
 	height: 100%;
-	font-size: 16px;
 	color: var(--text-color);
   background-color: #fff;
   margin: 0;
 }
 
 input, button, textarea, select {
-  font-family: var(--font-name);
 	resize: none;
 	border-radius: 0;
+  font-family: inherit;
+  line-height: 16px;
 }
 
 main {
