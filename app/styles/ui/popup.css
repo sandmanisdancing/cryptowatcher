@@ -73,12 +73,13 @@
 }
 
 .popup--delete {
-  height: 125px;
+  height: 150px;
   width: 340px;
 }
 
 .popup--delete p {
   margin-bottom: 13px;
+  width: calc(100% - 35px);
 }
 
 .popup--delete .btn {
@@ -91,4 +92,9 @@
 
 .popup--sign-in {
   height: 150px;
+  width: 340px;
+}
+
+.popup--sign-in .popup__inner {
+  display: block;
 }

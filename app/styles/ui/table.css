@@ -110,3 +110,8 @@
 .table--marketinfo .table__th {
   height: auto;
 }
+
+.table__td--desktop,
+.table__th--desktop {
+  display: none;
+}

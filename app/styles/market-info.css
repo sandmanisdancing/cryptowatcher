@@ -17,3 +17,7 @@
   font-weight: 500;
   margin: auto 15px auto 0;
 }
+
+.market-info__search-field {
+  flex-grow: 1;
+}

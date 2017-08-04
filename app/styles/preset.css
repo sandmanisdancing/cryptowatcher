@@ -62,7 +62,3 @@ main {
   flex-direction: column;
   min-height: 100%;
 }
-
-#crypto-app[v-cloak] {
-  display: none;
-}

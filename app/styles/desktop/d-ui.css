@@ -28,6 +28,15 @@
   background-color: #e5e6ea;
 }
 
+.table--symbol {
+  display: none;
+}
+
+.table__td--desktop,
+.table__th--desktop {
+  display: table-cell;
+}
+
 .table__row:hover .action-btn {
   clip: auto;
   height: auto;
@@ -37,4 +46,9 @@
   width: auto;
   padding: 5px 6px;
   margin: 2px auto;
+}
+
+.table tr.table__row-active .table__action-div {
+  width: auto;
+  height: auto;
 }

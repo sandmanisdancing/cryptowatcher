@@ -7,4 +7,5 @@
 .insights {
   flex-shrink: 0;
   min-width: 50%;
+  flex-grow: 1;
 }

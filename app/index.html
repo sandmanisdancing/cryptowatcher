@@ -23,6 +23,7 @@
   <!-- shortcut icon, uncomment for production -->
   <!-- <link rel="shortcut icon" href="images/icons/icon-32x32.png" type="image/ico"> -->
 
+  <style>#crypto-app[v-cloak]{max-height:100vh;overflow:hidden}#crypto-app[v-cloak]:before{content:' ';position: absolute;width:100%;height:100%;background-color:#fff;z-index:10}#crypto-app[v-cloak]:after{content:"Cryptowatcher";position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center;font-size:7vw;top:0;left:0;z-index:20}</style>
   <link rel="stylesheet" type="text/css" href="styles/main.css" media="all">
   <link rel="stylesheet" type="text/css" href="styles/desktop.css" media="(min-width: 700px)">
 
@@ -78,7 +79,9 @@
     <main role="main">
       <section class="portfolio">
         <div class="portfolio__filters" v-if="myInvestments.length">
-          <input type="search" class="input-field portfolio__search" v-model="searchInv" placeholder="Search by symbol...">
+          <div class="portfolio__search-block">
+            <input type="search" class="input-field portfolio__search" v-model="searchInv" placeholder="Search by symbol...">
+          </div>
           <button role="button" class="btn btn--alt" @click="tableFiltering.notListed = !tableFiltering.notListed">
             <span v-if="tableFiltering.notListed">Hide not listed</span>
             <span v-else>Show all</span>
@@ -86,12 +89,12 @@
         </div>
 
         <div class="portfolio__myinv" v-if="myInvestments.length">
-          <table class="table table--myinv">
+          <table class="table table--myinv table--symbol">
             <thead>
               <th class="table__th table__th--symbol">Symbol</th>
             </thead>
             <tbody>
-              <tr v-for="(investment, index) in filteredInvestments" :key="investment.id" @click="highlightRow(index)" class="table__row">
+              <tr v-for="(investment, index) in filteredInvestments" :key="investment.id" @click.stop="highlightRow(index)" class="table__row">
                 <td class="table__td table__td--symbol">
                   <span class="table__symbol">
                     <img class="table__symbol-icon" :src="showCoinImage(investment.coinsSymbol)" :src="showCoinImage(investment.coinsSymbol)" :alt="investment.coinsSymbol + ' icon'" v-if="showCoinImage(investment.coinsSymbol)">
@@ -111,6 +114,7 @@
             <table class="table table--myinv table--w100">
               <thead>
                 <tr>
+                  <th class="table__th table__th--symbol table__th--desktop">Symbol</th>
                   <th class="table__th table__th--in-crypto">Invested, crypto</th>
                   <th class="table__th table__th--in-usd">Invested</th>
                   <th class="table__th table__th--stay-usd">Current crypto value</th>
@@ -125,7 +129,18 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(investment, index) in filteredInvestments" :key="investment.id" @click="highlightRow(index)" class="table__row">
+                <tr v-for="(investment, index) in filteredInvestments" :key="investment.id" @click.stop="highlightRow(index)" class="table__row">
+                  <td class="table__td table__td--symbol table__td--desktop">
+                    <span class="table__symbol">
+                      <img class="table__symbol-icon" :src="showCoinImage(investment.coinsSymbol)" :src="showCoinImage(investment.coinsSymbol)" :alt="investment.coinsSymbol + ' icon'" v-if="showCoinImage(investment.coinsSymbol)">
+                      <span v-else class="table__symbol-icon">&minus;</span>
+
+                      <template v-if="investment.url">
+                        <a class="table__symbol-name" :title="investment.url" :href="investment.url" target="_blank" rel="noopener">{{ investment.coinsSymbol }}</a>
+                      </template>
+                      <span class="table__symbol-name" v-else>{{ investment.coinsSymbol }}</span>
+                    </span>
+                  </td>
                   <td class="table__td">{{ investment.cryptoInvestedAmount | roundToThreeDigits }}&nbsp;{{ investment.cryptoInvestedSymbol }}</td>
                   <td class="table__td">
                     <span class="fiat"><span class="fiat__whole">${{ investment.usdInvested | tofixWhole }}</span>.<span class="fiat__fraction">{{ investment.usdInvested | tofixFraction }}</span></span>
@@ -221,7 +236,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="n in 10" v-if="currencyListSearch[n-1]">
+              <tr v-for="n in 10" v-if="currencyListSearch[n-1]" :key="currencyListSearch[n-1].id">
                 <td class="table__td table__td--name">
                   <span class="table__symbol">
                     <img class="table__symbol-icon" :src="showCoinImage(currencyListSearch[n-1].id, false)" :alt="currencyListSearch[n-1].name + ' icon'">
@@ -271,7 +286,7 @@
                       <input type="number" v-model.number="investTemplate.cryptoInvestedAmount" id="crypto-spent" class="input-field" placeholder="0.361" min="0" step="any">
                       <select class="input-field" v-model="investTemplate.cryptoInvestedSymbol" required="true">
                         <option value="Crypto name" disabled>Crypto name</option>
-                        <option v-for="currency in fullData" :value="currency.symbol">{{ currency.name }}</option>
+                        <option v-for="n in 50" :value="fullData[n-1].symbol">{{ fullData[n-1].name }}</option>
                       </select>
                     </div>
                   </div>

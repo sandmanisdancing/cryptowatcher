@@ -16,6 +16,15 @@
   margin-bottom: 1.5em;
 }
 
+.portfolio__search-block {
+  flex-shrink: 1;
+  margin-right: 15px;
+}
+
+.portfolio__filters .btn {
+  flex-shrink: 0;
+}
+
 .portfolio__myinv {
   display: flex;
 }

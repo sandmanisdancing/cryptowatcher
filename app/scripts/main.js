@@ -209,6 +209,8 @@ const app = new Vue({
           + 'credential: ' + credential);
         });
       }
+
+      this.signInPopup = false;
     },
 
     signOut: function () {
