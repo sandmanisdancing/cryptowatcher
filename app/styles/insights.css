@@ -1,7 +1,7 @@
 .columns {
   display: flex;
   flex-wrap: wrap;
-  margin: 1em;
+  margin: 1em 0;
 }
 
 .insights {

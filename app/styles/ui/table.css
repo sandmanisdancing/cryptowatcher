@@ -70,6 +70,14 @@
   border-left: 2px solid var(--bg-color);
 }
 
+.table__td--pl {
+  color: var(--main-color);
+}
+
+.table__neutral {
+  color: #000;
+}
+
 .table__negative-change {
   color: var(--warning-color);
 }
@@ -114,4 +122,12 @@
 .table__td--desktop,
 .table__th--desktop {
   display: none;
+}
+
+.table__th--rank {
+  width: 37px;
+}
+
+.table__td--rank {
+  text-align: center;
 }

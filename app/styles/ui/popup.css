@@ -39,6 +39,11 @@
   background: var(--maindark-color);
 }
 
+.popup__close:focus {
+  outline: 0;
+  box-shadow: -3px 3px 3px var(--maindark-color);
+}
+
 .popup__close:before,
 .popup__close:after {
   position: absolute;
@@ -91,7 +96,7 @@
 }
 
 .popup--sign-in {
-  height: 150px;
+  height: 195px;
   width: 340px;
 }
 

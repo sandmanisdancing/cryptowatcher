@@ -3,7 +3,6 @@
 	font-weight: 500;
 	padding: 9px 10px;
 	border-radius: 5px;
-	text-align: center;
 	transition: background .1s, color .1s, transform .15s;
 	border: none;
 	position: relative;
@@ -27,6 +26,10 @@
   color: var(--bg-color);
 }
 
+.btn__text {
+  margin: 0 auto;
+}
+
 .btn--alt {
   background-image: linear-gradient(45deg, var(--secondary-color), var(--secondarydark-color));
 }
@@ -37,7 +40,7 @@
 }
 
 .btn--alt:focus {
-  box-shadow: -3px 3px 9px var(--secondarydark-color);
+  box-shadow: -3px 3px 3px var(--secondarydark-color);
 }
 
 .btn--main {
@@ -50,7 +53,7 @@
 }
 
 .btn--main:focus {
-  box-shadow: -3px 3px 9px var(--maindark-color);
+  box-shadow: -3px 3px 3px var(--maindark-color);
 }
 
 .btn--warning {
@@ -62,8 +65,37 @@
   background-color: var(--warningdark-color);
 }
 
+.btn--login {
+  border: 1px solid var(--link-color);
+  background-color: #fff;
+  color: var(--link-color);
+  width: 80%;
+  justify-content: flex-start;
+}
+
+.btn--login:hover {
+  border-color: var(--warning-color);
+}
+
+.btn--login:focus {
+  box-shadow: -3px 3px 3px var(--link-color);
+}
+
+.btn--login svg {
+  margin-right: 6px;
+}
+
+.btn--facebook,
+.btn--twitter {
+  margin-top: 10px;
+}
+
+.btn--facebook svg {
+  fill: #4267b2;
+}
+
 .btn--warning:focus {
-  box-shadow: -3px 3px 9px var(--warningdark-color);
+  box-shadow: -3px 3px 3px var(--warningdark-color);
 }
 
 .action-btn svg {

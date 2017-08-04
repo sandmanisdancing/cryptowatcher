@@ -1,5 +1,5 @@
 .portfolio {
-  margin: 1em;
+  margin: 1em 0;
 }
 
 .portfolio__empty {
@@ -13,12 +13,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5em;
+  margin: 0 10px 1.5em;
 }
 
 .portfolio__search-block {
   flex-shrink: 1;
-  margin-right: 15px;
+  width: 150px;
 }
 
 .portfolio__filters .btn {
@@ -32,4 +32,10 @@
 .portfolio__table-holder {
   overflow-x: auto;
   flex-grow: 1;
+}
+
+.portfolio__total {
+  margin: 1em;
+  text-align: center;
+  font-size: 3em;
 }

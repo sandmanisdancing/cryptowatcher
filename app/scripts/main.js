@@ -168,8 +168,21 @@ const app = new Vue({
       }
     },
 
-    signIn: function (device) {
-      var provider = new firebase.auth.GoogleAuthProvider();
+    signInFacebook: function () {
+      var provider = new firebase.auth.FacebookAuthProvider();
+    },
+
+    signIn: function (device, providerPassed) {
+      let provider;
+
+      if (providerPassed === "facebook") {
+        provider = new firebase.auth.FacebookAuthProvider();
+      } else if (providerPassed === "google") {
+        provider = new firebase.auth.GoogleAuthProvider();
+      } else if (providerPassed === "twitter") {
+        provider = new firebase.auth.TwitterAuthProvider();
+      }
+
       var self = this;
 
       if(device === 'mobile') {
@@ -397,7 +410,7 @@ const app = new Vue({
     },
 
     askRemoveToken: function (index) {
-      this.deletePopup = true;
+      this.openWindow('deletePopup');
 
       this.deleteIndex = index;
     },
@@ -416,7 +429,7 @@ const app = new Vue({
         this.investTemplate[key] = this.myInvestments[index][key];
       }
 
-      this.investPopup = true;
+      this.openWindow('investPopup');
     },
 
     makeTransaction: function (index) {
@@ -424,7 +437,7 @@ const app = new Vue({
         this.investTemplate[key] = this.myInvestments[index][key];
       }
 
-      this.transactionPopup = true;
+      this.openWindow('transactionPopup');
     },
 
     closeWindow: function (popup, e) {
@@ -435,11 +448,11 @@ const app = new Vue({
       }
     },
 
-    openWindow: function (e) {
-      this.investPopup = true;
+    openWindow: function (popup) {
+      this[popup] = true;
 
       setTimeout(function () {
-        if(e.target.matches('button, button *')) document.querySelector('.popup-overlay').focus();
+        document.querySelector('.popup-overlay').focus();
       }, 200);
     },
 

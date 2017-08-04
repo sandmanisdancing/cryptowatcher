@@ -6,3 +6,12 @@
   max-width: 300px;
   width: 300px;
 }
+
+.portfolio__search-block {
+  width: auto;
+}
+
+.portfolio__filters {
+  margin-left: 0;
+  margin-right: 0;
+}
