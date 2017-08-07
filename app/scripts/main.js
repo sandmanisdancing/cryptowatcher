@@ -509,7 +509,7 @@ const app = new Vue({
     },
 
     filteredInvestments () {
-      var self = this;
+      const self = this;
 
       if (this.tableFiltering.notListed) {
         return this.myInvestments.filter(function (investment) {
@@ -525,7 +525,7 @@ const app = new Vue({
     },
 
     currencyListSearch () {
-      var self = this;
+      const self = this;
 
       if(this.fullData) {
         return this.fullData.filter(function (node) {

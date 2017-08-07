@@ -1,6 +1,7 @@
 {
   "presets": ["es2015"],
   "ignore": [
+    "scripts/mdrnzr-touch.js",
     "scripts/vue.js",
     "scripts/vue.min.js"
   ]

@@ -24,7 +24,7 @@
   font-size: 14px;
 }
 
-.table tr:hover .table__td {
+.no-touchevents .table tr:hover .table__td {
   background-color: #e5e6ea;
 }
 
@@ -37,7 +37,7 @@
   display: table-cell;
 }
 
-.table__row:hover .action-btn {
+.no-touchevents .table__row:hover .action-btn {
   clip: auto;
   height: auto;
   margin: 0;

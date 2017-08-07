@@ -15,3 +15,15 @@
   margin-left: 0;
   margin-right: 0;
 }
+
+.portfolio__total {
+  margin: 1em;
+  text-align: center;
+  font-size: 5vw;
+}
+
+@media (min-width: 1350px) {
+  .portfolio__total {
+    font-size: 67px;
+  }
+}

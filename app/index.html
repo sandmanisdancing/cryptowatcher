@@ -78,7 +78,7 @@
 
     <main role="main">
       <section class="portfolio">
-        <h2>ICOs</h2>
+        <h2 class="portfolio__ico-header" v-if="myInvestments.length">ICOs</h2>
         <div class="portfolio__filters" v-if="myInvestments.length">
           <div class="portfolio__search-block">
             <input type="search" class="input-field portfolio__search" v-model="searchInv" placeholder="Search by symbol...">
@@ -216,7 +216,7 @@
           </div>
         </div>
 
-        <div class="portfolio__total">
+        <div class="portfolio__total" v-if="myInvestments.length">
           Total portfolio value: ${{ totalPortfolioValue | tofix2 }}
         </div>
 
@@ -249,42 +249,48 @@
             <input type="search" id="search-currency" class="input-field market-info__search-field" v-model="searchMarket" placeholder="Search by name...">
           </div>
 
-          <table class="table table--marketinfo table--w100">
-            <thead>
-              <tr>
-                <th class="table__th table__th--rank">№</th>
-                <th class="table__th">Coin</th>
-                <th class="table__th">Price (24h change)</th>
-                <th class="table__th">Price, BTC</th>
-                <th class="table__th">Market cap</th>
-                <th class="table__th">Circulating Supply</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="n in 10" v-if="currencyListSearch[n-1]" :key="currencyListSearch[n-1].id">
-                <td class="table__td table__td--rank">
-                  {{ currencyListSearch[n-1].rank }}
-                </td>
-                <td class="table__td table__td--name">
-                  <span class="table__symbol">
-                    <img class="table__symbol-icon" :src="showCoinImage(currencyListSearch[n-1].id, false)" :alt="currencyListSearch[n-1].name + ' icon'">
+          <div class="market-info__table-holder">
+            <table class="table table--marketinfo table--w100">
+              <thead>
+                <tr>
+                  <th class="table__th table__th--rank">№</th>
+                  <th class="table__th">Coin</th>
+                  <th class="table__th">Price (24h change)</th>
+                  <th class="table__th">Price, BTC</th>
+                  <th class="table__th">Trade volume, 24h</th>
+                  <th class="table__th">Market cap</th>
+                  <th class="table__th">Circulating Supply</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="n in 10" v-if="currencyListSearch[n-1]" :key="currencyListSearch[n-1].id">
+                  <td class="table__td table__td--rank">
+                    {{ currencyListSearch[n-1].rank }}
+                  </td>
+                  <td class="table__td table__td--name">
+                    <span class="table__symbol">
+                      <img class="table__symbol-icon" :src="showCoinImage(currencyListSearch[n-1].id, false)" :alt="currencyListSearch[n-1].name + ' icon'">
 
-                    <span class="table__symbol-name">{{ currencyListSearch[n-1].name }}</span>
-                  </span>
-                </td>
-                <td class="table__td table__td--price">
-                  ${{ currencyListSearch[n-1].price_usd | tofix2 }}&nbsp;(<span :class="[currencyListSearch[n-1].percent_change_24h >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ currencyListSearch[n-1].percent_change_24h }}%</span>)
-                </td>
-                <td class="table__td">
-                  {{ currencyListSearch[n-1].price_btc }}
-                </td>
-                <td class="table__td">${{ currencyListSearch[n-1].market_cap_usd | bigNumber }}</td>
-                <td class="table__td">
-                  {{ currencyListSearch[n-1].available_supply }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                      <span class="table__symbol-name">{{ currencyListSearch[n-1].name }}</span>
+                    </span>
+                  </td>
+                  <td class="table__td">
+                    ${{ currencyListSearch[n-1].price_usd | tofix2 }}&nbsp;(<span :class="[currencyListSearch[n-1].percent_change_24h >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ currencyListSearch[n-1].percent_change_24h }}%</span>)
+                  </td>
+                  <td class="table__td">
+                    {{ currencyListSearch[n-1].price_btc }}
+                  </td>
+                  <td class="table__td">
+                    {{ currencyListSearch[n-1]["24h_volume_usd"] | bigNumber }}
+                  </td>
+                  <td class="table__td">${{ currencyListSearch[n-1].market_cap_usd | bigNumber }}</td>
+                  <td class="table__td">
+                    {{ currencyListSearch[n-1].available_supply }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </aside>
       </div>
     </main>

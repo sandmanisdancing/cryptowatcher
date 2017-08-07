@@ -9,6 +9,11 @@
   margin-top: 0;
 }
 
+.portfolio__ico-header {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 .portfolio__filters {
   display: flex;
   justify-content: space-between;
@@ -37,5 +42,12 @@
 .portfolio__total {
   margin: 1em;
   text-align: center;
-  font-size: 3em;
+  font-size: calc( 1.5rem + 16 * (100vw - 320px) / (960 - 320) );
+  line-height: calc( 120% + 3.2 * (100vw - 960px) / (320 - 960) );
+}
+
+@media (max-width: 365px) {
+  .portfolio__total {
+    font-size: 22px;
+  }
 }
