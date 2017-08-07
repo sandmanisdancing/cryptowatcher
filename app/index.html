@@ -78,6 +78,10 @@
 
     <main role="main">
       <section class="portfolio">
+        <div class="portfolio__total" v-if="myInvestments.length">
+          Total portfolio value: ${{ totalPortfolioValue | tofix2 }}
+        </div>
+
         <h2 class="portfolio__ico-header" v-if="myInvestments.length">ICOs</h2>
         <div class="portfolio__filters" v-if="myInvestments.length">
           <div class="portfolio__search-block">
@@ -214,10 +218,6 @@
               </tbody>
             </table>
           </div>
-        </div>
-
-        <div class="portfolio__total" v-if="myInvestments.length">
-          Total portfolio value: ${{ totalPortfolioValue | tofix2 }}
         </div>
 
         <div v-if="!myInvestments.length">

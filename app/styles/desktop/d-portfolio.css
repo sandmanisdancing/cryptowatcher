@@ -1,5 +1,5 @@
 .portfolio {
-  margin: 2em;
+  margin: 2em 2em 4em;
 }
 
 .portfolio__search {
@@ -17,13 +17,18 @@
 }
 
 .portfolio__total {
-  margin: 1em;
+  margin: .5em;
   text-align: center;
-  font-size: 5vw;
+  font-size: 3.5vw;
+}
+
+.portfolio__ico-header {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 @media (min-width: 1350px) {
   .portfolio__total {
-    font-size: 67px;
+    font-size: 48px;
   }
 }
