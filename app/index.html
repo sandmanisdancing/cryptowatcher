@@ -349,7 +349,12 @@
                     </div>
                   </div>
                   <div class="invest__block">
-                    <label for="coins-symbol" class="invest__label">Symbol for coins / tokens<span class="secondary-span">, i.e. BNT for Bancor</span></label>
+                    <label for="coins-symbol" class="invest__label">
+                      <span class="acronym" tabindex="0">
+                        <span class="acronym__tooltip">i.e. BNT for Bancor</span>
+                        <span class="acronym__text">Symbol</span>
+                      </span>&nbsp;for coins / tokens
+                    </label>
                     <div class="invest__line">
                       <input type="text" v-model="investTemplate.coinsSymbol" id="coins-symbol" class="input-field" placeholder="BNT" required>
                     </div>
