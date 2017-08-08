@@ -20,6 +20,7 @@
 
 .market-info__search-field {
   flex-grow: 1;
+  max-width: 300px;
 }
 
 .market-info__table-holder {

@@ -27,6 +27,11 @@
   margin-right: 0;
 }
 
+.portfolio__no-records {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 @media (min-width: 1350px) {
   .portfolio__total {
     font-size: 48px;

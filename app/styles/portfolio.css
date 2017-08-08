@@ -21,9 +21,15 @@
   margin: 0 10px .5em;
 }
 
+.portfolio__search {
+  width: 100%;
+  max-width: 300px;
+}
+
 .portfolio__search-block {
   flex-shrink: 1;
-  width: 150px;
+  flex-grow: 1;
+  margin-right: 15px;
 }
 
 .portfolio__filters .btn {
@@ -44,6 +50,12 @@
   text-align: center;
   font-size: calc( 1.5rem + 16 * (100vw - 320px) / (960 - 320) );
   line-height: calc( 120% + 3.2 * (100vw - 960px) / (320 - 960) );
+  font-weight: 500;
+}
+
+.portfolio__no-records {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 @media (max-width: 365px) {
