@@ -196,10 +196,9 @@
                   </td>
                   <td class="table__td table__td--action">
                     <div class="table__action-div">
-                      <button class="btn btn--main action-btn" type="button" @click="makeTransaction(index)" title="Transaction">
+                      <button class="btn btn--main action-btn" type="button" @click="makeTransaction(index)" title="Sell">
                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="18" height="18" viewBox="0 0 45 45" xml:space="preserve">
-                          <path d="M1.788,16.945c0.388,0.385,0.913,0.601,1.459,0.601l27.493-0.035v3.831c0.003,0.836,0.556,1.586,1.329,1.904	c0.771,0.314,1.658,0.135,2.246-0.459l9.091-9.18c1.062-1.071,1.06-2.801-0.009-3.868l-9.137-9.134	c-0.59-0.591-1.479-0.768-2.25-0.446c-0.77,0.319-1.271,1.074-1.27,1.908L30.74,5.9L3.219,5.937	C2.08,5.94,1.161,6.864,1.163,8.004l0.018,7.483C1.182,16.034,1.401,16.56,1.788,16.945z"/>
-                          <path d="M42.146,27.901l-27.522-0.035l-0.001-3.834c0.002-0.835-0.5-1.587-1.27-1.907c-0.771-0.321-1.66-0.146-2.25,0.445	l-9.136,9.135c-1.067,1.064-1.071,2.796-0.009,3.866l9.09,9.181c0.588,0.596,1.475,0.772,2.247,0.458	c0.772-0.316,1.326-1.066,1.329-1.904v-3.83l27.493,0.035c0.547,0,1.072-0.216,1.459-0.602s0.605-0.91,0.607-1.456L44.2,29.97	C44.203,28.83,43.284,27.903,42.146,27.901z"/>
+                          <path style="transform:translateY(11px)" d="M1.788,16.945c0.388,0.385,0.913,0.601,1.459,0.601l27.493-0.035v3.831c0.003,0.836,0.556,1.586,1.329,1.904	c0.771,0.314,1.658,0.135,2.246-0.459l9.091-9.18c1.062-1.071,1.06-2.801-0.009-3.868l-9.137-9.134	c-0.59-0.591-1.479-0.768-2.25-0.446c-0.77,0.319-1.271,1.074-1.27,1.908L30.74,5.9L3.219,5.937	C2.08,5.94,1.161,6.864,1.163,8.004l0.018,7.483C1.182,16.034,1.401,16.56,1.788,16.945z"/>
                         </svg>
                       </button>
                       <button class="btn btn--alt action-btn action-btn--edit" type="button" @click="editToken(index, $event)" title="Edit">
@@ -397,11 +396,11 @@
 
           <form action="#" @submit.prevent="createTransaction">
             <div class="invest__screen">
-              <h3>Sold</h3>
+              <h3>Sell</h3>
               <input type="hidden" v-model="investTemplate.id">
               <div class="invest__columns">
                 <div class="invest__block">
-                  <label for="tokens-withdraw" class="invest__label">Sold, quantity</label>
+                  <label for="tokens-withdraw" class="invest__label">Sell, quantity</label>
                   <div class="invest__line">
                     <input type="number" v-model.number="investTemplate.coinsWithdrawTemp" id="tokens-withdraw" class="input-field" step="any">
                   </div>
@@ -417,7 +416,7 @@
 
             <div class="invest__screen">
               <h3>Result</h3>
-              <p>Total sold, coins / tokens: {{ coinsSold }}</p>
+              <p>Total sell, coins / tokens: {{ coinsSold }}</p>
               <p>Total sell sum, USD: {{ usdGot }}</p>
             </div>
 
