@@ -100,6 +100,11 @@ const app = new Vue({
       }
     },
 
+    billions: function (value) {
+      value = +value;
+      return value.toLocaleString();
+    },
+
     bigNumber: function (value) {
       return (value/1000000000).toFixed(3) + 'B';
     },

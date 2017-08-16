@@ -23,7 +23,7 @@
   <!-- shortcut icon, uncomment for production -->
   <!-- <link rel="shortcut icon" href="images/icons/icon-32x32.png" type="image/ico"> -->
 
-  <style>#crypto-app[v-cloak]{max-height:100vh;overflow:hidden}#crypto-app[v-cloak]:before{content:' ';position: absolute;width:100%;height:100%;background-color:#fff;z-index:10}#crypto-app[v-cloak]:after{content:"Cryptowatcher";position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center;font-weight:500;font-size:7vw;top:0;left:0;z-index:20}</style>
+  <style>#crypto-app[v-cloak]{max-width:100%;max-height:100vh;overflow:hidden}#crypto-app[v-cloak]:before{content:' ';position: absolute;width:100%;height:100%;background-color:#fff;z-index:10}#crypto-app[v-cloak]:after{content:"Cryptowatcher";position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center;font-weight:500;font-size:7vw;top:0;left:0;z-index:20}</style>
   <link rel="stylesheet" type="text/css" href="styles/main.css" media="all">
   <link rel="stylesheet" type="text/css" href="styles/desktop.css" media="(min-width: 800px)">
 
@@ -34,7 +34,6 @@
 
   <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed:400,500" rel="stylesheet">
 
-  <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-102622704-1', 'auto');ga('send', 'pageview');</script>
   <script>
   var script = document.createElement('script');
 
@@ -199,6 +198,7 @@
                       <button class="btn btn--main action-btn" type="button" @click="makeTransaction(index)" title="Sell">
                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="18" height="18" viewBox="0 0 45 45" xml:space="preserve">
                           <path style="transform:translateY(11px)" d="M1.788,16.945c0.388,0.385,0.913,0.601,1.459,0.601l27.493-0.035v3.831c0.003,0.836,0.556,1.586,1.329,1.904	c0.771,0.314,1.658,0.135,2.246-0.459l9.091-9.18c1.062-1.071,1.06-2.801-0.009-3.868l-9.137-9.134	c-0.59-0.591-1.479-0.768-2.25-0.446c-0.77,0.319-1.271,1.074-1.27,1.908L30.74,5.9L3.219,5.937	C2.08,5.94,1.161,6.864,1.163,8.004l0.018,7.483C1.182,16.034,1.401,16.56,1.788,16.945z"/>
+                          <!-- <path d="M42.146,27.901l-27.522-0.035l-0.001-3.834c0.002-0.835-0.5-1.587-1.27-1.907c-0.771-0.321-1.66-0.146-2.25,0.445	l-9.136,9.135c-1.067,1.064-1.071,2.796-0.009,3.866l9.09,9.181c0.588,0.596,1.475,0.772,2.247,0.458	c0.772-0.316,1.326-1.066,1.329-1.904v-3.83l27.493,0.035c0.547,0,1.072-0.216,1.459-0.602s0.605-0.91,0.607-1.456L44.2,29.97	C44.203,28.83,43.284,27.903,42.146,27.901z"/> -->
                         </svg>
                       </button>
                       <button class="btn btn--alt action-btn action-btn--edit" type="button" @click="editToken(index, $event)" title="Edit">
@@ -226,22 +226,6 @@
       </section>
 
       <div class="columns">
-        <!-- <section class="insights" v-if="myInvestments.length">
-          <table class="table table--right-align table--w100" id="invest-calcs">
-            <thead>
-              <tr>
-                <th class="table__th" colspan="2">Insights</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="table__td">Total portfolio value, USD</td>
-                <td class="table__td">{{ totalPortfolioValue | tofix2 }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </section> -->
-
         <aside class="market-info">
           <div class="market-info__search">
             <label for="search-currency" class="input-label market-info__search-label">Coin search</label>
@@ -258,7 +242,7 @@
                   <th class="table__th">Price, BTC</th>
                   <th class="table__th">Trade volume, 24h</th>
                   <th class="table__th">Market cap</th>
-                  <th class="table__th">Circulating Supply</th>
+                  <th class="table__th">Circulating supply, coins</th>
                 </tr>
               </thead>
               <tbody>
@@ -280,11 +264,11 @@
                     {{ currencyListSearch[n-1].price_btc }}
                   </td>
                   <td class="table__td">
-                    {{ currencyListSearch[n-1]["24h_volume_usd"] | bigNumber }}
+                    ${{ currencyListSearch[n-1]["24h_volume_usd"] | bigNumber }}
                   </td>
                   <td class="table__td">${{ currencyListSearch[n-1].market_cap_usd | bigNumber }}</td>
                   <td class="table__td">
-                    {{ currencyListSearch[n-1].available_supply }}
+                    {{ currencyListSearch[n-1].available_supply | billions }}
                   </td>
                 </tr>
               </tbody>
@@ -416,7 +400,7 @@
 
             <div class="invest__screen">
               <h3>Result</h3>
-              <p>Total sell, coins / tokens: {{ coinsSold }}</p>
+              <p>Total sold, coins / tokens: {{ coinsSold }}</p>
               <p>Total sell sum, USD: {{ usdGot }}</p>
             </div>
 
@@ -496,5 +480,6 @@
 
   <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js" defer></script>
   <script src="scripts/main.js" defer></script>
+  <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-102622704-1', 'auto');ga('send', 'pageview');</script>
 </body>
 </html>
