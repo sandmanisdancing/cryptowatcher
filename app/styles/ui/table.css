@@ -70,6 +70,10 @@
   border-left: 2px solid var(--bg-color);
 }
 
+.table__td--finish {
+  width: 91px;
+}
+
 .table__td--pl {
   color: var(--main-color);
 }
@@ -125,7 +129,7 @@
 }
 
 .table__th--rank {
-  width: 37px;
+  width: 44px;
 }
 
 .table__td--rank {

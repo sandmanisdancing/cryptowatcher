@@ -73,7 +73,6 @@ const data = {
   tableFiltering: {
     notListed: true
   },
-  searchInv: "",
   searchMarket: ""
 };
 
@@ -366,18 +365,24 @@ const app = new Vue({
     },
 
     countRate: function (amount, symbol) {
-      let rate = 0;
+      if(amount) {
+        if(this.fullData) {
+          let price = this.fullData.find(findSymbol);
 
-      if(!amount) amount = 0;
-
-      if(this.fullData) {
-        this.fullData.forEach((item) => {
-          if(item["symbol"] === symbol) {
-            rate = amount * item["price_usd"];
+          if(price) {
+            return amount * price["price_usd"];
+          } else {
+            return 0;
           }
-        });
+        }
+      } else {
+        return 0;
+      }
 
-        return rate;
+      function findSymbol (item) {
+        if(item["symbol"] === symbol) {
+          return item;
+        }
       }
     },
 
@@ -399,9 +404,7 @@ const app = new Vue({
       if(!a) a = 0;
       if(!b) b = 0;
 
-      let sum = parseFloat(a) + parseFloat(b);
-
-      return sum;
+      return a + b;
     },
 
     saveToLS: function (name) {
@@ -469,6 +472,10 @@ const app = new Vue({
       if(name.length) return 'https://coinmarketcap.com/assets/' + name[0].name.toLowerCase() + '/#markets';
     },
 
+    showCryptoLink: function (id) {
+      return 'https://coinmarketcap.com/assets/' + id;
+    },
+
     detectPixelRatio: function () {
       const pixelRatio = window.devicePixelRatio || 1;
 
@@ -513,28 +520,12 @@ const app = new Vue({
       return +this.investTemplate.usdWithdraw + +this.investTemplate.usdWithdrawTemp;
     },
 
-    filteredInvestments () {
-      const self = this;
-
-      if (this.tableFiltering.notListed) {
-        return this.myInvestments.filter(function (investment) {
-          return investment.coinsSymbol.toLowerCase().indexOf(self.searchInv.toLowerCase())>=0;
-        });
-      } else {
-        return this.myInvestments.filter(function (investment) {
-          if (self.countRate(1, investment.coinsSymbol) !== 0) {
-            return investment.coinsSymbol.toLowerCase().indexOf(self.searchInv.toLowerCase())>=0;
-          }
-        });
-      }
-    },
-
     currencyListSearch () {
       const self = this;
 
       if(this.fullData) {
         return this.fullData.filter(function (node) {
-          return node.name.toLowerCase().indexOf(self.searchMarket.toLowerCase())>=0;
+          return node.name.toLowerCase().indexOf(self.searchMarket.toLowerCase()) === 0;
         });
       }
     },
@@ -545,24 +536,47 @@ const app = new Vue({
           self = this;
 
       if(portfolio.length) {
-        if(portfolio.length > 1) {
-          result = portfolio.reduce(function (a, b) {
-            if(isNaN(a.coinsAmount)) {
-              return a + +self.countRate(+b.coinsAmount - +b.coinsWithdraw, b.coinsSymbol);
-            } else {
-              return +self.countRate(+a.coinsAmount - +a.coinsWithdraw, a.coinsSymbol)
-              + +self.countRate(+b.coinsAmount - +b.coinsWithdraw, b.coinsSymbol)
-            }
-          });
-        } else {
-          result = portfolio.reduce(function (a, b) {
-            return +self.countRate(+a.coinsAmount - +a.coinsWithdraw, a.coinsSymbol) +
-            +self.countRate(+b.coinsAmount - +b.coinsWithdraw, b.coinsSymbol)
-          }, 0);
-        }
+        result = portfolio.reduce(function (sum, current) {
+          return sum + self.countRate(current.coinsAmount - current.coinsWithdraw, current.coinsSymbol);
+        }, 0);
 
         return result;
       }
+    },
+
+    computedInvestments () {
+      let portfolio = this.myInvestments;
+
+      portfolio.forEach((item) => {
+        item["icon"] = this.showCoinImage(item.coinsSymbol);
+        item["current_value"] = this.countRate(item.cryptoInvestedAmount, item.cryptoInvestedSymbol);
+        item["quantity"] = item.coinsAmount - item.coinsWithdraw;
+        item["markets_link"] = this.showMarketsLink(item.coinsSymbol);
+        item["price"] = this.countRate(1, item.coinsSymbol);
+        item["24h_change"] = this.show24hChange(item.coinsSymbol);
+
+        if (item["24h_change"] >= 0) {
+          item["is_change_negative"] = true;
+        } else {
+          item["is_change_negative"] = false;
+        }
+
+        item["current_pl"] = Math.abs((this.countRate(1, item.coinsSymbol) - item.usdInvested/item.coinsAmount) * (item.coinsAmount - item.coinsWithdraw));
+        item["total"] = this.countRate(item.coinsAmount - item.coinsWithdraw, item.coinsSymbol)
+        item["sold_total"] = item.usdWithdraw + this.countRate(item.coinsAmount - item.coinsWithdraw, item.coinsSymbol);
+        item["sold_pl"] = Math.abs(((item.usdWithdraw/item.coinsWithdraw) - (item.usdInvested/item.coinsAmount)) * item.coinsWithdraw);
+      });
+
+      // filtering not listed entries
+      if (!this.tableFiltering.notListed) {
+        return portfolio.filter((investment) => {
+          if (this.countRate(1, investment.coinsSymbol) !== 0) {
+            return investment;
+          }
+        });
+      }
+
+      return portfolio;
     }
   },
 
