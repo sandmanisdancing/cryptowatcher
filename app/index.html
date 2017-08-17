@@ -95,10 +95,10 @@
               <th class="table__th table__th--symbol">Symbol</th>
             </thead>
             <tbody>
-              <tr v-for="(investment, index) in myInvestments" :key="investment.id" @click.stop="highlightRow(index)" class="table__row">
+              <tr v-for="(investment, index) in computedInvestments" :key="investment.id" @click.stop="highlightRow(index)" class="table__row">
                 <td class="table__td table__td--symbol">
                   <span class="table__symbol">
-                    <img class="table__symbol-icon" :src="showCoinImage(investment.coinsSymbol)" :src="showCoinImage(investment.coinsSymbol)" :alt="investment.coinsSymbol + ' icon'" v-if="showCoinImage(investment.coinsSymbol)">
+                    <img class="table__symbol-icon" :src="investment.icon" :alt="investment.coinsSymbol + ' icon'" v-if="investment.icon">
                     <span v-else class="table__symbol-icon">&minus;</span>
 
                     <template v-if="investment.url">
