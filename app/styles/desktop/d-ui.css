@@ -52,3 +52,7 @@
   width: auto;
   height: auto;
 }
+
+.invest__block--inv-crypto + .invest__block {
+  margin-top: 0;
+}

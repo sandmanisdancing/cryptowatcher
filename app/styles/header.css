@@ -31,8 +31,12 @@
   margin-top: 1em;
 }
 
-.pageheader__buttons--si .btn {
+.pageheader__buttons .btn {
   flex-grow: 1;
+  letter-spacing: -.2px;
+}
+.fonts-loaded .pageheader__buttons .btn {
+  letter-spacing: 0;
 }
 
 .pageheader__buttons .btn + .btn {

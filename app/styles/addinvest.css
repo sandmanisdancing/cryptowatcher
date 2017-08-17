@@ -34,7 +34,16 @@
 .invest__block + .invest__block {
   padding-right: 0;
   padding-left: 15px;
-  border-left: 1px dashed var(--bg-color);
+}
+
+.invest__block--inv-crypto {
+  min-width: 305px;
+  padding-right: 15px;
+}
+
+.invest__block--inv-crypto + .invest__block {
+  padding-left: 0;
+  margin-top: .5em;
 }
 
 .invest__label {

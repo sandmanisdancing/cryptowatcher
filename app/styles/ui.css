@@ -143,6 +143,7 @@ strong, b, h1, h2, h3 {
   font-size: 15px;
   border-radius: 0 !important;
   border: 1px solid var(--bg-color);
+  background-color: #fff;
   max-width: 100%;
   min-width: 130px;
 }

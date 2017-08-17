@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <div class="pageheader__buttons" :class="{ 'pageheader__buttons--si': authentication.isSignedIn }">
+      <div class="pageheader__buttons">
         <button class="btn btn--main" @click="openWindow('investPopup')">Add investment</button>
         <button class="btn btn--alt" @click="fetchData">Refresh data</button>
 
@@ -81,10 +81,10 @@
           Total portfolio value: ${{ totalPortfolioValue | tofix2 }}
         </div>
 
-        <h2 class="portfolio__ico-header" v-if="myInvestments.length">ICOs</h2>
+        <h2 class="portfolio__header" v-if="myInvestments.length">ICOs</h2>
         <div class="portfolio__filters" v-if="myInvestments.length">
-          <button role="button" class="btn btn--alt" @click="tableFiltering.notListed = !tableFiltering.notListed">
-            <span v-if="tableFiltering.notListed">Hide not listed</span>
+          <button role="button" class="btn btn--alt" @click="toggleListed">
+            <span v-if="notListed">Hide not listed</span>
             <span v-else>Show all</span>
           </button>
         </div>
@@ -121,7 +121,7 @@
                   <th class="table__th table__th--stay-usd">Current crypto value</th>
                   <th class="table__th table__th--quantity">Quantity</th>
                   <th class="table__th table__th--current-price">Price</th>
-                  <th class="table__th">Current profit&nbsp;/ loss</th>
+                  <th class="table__th">Current profit&nbsp;/&nbsp;loss</th>
                   <th class="table__th table__th--total-usd">Total</th>
                   <th class="table__th table__th--sell-usd">Sold</th>
                   <th class="table__th table__th--sell-coins">Sold, coins&nbsp;/&nbsp;tokens</th>
@@ -227,6 +227,50 @@
           </div>
         </div>
 
+        <!-- <h2 class="portfolio__header">Hold</h2>
+        <div class="portfolio__myinv">
+          <div class="portfolio__table-holder">
+            <table class="table table--w100">
+              <thead>
+                <tr>
+                  <th class="table__th table__th--symbol">Symbol</th>
+                  <th class="table__th table__th--in-crypto">Invested, crypto</th>
+                  <th class="table__th table__th--in-usd">Invested</th>
+                  <th class="table__th table__th--stay-usd">Current crypto value</th>
+                  <th class="table__th table__th--quantity">Quantity</th>
+                  <th class="table__th table__th--avg-price">Price</th>
+                  <th class="table__th table__th--current-price">Price</th>
+                  <th class="table__th">Current profit&nbsp;/ loss</th>
+                  <th class="table__th table__th--total-usd">Total</th>
+                  <th class="table__th table__th--sell-usd">Sold</th>
+                  <th class="table__th table__th--sell-coins">Sold, coins&nbsp;/&nbsp;tokens</th>
+                  <th class="table__th table__th--sell-total">Sold + total</th>
+                  <th class="table__th table__th--pl">Sold profit&nbsp;/&nbsp;loss</th>
+                  <th class="table__th table__th--action">Act</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="table__td table__td--symbol"></td>
+                  <td class="table__td table__td--in-crypto"></td>
+                  <td class="table__td table__td--in-usd"></td>
+                  <td class="table__td table__td--stay-usd"></td>
+                  <td class="table__td table__td--quantity"></td>
+                  <td class="table__td table__td--avg-price"></td>
+                  <td class="table__td table__td--current-price"></td>
+                  <td class="table__td"></td>
+                  <td class="table__td table__td--total-usd"></td>
+                  <td class="table__td table__td--sell-usd"></td>
+                  <td class="table__td table__td--sell-coins"></td>
+                  <td class="table__td table__td--sell-total"></td>
+                  <td class="table__td table__td--pl"></td>
+                  <td class="table__td table__td--action"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div> -->
+
         <div class="portfolio__no-records" v-if="!myInvestments.length">
           <p class="portfolio__empty">You have not investments right now, please add some information:</p>
           <button class="btn btn--main" @click="openWindow('investPopup')">Add investment</button>
@@ -308,7 +352,7 @@
               <div class="invest__screen">
                 <h3>Invested</h3>
                 <div class="invest__columns">
-                  <div class="invest__block">
+                  <div class="invest__block invest__block--inv-crypto">
                     <label for="crypto-spent" class="invest__label">Crypto quantity</label>
                     <div class="invest__line">
                       <input type="hidden" v-model="investTemplate.id">

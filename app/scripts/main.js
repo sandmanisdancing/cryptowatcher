@@ -52,6 +52,7 @@ const data = {
   transactionPopup: false,
   signInPopup: false,
   myInvestments: [],
+  myHold: [],
   investTemplate: {
     "id": null,
     "cryptoInvestedAmount": 0,
@@ -70,9 +71,7 @@ const data = {
     user: null,
     isSignedIn: false
   },
-  tableFiltering: {
-    notListed: true
-  },
+  notListed: true,
   searchMarket: ""
 };
 
@@ -162,7 +161,7 @@ const app = new Vue({
         } else {
           try {
             self.fullData = JSON.parse(request.responseText);
-            self.saveToLS('fullData')
+            self.saveToLS('fullData');
 
             self.loadStatus = null;
           } catch (e) {
@@ -244,6 +243,9 @@ const app = new Vue({
 
       this.myInvestments = [];
       this.saveToLS('myInvestments');
+
+      this.myHold = [];
+      this.saveToLS('myHold');
     },
 
     checkIsSignedIn: function () {
@@ -264,20 +266,22 @@ const app = new Vue({
 
     writeUserData: function () {
       firebase.database().ref('users/' + this.authentication.user.uid).set({
-        'myInvestments': JSON.parse(localStorage.getItem('myInvestments'))
+        'myInvestments': JSON.parse(localStorage.getItem('myInvestments')),
+        'myHold': JSON.parse(localStorage.getItem('myHold'))
       });
     },
 
     readUserData: function () {
       this.loadStatus = 'Loading investment data...';
 
-      var investmentsRecord = firebase.database().ref('users/' + this.authentication.user.uid);
-      var self = this;
+      const investmentsRecord = firebase.database().ref('users/' + this.authentication.user.uid);
 
-      investmentsRecord.once('value').then(function(snapshot) {
-        self.myInvestments = snapshot.val().myInvestments;
+      investmentsRecord.once('value').then((snapshot) => {
+        this.myInvestments = snapshot.val().myInvestments;
+        this.saveToLS('myInvestments');
 
-        self.saveToLS('myInvestments');
+        this.myHold = snapshot.val().myHold;
+        this.saveToLS('myHold');
       });
 
       this.loadStatus = null;
@@ -508,6 +512,16 @@ const app = new Vue({
       [...rows].forEach((item) => {
         item.classList.toggle('table__row-active');
       });
+    },
+
+    toggleListed: function () {
+      this.notListed = !this.notListed;
+
+      this.saveToLS('notListed');
+    },
+
+    setTableListing: function () {
+      this.readFromLS("notListed");
     }
   },
 
@@ -568,7 +582,7 @@ const app = new Vue({
       });
 
       // filtering not listed entries
-      if (!this.tableFiltering.notListed) {
+      if (!this.notListed) {
         return portfolio.filter((investment) => {
           if (this.countRate(1, investment.coinsSymbol) !== 0) {
             return investment;
@@ -584,6 +598,7 @@ const app = new Vue({
     this.checkIsSignedIn();
     this.detectPixelRatio();
     this.readFromLS("myInvestments");
+    this.setTableListing();
     this.readFromLS("fullData");
     this.fetchData();
 
