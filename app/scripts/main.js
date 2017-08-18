@@ -77,12 +77,12 @@ const data = {
 
 const app = new Vue({
   el: "#crypto-app",
-  data() {
+  data () {
     return data;
   },
 
   filters: {
-    dateToDays: function (value) {
+    dateToDays (value) {
       if(!value) return "";
       let computed = Math.ceil((Date.parse(value) - Date.now()) / (60*60*24*1000)),
         day = ' day';
@@ -98,20 +98,20 @@ const app = new Vue({
       }
     },
 
-    billions: function (value) {
+    billions (value) {
       value = +value;
       return value.toLocaleString();
     },
 
-    bigNumber: function (value) {
+    bigNumber (value) {
       return (value/1000000000).toFixed(3) + 'B';
     },
 
-    roundToThreeDigits: function (value) {
+    roundToThreeDigits (value) {
       return Math.round((value) * 1000) / 1000;
     },
 
-    tofix2: function (value) {
+    tofix2 (value) {
       if(isNaN(value)) value = 0;
 
       let fixed = parseFloat(value).toFixed(2),
@@ -121,7 +121,7 @@ const app = new Vue({
       return fixed;
     },
 
-    tofixWhole: function (value) {
+    tofixWhole (value) {
       if(!value) value = 0;
 
       let fixed = parseFloat(value).toFixed(2),
@@ -130,7 +130,7 @@ const app = new Vue({
       return fixedInt;
     },
 
-    tofixFraction: function (value) {
+    tofixFraction (value) {
       if(!value) value = 0;
 
       let fixed = parseFloat(value).toFixed(2),
@@ -141,29 +141,28 @@ const app = new Vue({
   },
 
   methods: {
-    fetchData: function () {
+    fetchData () {
       const request = new XMLHttpRequest();
-      var self = this;
 
       request.open('GET', 'https://api.coinmarketcap.com/v1/ticker/', true);
       request.send();
 
-      request.onreadystatechange = function () {
+      request.onreadystatechange = () => {
         if (request.readyState !== 4) {
-          self.loadStatus = "Loading...";
+          this.loadStatus = "Loading...";
 
           return;
         }
 
-        if (this.status != 200) {
-          self.loadStatus = "Error!";
+        if (request.status != 200) {
+          this.loadStatus = "Error!";
           console.log( request.status + ': ' + request.statusText );
         } else {
           try {
-            self.fullData = JSON.parse(request.responseText);
-            self.saveToLS('fullData');
+            this.fullData = JSON.parse(request.responseText);
+            this.saveToLS('fullData');
 
-            self.loadStatus = null;
+            this.loadStatus = null;
           } catch (e) {
             console.log("Wrong response " + e.message);
           }
@@ -171,11 +170,7 @@ const app = new Vue({
       }
     },
 
-    signInFacebook: function () {
-      var provider = new firebase.auth.FacebookAuthProvider();
-    },
-
-    signIn: function (device, providerPassed) {
+    signIn (device, providerPassed) {
       let provider;
 
       if (providerPassed === "facebook") {
@@ -186,14 +181,12 @@ const app = new Vue({
         provider = new firebase.auth.TwitterAuthProvider();
       }
 
-      var self = this;
-
       if(device === 'mobile') {
-        firebase.auth().signInWithRedirect(provider).then(function (result) {
+        firebase.auth().signInWithRedirect(provider).then((result) => {
           // The signed-in user info.
-          var user = result.user;
+          const user = result.user;
 
-          self.authentication.isSignedIn = true;
+          this.authentication.isSignedIn = true;
         }).catch(function (error) {
           // Handle Errors here.
           var errorCode = error.code,
@@ -209,10 +202,10 @@ const app = new Vue({
           + 'credential: ' + credential);
         });
       } else {
-        firebase.auth().signInWithPopup(provider).then(function (result) {
-          var user = result.user;
+        firebase.auth().signInWithPopup(provider).then((result) => {
+          const user = result.user;
 
-          self.authentication.isSignedIn = true;
+          this.authentication.isSignedIn = true;
         }).catch(function (error) {
           var errorCode = error.code,
           errorMessage = error.message,
@@ -229,12 +222,10 @@ const app = new Vue({
       this.signInPopup = false;
     },
 
-    signOut: function () {
-      var self = this;
-
-      firebase.auth().signOut().then(function() {
-        self.authentication.user = null;
-        self.authentication.isSignedIn = false;
+    signOut () {
+      firebase.auth().signOut().then(() => {
+        this.authentication.user = null;
+        this.authentication.isSignedIn = false;
       }).catch(function(error) {
         // An error happened.
 
@@ -248,30 +239,29 @@ const app = new Vue({
       this.saveToLS('myHold');
     },
 
-    checkIsSignedIn: function () {
-      var self = this;
-      self.loadStatus = 'Authentication...';
+    checkIsSignedIn () {
+      this.loadStatus = 'Authentication...';
 
-      firebase.auth().onAuthStateChanged(function(user) {
+      firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-          self.authentication.user = user;
-          self.authentication.isSignedIn = true;
+          this.authentication.user = user;
+          this.authentication.isSignedIn = true;
 
-          self.readUserData();
+          this.readUserData();
         } else {
-          self.authentication.isSignedIn = false;
+          this.authentication.isSignedIn = false;
         }
       });
     },
 
-    writeUserData: function () {
+    writeUserData () {
       firebase.database().ref('users/' + this.authentication.user.uid).set({
         'myInvestments': JSON.parse(localStorage.getItem('myInvestments')),
         'myHold': JSON.parse(localStorage.getItem('myHold'))
       });
     },
 
-    readUserData: function () {
+    readUserData () {
       this.loadStatus = 'Loading investment data...';
 
       const investmentsRecord = firebase.database().ref('users/' + this.authentication.user.uid);
@@ -287,7 +277,7 @@ const app = new Vue({
       this.loadStatus = null;
     },
 
-    createInvestment: function (e) {
+    createInvestment (e) {
       // this method is used both to create and to edit investment entry
 
       // if ID is empty - assign to it current timestamp
@@ -333,7 +323,7 @@ const app = new Vue({
       if(this.authentication.isSignedIn) this.writeUserData();
     },
 
-    createTransaction: function () {
+    createTransaction () {
       this.myInvestments.forEach((item, index) => {
         if(item["id"] === this.investTemplate.id) {
           item["coinsWithdraw"] += this.investTemplate["coinsWithdrawTemp"];
@@ -353,7 +343,7 @@ const app = new Vue({
       if(this.authentication.isSignedIn) this.writeUserData();
     },
 
-    clearInvestTemplate: function (e) {
+    clearInvestTemplate () {
       this.investTemplate["id"] = null,
       this.investTemplate["cryptoInvestedAmount"] = 0,
       this.investTemplate["cryptoInvestedSymbol"] = "Crypto name",
@@ -368,13 +358,15 @@ const app = new Vue({
       this.investTemplate["coinsWithdrawTemp"] = 0
     },
 
-    countRate: function (amount, symbol) {
-      if(amount) {
-        if(this.fullData) {
-          let price = this.fullData.find(findSymbol);
+    countRate (amount, symbol) {
+      if (amount) {
+        if (this.fullData) {
+          let price = this.fullData.filter((item) => {
+            if (item["symbol"] === symbol) return item;
+          });
 
-          if(price) {
-            return amount * price["price_usd"];
+          if (price.length) {
+            return amount * price[0]["price_usd"];
           } else {
             return 0;
           }
@@ -382,52 +374,48 @@ const app = new Vue({
       } else {
         return 0;
       }
+    },
 
-      function findSymbol (item) {
-        if(item["symbol"] === symbol) {
-          return item;
+    show24hChange (symbol) {
+      let change = 0;
+
+      if (this.fullData) {
+        change = this.fullData.filter((item) => {
+          if (item["symbol"] === symbol) return item;
+        });
+
+        if (change.length) {
+          return change[0]["percent_change_24h"];
+        } else {
+          return 0;
         }
       }
     },
 
-    show24hChange: function (symbol) {
-      let change = 0;
-
-      if(this.fullData) {
-        this.fullData.forEach((item) => {
-          if(item["symbol"] === symbol) {
-            if(item["percent_change_24h"]) change = item["percent_change_24h"];
-          }
-        });
-
-        return change;
-      }
-    },
-
-    countSum: function (a, b) {
+    countSum (a, b) {
       if(!a) a = 0;
       if(!b) b = 0;
 
       return a + b;
     },
 
-    saveToLS: function (name) {
+    saveToLS (name) {
       localStorage.setItem(name, JSON.stringify(this[name]));
     },
 
-    readFromLS: function (name) {
+    readFromLS (name) {
       if(localStorage.getItem(name)) {
         this[name] = JSON.parse(localStorage.getItem(name));
       }
     },
 
-    askRemoveToken: function (index) {
+    askRemoveToken (index) {
       this.openWindow('deletePopup');
 
       this.deleteIndex = index;
     },
 
-    removeToken: function (index) {
+    removeToken (index) {
       this.myInvestments.splice(index, 1);
       this.saveToLS("myInvestments");
       this.deletePopup = false;
@@ -436,7 +424,7 @@ const app = new Vue({
       if(this.authentication.isSignedIn) this.writeUserData();
     },
 
-    editToken: function (index) {
+    editToken (index) {
       for(key in this.myInvestments[index]) {
         this.investTemplate[key] = this.myInvestments[index][key];
       }
@@ -444,7 +432,7 @@ const app = new Vue({
       this.openWindow('investPopup');
     },
 
-    makeTransaction: function (index) {
+    makeTransaction (index) {
       for(key in this.myInvestments[index]) {
         this.investTemplate[key] = this.myInvestments[index][key];
       }
@@ -452,7 +440,7 @@ const app = new Vue({
       this.openWindow('transactionPopup');
     },
 
-    closeWindow: function (popup, e) {
+    closeWindow (popup, e) {
       if(e.target.matches('.popup-overlay') || e.target.matches('.popup__close')) {
         this[popup] = false;
 
@@ -460,7 +448,7 @@ const app = new Vue({
       }
     },
 
-    openWindow: function (popup) {
+    openWindow (popup) {
       this[popup] = true;
 
       setTimeout(function () {
@@ -468,7 +456,7 @@ const app = new Vue({
       }, 200);
     },
 
-    showMarketsLink: function (symbol) {
+    showMarketsLink (symbol) {
       let name = this.fullData.filter((item) => {
         if (item["symbol"] == symbol) return item;
       });
@@ -476,17 +464,17 @@ const app = new Vue({
       if(name.length) return 'https://coinmarketcap.com/assets/' + name[0].name.toLowerCase() + '/#markets';
     },
 
-    showCryptoLink: function (id) {
+    showCryptoLink (id) {
       return 'https://coinmarketcap.com/assets/' + id;
     },
 
-    detectPixelRatio: function () {
+    detectPixelRatio () {
       const pixelRatio = window.devicePixelRatio || 1;
 
       this.pixelRatio = pixelRatio;
     },
 
-    showCoinImage: function (symbol, isInvestment) {
+    showCoinImage (symbol, isInvestment) {
       if (this.pixelRatio > 1) {
         size = 32;
       } else {
@@ -504,7 +492,7 @@ const app = new Vue({
       }
     },
 
-    highlightRow: function (index) {
+    highlightRow (index) {
       index++;
 
       let rows = document.querySelectorAll('.table--myinv tbody tr:nth-child(' + index + ')');
@@ -514,13 +502,13 @@ const app = new Vue({
       });
     },
 
-    toggleListed: function () {
+    toggleListed () {
       this.notListed = !this.notListed;
 
       this.saveToLS('notListed');
     },
 
-    setTableListing: function () {
+    setTableListing () {
       this.readFromLS("notListed");
     }
   },
@@ -535,23 +523,20 @@ const app = new Vue({
     },
 
     currencyListSearch () {
-      const self = this;
-
-      if(this.fullData) {
-        return this.fullData.filter(function (node) {
-          return node.name.toLowerCase().indexOf(self.searchMarket.toLowerCase()) === 0;
+      if (this.fullData) {
+        return this.fullData.filter((node) => {
+          return node.name.toLowerCase().indexOf(this.searchMarket.toLowerCase()) === 0;
         });
       }
     },
 
     totalPortfolioValue () {
       let portfolio = this.myInvestments,
-          result,
-          self = this;
+          result;
 
-      if(portfolio.length) {
-        result = portfolio.reduce(function (sum, current) {
-          return sum + self.countRate(current.coinsAmount - current.coinsWithdraw, current.coinsSymbol);
+      if (portfolio.length) {
+        result = portfolio.reduce((sum, current) => {
+          return sum + this.countRate(current.coinsAmount - current.coinsWithdraw, current.coinsSymbol);
         }, 0);
 
         return result;
@@ -594,15 +579,20 @@ const app = new Vue({
     }
   },
 
-  created: function () {
+  created () {
     this.checkIsSignedIn();
     this.detectPixelRatio();
-    this.readFromLS("myInvestments");
     this.setTableListing();
-    this.readFromLS("fullData");
     this.fetchData();
 
     console.log('App created...');
+  },
+
+  mounted () {
+    this.readFromLS("myInvestments");
+    this.readFromLS("fullData");
+
+    console.log('App mounted...');
   },
 });
 
