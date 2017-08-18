@@ -114,9 +114,7 @@ const app = new Vue({
     tofix2 (value) {
       if(isNaN(value)) value = 0;
 
-      let fixed = parseFloat(value).toFixed(2),
-          fixedInt = fixed.slice(0,2),
-          fixedFloat = fixed.slice(2,4);
+      let fixed = parseFloat(value).toFixed(2);
 
       return fixed;
     },
@@ -137,6 +135,20 @@ const app = new Vue({
           fixedInt = fixed.split('.')[1];
 
       return fixedInt;
+    },
+
+    tofixPrice (value) {
+      if(!value) value = 0;
+
+      let fixed = parseFloat(value);
+
+      if (fixed > 1) {
+        fixed = fixed.toFixed(2);
+      } else {
+        fixed = fixed.toFixed(4);
+      }
+
+      return fixed;
     }
   },
 
@@ -183,17 +195,11 @@ const app = new Vue({
 
       if(device === 'mobile') {
         firebase.auth().signInWithRedirect(provider).then((result) => {
-          // The signed-in user info.
-          const user = result.user;
-
           this.authentication.isSignedIn = true;
         }).catch(function (error) {
-          // Handle Errors here.
           var errorCode = error.code,
           errorMessage = error.message,
-          // The email of the user's account used.
           email = error.email,
-          // The firebase.auth.AuthCredential type that was used.
           credential = error.credential;
 
           console.log('errorCode: ' + errorCode + '\n'
@@ -203,8 +209,6 @@ const app = new Vue({
         });
       } else {
         firebase.auth().signInWithPopup(provider).then((result) => {
-          const user = result.user;
-
           this.authentication.isSignedIn = true;
         }).catch(function (error) {
           var errorCode = error.code,
@@ -425,7 +429,7 @@ const app = new Vue({
     },
 
     editToken (index) {
-      for(key in this.myInvestments[index]) {
+      for (key in this.myInvestments[index]) {
         this.investTemplate[key] = this.myInvestments[index][key];
       }
 

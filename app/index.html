@@ -165,8 +165,8 @@
                   </td>
                   <td class="table__td table__td--quantity">{{ investment.quantity | roundToThreeDigits }}</td>
                   <td class="table__td table__td--current-price">
-                    <a target="_blank" rel="noopener" @click.stop title="Link to the list of markets" :href="investment.markets_link" v-if="investment.markets_link">${{ investment.price | tofix2 }}</a>
-                    <span v-else>${{ investment.price | tofix2 }}</span>
+                    <a target="_blank" rel="noopener" @click.stop title="Link to the list of markets" :href="investment.markets_link" v-if="investment.markets_link">${{ investment.price | tofixPrice }}</a>
+                    <span v-else>${{ investment.price | tofixPrice }}</span>
                     <template v-if="investment['24h_change'] !== 0">
                       &nbsp;(<span :class="[investment['is_change_negative'] ? 'table__positive-change' : 'table__negative-change']">{{ investment['24h_change'] }}%</span>)
                     </template>
@@ -213,19 +213,13 @@
                   <td class="table__td table__td--action">
                     <div class="table__action-div">
                       <button class="btn btn--main action-btn" type="button" @click.stop="makeTransaction(index)" title="Sell">
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="18" height="18" viewBox="0 0 45 45" xml:space="preserve">
-                          <path style="transform:translateY(11px)" d="M1.788,16.945c0.388,0.385,0.913,0.601,1.459,0.601l27.493-0.035v3.831c0.003,0.836,0.556,1.586,1.329,1.904	c0.771,0.314,1.658,0.135,2.246-0.459l9.091-9.18c1.062-1.071,1.06-2.801-0.009-3.868l-9.137-9.134	c-0.59-0.591-1.479-0.768-2.25-0.446c-0.77,0.319-1.271,1.074-1.27,1.908L30.74,5.9L3.219,5.937	C2.08,5.94,1.161,6.864,1.163,8.004l0.018,7.483C1.182,16.034,1.401,16.56,1.788,16.945z"/>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline></svg>
                       </button>
                       <button class="btn btn--alt action-btn action-btn--edit" type="button" @click.stop="editToken(index, $event)" title="Edit">
-                        <svg version="1.1" width="18" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" xml:space="preserve">
-                          <path d="M984.1,122.3C946.5,84.5,911.4,42.1,867.8,11c-40-8.3-59.2,34.9-86.7,55.1c46.4,53.9,100.5,101.5,150.4,152.5C954.1,191.7,1007.7,164.1,984.1,122.3z M959.3,325.9c-31.7,31.8-64.5,62.8-95.1,95.8c-0.8,127.5,0.3,255-0.4,382.6c-0.6,47-41.8,88.7-88.8,90.3c-193.4,0.8-387,0.8-580.4,0.1c-52.2-1.4-94-51.4-89.9-102.7c-0.1-184.6-0.1-369.1,0-553.5c-4-51.1,38-100.3,89.6-102.1c128.1-1.7,256.3,0.1,384.3-0.9c33.2-30,63.9-62.9,95.7-94.5c-170.6,0-341-0.9-511.6,0.5c-79.6,1.4-151,71-152.4,151C10.1,407.7,9.5,622.8,10.7,838c0.3,77.5,66.1,144.7,142.4,152h670.2c72.3-12.7,134.3-75.8,135.2-150.9C960.7,668.1,959,496.9,959.3,325.9z M908.2,242.2C858,191.7,807.4,141.5,756.6,91.5C645.4,201.9,534,312,423.4,423c50.1,50.4,100.4,100.6,151.3,150.3C686,463.1,797.2,352.6,908.2,242.2z M341.2,654.6c68.1-18.5,104.4-30.2,172.5-48.5c18.2-5.8,30.3-9.3,39.7-13c-48.2-45.9-103.6-102.5-151.7-148.8C381.4,514.4,361.4,584.5,341.2,654.6z"></path>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg>
                       </button>
                       <button class="btn btn--warning action-btn action-btn--delete" type="button" @click.stop="askRemoveToken(index)" title="Delete">
-                        <svg version="1.1" width="18" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" xml:space="preserve">
-                          <g><path d="M815.3,80.3h-190V10H372.6v70.3h-190v69.3h632.7V80.3z"></path><path d="M816.9,203.6H120v101.9h63.3V990H817V305.5h63V203.6L816.9,203.6L816.9,203.6z M365.6,890.8h-85.5V304.5h85.5V890.8z M542.5,890.8H457V304.5h85.5V890.8z M722.3,890.8h-85.5V304.5h85.5V890.8z"></path></g>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
                       </button>
                     </div>
                   </td>
@@ -317,7 +311,7 @@
                   </span>
                 </td>
                 <td class="table__td">
-                  ${{ currencyListSearch[n-1].price_usd | tofix2 }}&nbsp;(<span :class="[currencyListSearch[n-1].percent_change_24h >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ currencyListSearch[n-1].percent_change_24h }}%</span>)
+                  ${{ currencyListSearch[n-1].price_usd | tofixPrice }}&nbsp;(<span :class="[currencyListSearch[n-1].percent_change_24h >= 0 ? 'table__positive-change' : 'table__negative-change']">{{ currencyListSearch[n-1].percent_change_24h }}%</span>)
                 </td>
                 <td class="table__td">
                   {{ currencyListSearch[n-1].price_btc }}

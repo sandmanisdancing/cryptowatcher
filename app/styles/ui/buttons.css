@@ -98,18 +98,6 @@
   box-shadow: -3px 3px 3px var(--warningdark-color);
 }
 
-.action-btn svg {
-  display: block;
-  fill: #fff;
-}
-
-.action-btn {
-  border: none;
-  padding: 5px 6px;
-  border-radius: 3px;
-  margin: 2px auto;
-}
-
 .action-btn {
   position: absolute;
   overflow: hidden;
@@ -119,6 +107,10 @@
   margin: -1px;
   padding: 0;
   border: 0;
+}
+
+.action-btn svg {
+  display: block;
 }
 
 .action-btn:hover {
