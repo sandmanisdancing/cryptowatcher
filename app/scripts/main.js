@@ -397,7 +397,7 @@ const app = new Vue({
       this.investTemplate.url = null,
       this.investTemplate.usdWithdraw = 0,
       this.investTemplate.coinsWithdraw = 0,
-      this.investTemplate.type = "type-ico",
+      this.investTemplate.type = null,
       this.transaction.usdWithdrawTemp = 0,
       this.transaction.coinsWithdrawTemp = 0,
       this.transaction.cryptoSpentTemp = 0,
@@ -609,6 +609,18 @@ const app = new Vue({
           return node.name.toLowerCase().indexOf(this.searchMarket.toLowerCase()) === 0;
         });
       }
+    },
+
+    isIcoExist () {
+      return this.myInvestments.some((item) => {
+        return item.type === 'type-ico';
+      });
+    },
+
+    isHoldExist () {
+      return this.myInvestments.some((item) => {
+        return item.type === 'type-hold';
+      });
     },
 
     totalPortfolioValue () {

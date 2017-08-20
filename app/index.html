@@ -88,15 +88,15 @@
           Total portfolio value: ${{ totalPortfolioValue | tofix2 }}
         </div>
 
-        <h2 class="portfolio__header" v-if="myInvestments.length">ICOs</h2>
-        <div class="portfolio__filters" v-if="myInvestments.length">
+        <h2 class="portfolio__header" v-if="isIcoExist">ICOs</h2>
+        <div class="portfolio__filters" v-if="isIcoExist">
           <button role="button" class="btn btn--alt" @click="toggleListed">
             <span v-if="notListed">Hide not listed</span>
             <span v-else>Show all</span>
           </button>
         </div>
 
-        <div class="portfolio__myinv" v-if="myInvestments.length">
+        <div class="portfolio__myinv" v-if="isIcoExist">
           <table class="table table--myinv table--symbol">
             <thead>
               <th class="table__th table__th--symbol">Symbol</th>
@@ -229,8 +229,8 @@
           </div>
         </div>
 
-        <h2 class="portfolio__header">Hold</h2>
-        <div class="portfolio__myinv">
+        <h2 class="portfolio__header" v-if="isHoldExist">Hold</h2>
+        <div class="portfolio__myinv" v-if="isHoldExist">
           <table class="table table--myHold table--symbol">
             <thead>
               <th class="table__th table__th--symbol">Symbol</th>
