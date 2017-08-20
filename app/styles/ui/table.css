@@ -39,26 +39,27 @@
 }
 
 .table__td--action {
-  text-align: center;
-  width: 116px;
   position: relative;
 }
 
 .table__action-div {
   display: flex;
   flex-wrap: wrap;
-  min-height: 32px;
+  min-height: 100%;
 
   position: absolute;
-  right: 8px;
+  right: 11px;
   top: 0;
-  padding: 5px;
+  padding: 5px 0;
   background-color: inherit;
 }
 
-.table tr.table__row-active .table__action-div {
-  width: 108px;
-  height: 100%;
+.table__row-active .table__action-div {
+  width: 102px;
+}
+
+.table__row-active .table__action-div--hold {
+  width: 136px;
 }
 
 .table__td--current-price {
@@ -113,6 +114,11 @@
 .table__symbol-name {
   vertical-align: middle;
   margin-left: 8px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
+  white-space: nowrap;
 }
 
 .table--w100 {
@@ -120,7 +126,7 @@
 }
 
 .table--marketinfo .table__th {
-  height: auto;
+  height: 80px;
 }
 
 .table__td--desktop,
@@ -129,9 +135,14 @@
 }
 
 .table__th--rank {
-  width: 44px;
+  width: 35px;
+  text-align: center;
 }
 
 .table__td--rank {
   text-align: center;
+}
+
+.table--marketinfo.table--symbol {
+  width: 190px;
 }

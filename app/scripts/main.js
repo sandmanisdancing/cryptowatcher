@@ -46,13 +46,8 @@ const database = firebase.database();
 const data = {
   fullData: [],
   loadStatus: null,
-  investPopup: false,
-  deletePopup: false,
   deleteIndex: null,
-  transactionPopup: false,
-  signInPopup: false,
   myInvestments: [],
-  myHold: [],
   investTemplate: {
     "id": null,
     "cryptoInvestedAmount": 0,
@@ -64,16 +59,46 @@ const data = {
     "url": null,
     "usdWithdraw": 0,
     "coinsWithdraw": 0,
+    "type": null
+  },
+  transaction: {
     "usdWithdrawTemp": 0,
-    "coinsWithdrawTemp": 0
+    "coinsWithdrawTemp": 0,
+    "coinsBuyTemp": 0,
+    "usdSpentTemp": 0,
+    "cryptoSpentTemp": 0,
   },
   authentication: {
     user: null,
     isSignedIn: false
   },
+  popup: {
+    investPopup: false,
+    deletePopup: false,
+    signInPopup: false,
+    transactionPopup: false,
+    buy: false
+  },
   notListed: true,
   searchMarket: ""
 };
+
+Vue.component('page-footer', {
+  template: '<footer class="pagefooter">\
+    <div class="pagefooter__copy">\
+      <p>&copy; 2017 — you are able to use this app in the way you need.</p>\
+      <p>Built with <a href="http://coinmarketcap.com/" target="_blank" rel="noopener">Coinmarketcap API</a> and <a href="http://vuejs.org/" target="_blank" rel="noopener">Vue.js</a>.</p>\
+    </div>\
+    <div class="pagefooter__donate">\
+      <p>Donations are always appreciated.</p>\
+      <p>ETH <strong>0x9e41B796ac20320b462F9aCf896717c04302672C</strong></p>\
+      <p>BTC <strong>1NbwV5pqAJKaipM1pTQpdbisB3rwtKq6MF</strong></p>\
+    </div>\
+  </footer>',
+  data () {
+    return data;
+  }
+});
 
 const app = new Vue({
   el: "#crypto-app",
@@ -140,11 +165,11 @@ const app = new Vue({
     tofixPrice (value) {
       if(!value) value = 0;
 
-      let fixed = parseFloat(value);
+      let fixed = parseFloat (value);
 
       if (fixed > 1) {
         fixed = fixed.toFixed(2);
-      } else {
+      } else if (fixed < 1 && fixed > 0) {
         fixed = fixed.toFixed(4);
       }
 
@@ -223,7 +248,7 @@ const app = new Vue({
         });
       }
 
-      this.signInPopup = false;
+      this.popup.signInPopup = false;
     },
 
     signOut () {
@@ -238,9 +263,6 @@ const app = new Vue({
 
       this.myInvestments = [];
       this.saveToLS('myInvestments');
-
-      this.myHold = [];
-      this.saveToLS('myHold');
     },
 
     checkIsSignedIn () {
@@ -260,8 +282,7 @@ const app = new Vue({
 
     writeUserData () {
       firebase.database().ref('users/' + this.authentication.user.uid).set({
-        'myInvestments': JSON.parse(localStorage.getItem('myInvestments')),
-        'myHold': JSON.parse(localStorage.getItem('myHold'))
+        'myInvestments': JSON.parse(localStorage.getItem('myInvestments'))
       });
     },
 
@@ -273,9 +294,6 @@ const app = new Vue({
       investmentsRecord.once('value').then((snapshot) => {
         this.myInvestments = snapshot.val().myInvestments;
         this.saveToLS('myInvestments');
-
-        this.myHold = snapshot.val().myHold;
-        this.saveToLS('myHold');
       });
 
       this.loadStatus = null;
@@ -298,13 +316,13 @@ const app = new Vue({
         // this is for editing existing element,
         // there is need to check if is it already in myInvestments
         let elementExists = this.myInvestments.some((item) => {
-          return item["id"] === this.investTemplate.id;
+          return item.id === this.investTemplate.id;
         });
 
         // and if it is - write new data into investment entry
-        if(elementExists) {
+        if (elementExists) {
           this.myInvestments.forEach((item, index) => {
-            if(item["id"] === this.investTemplate.id) {
+            if(item.id === this.investTemplate.id) {
               Object.assign(item, this.investTemplate);
             }
           });
@@ -319,19 +337,19 @@ const app = new Vue({
       this.saveToLS("myInvestments");
       // and read it from LS
       this.readFromLS("myInvestments");
-      // clear form
-      this.clearInvestTemplate();
       // close dialog
-      this.investPopup = false;
+      this.popup.investPopup = false;
+      // clear invest template
+      this.clearInvestTemplate();
       // if signed in, write whole investment table to DB
-      if(this.authentication.isSignedIn) this.writeUserData();
+      if (this.authentication.isSignedIn) this.writeUserData();
     },
 
     createTransaction () {
       this.myInvestments.forEach((item, index) => {
-        if(item["id"] === this.investTemplate.id) {
-          item["coinsWithdraw"] += this.investTemplate["coinsWithdrawTemp"];
-          item["usdWithdraw"] += this.investTemplate["usdWithdrawTemp"];
+        if (item.id === this.investTemplate.id) {
+          item.coinsWithdraw += this.transaction.coinsWithdrawTemp;
+          item.usdWithdraw += this.transaction.usdWithdrawTemp;
         }
       });
 
@@ -342,32 +360,55 @@ const app = new Vue({
       // clear form
       this.clearInvestTemplate();
       // close dialog
-      this.transactionPopup = false;
+      this.popup.transactionPopup = false;
+      // if signed in, write whole investment table to DB
+      if(this.authentication.isSignedIn) this.writeUserData();
+    },
+
+    createPurchase () {
+      this.myInvestments.forEach((item, index) => {
+        if(item.id === this.investTemplate.id) {
+          item.cryptoInvestedAmount += this.transaction.cryptoSpentTemp;
+          item.coinsAmount += this.transaction.coinsBuyTemp;
+          item.usdInvested += this.transaction.usdSpentTemp;
+        }
+      });
+
+      // then push to localStorage
+      this.saveToLS("myInvestments");
+      // and read it from LS
+      this.readFromLS("myInvestments");
+      // clear form
+      this.clearInvestTemplate();
+      // close dialog
+      this.popup.buy = false;
       // if signed in, write whole investment table to DB
       if(this.authentication.isSignedIn) this.writeUserData();
     },
 
     clearInvestTemplate () {
-      this.investTemplate["id"] = null,
-      this.investTemplate["cryptoInvestedAmount"] = 0,
-      this.investTemplate["cryptoInvestedSymbol"] = "Crypto name",
-      this.investTemplate["usdInvested"] = null,
-      this.investTemplate["coinsAmount"] = 0,
-      this.investTemplate["coinsSymbol"] = null,
-      this.investTemplate["finishDate"] = null,
-      this.investTemplate["url"] = null,
-      this.investTemplate["usdWithdraw"] = 0,
-      this.investTemplate["coinsWithdraw"] = 0,
-      this.investTemplate["usdWithdrawTemp"] = 0,
-      this.investTemplate["coinsWithdrawTemp"] = 0
+      this.investTemplate.id = null,
+      this.investTemplate.cryptoInvestedAmount = 0,
+      this.investTemplate.cryptoInvestedSymbol = "Crypto name",
+      this.investTemplate.usdInvested = null,
+      this.investTemplate.coinsAmount = 0,
+      this.investTemplate.coinsSymbol = null,
+      this.investTemplate.finishDate = null,
+      this.investTemplate.url = null,
+      this.investTemplate.usdWithdraw = 0,
+      this.investTemplate.coinsWithdraw = 0,
+      this.investTemplate.type = "type-ico",
+      this.transaction.usdWithdrawTemp = 0,
+      this.transaction.coinsWithdrawTemp = 0,
+      this.transaction.cryptoSpentTemp = 0,
+      this.transaction.coinsBuyTemp = 0,
+      this.transaction.usdSpentTemp = 0
     },
 
     countRate (amount, symbol) {
       if (amount) {
         if (this.fullData) {
-          let price = this.fullData.filter((item) => {
-            if (item["symbol"] === symbol) return item;
-          });
+          let price = this.fullData.filter(item => item.symbol === symbol);
 
           if (price.length) {
             return amount * price[0]["price_usd"];
@@ -384,9 +425,7 @@ const app = new Vue({
       let change = 0;
 
       if (this.fullData) {
-        change = this.fullData.filter((item) => {
-          if (item["symbol"] === symbol) return item;
-        });
+        change = this.fullData.filter(item => item["symbol"] === symbol);
 
         if (change.length) {
           return change[0]["percent_change_24h"];
@@ -419,41 +458,64 @@ const app = new Vue({
       this.deleteIndex = index;
     },
 
-    removeToken (index) {
-      this.myInvestments.splice(index, 1);
+    removeToken (id) {
+      this.myInvestments.forEach((item, index) => {
+        if (item.id === id) this.myInvestments.splice(index, 1);
+      });
+
       this.saveToLS("myInvestments");
-      this.deletePopup = false;
+      this.popup.deletePopup = false;
       this.deleteIndex = null;
       // if signed in, write whole investment table to DB
       if(this.authentication.isSignedIn) this.writeUserData();
     },
 
-    editToken (index) {
-      for (key in this.myInvestments[index]) {
-        this.investTemplate[key] = this.myInvestments[index][key];
+    editToken (index, type) {
+      if (type === 'ico') {
+        for (key in this.investTemplate) {
+          this.investTemplate[key] = this.computedInvestments[index][key];
+        }
+      } else if (type === 'hold') {
+        for (key in this.investTemplate) {
+          this.investTemplate[key] = this.computedHold[index][key];
+        }
       }
 
       this.openWindow('investPopup');
     },
 
-    makeTransaction (index) {
-      for(key in this.myInvestments[index]) {
-        this.investTemplate[key] = this.myInvestments[index][key];
+    makeTransaction (index, type) {
+      if (type === 'ico') {
+        for (key in this.investTemplate) {
+          this.investTemplate[key] = this.computedInvestments[index][key];
+        }
+      } else if (type === 'hold') {
+        for (key in this.computedHold[index]) {
+          this.investTemplate[key] = this.computedHold[index][key];
+        }
       }
 
       this.openWindow('transactionPopup');
     },
 
+    buy (index, type) {
+      for (key in this.investTemplate) {
+        this.investTemplate[key] = this.computedHold[index][key];
+      }
+
+      this.openWindow('buy');
+    },
+
     closeWindow (popup, e) {
       if(e.target.matches('.popup-overlay') || e.target.matches('.popup__close')) {
-        this[popup] = false;
+        this.popup[popup] = false;
 
         this.clearInvestTemplate();
       }
     },
 
     openWindow (popup) {
-      this[popup] = true;
+      this.popup[popup] = true;
 
       setTimeout(function () {
         document.querySelector('.popup-overlay').focus();
@@ -461,9 +523,7 @@ const app = new Vue({
     },
 
     showMarketsLink (symbol) {
-      let name = this.fullData.filter((item) => {
-        if (item["symbol"] == symbol) return item;
-      });
+      let name = this.fullData.filter(item => item["symbol"] === symbol);
 
       if(name.length) return 'https://coinmarketcap.com/assets/' + name[0].name.toLowerCase() + '/#markets';
     },
@@ -496,14 +556,19 @@ const app = new Vue({
       }
     },
 
-    highlightRow (index) {
+    highlightRow (index, type) {
       index++;
+      let selector;
 
-      let rows = document.querySelectorAll('.table--myinv tbody tr:nth-child(' + index + ')');
+      if (type === 'icos') {
+        selector = '.table--myinv';
+      } else if (type === 'hold') {
+        selector = '.table--myHold';
+      }
 
-      [...rows].forEach((item) => {
-        item.classList.toggle('table__row-active');
-      });
+      let rows = document.querySelectorAll(selector + ' tbody tr:nth-child(' + index + ')');
+
+      [...rows].forEach(item => item.classList.toggle('table__row-active'));
     },
 
     toggleListed () {
@@ -519,11 +584,23 @@ const app = new Vue({
 
   computed: {
     coinsSold () {
-      return +this.investTemplate.coinsWithdraw + +this.investTemplate.coinsWithdrawTemp;
+      return +this.investTemplate.coinsWithdraw + +this.transaction.coinsWithdrawTemp;
     },
 
     usdGot () {
-      return +this.investTemplate.usdWithdraw + +this.investTemplate.usdWithdrawTemp;
+      return +this.investTemplate.usdWithdraw + +this.transaction.usdWithdrawTemp;
+    },
+
+    coinsBought () {
+      return +this.investTemplate.coinsAmount + +this.transaction.coinsBuyTemp;
+    },
+
+    usdSpent () {
+      return +this.investTemplate.usdInvested + +this.transaction.usdSpentTemp;
+    },
+
+    cryptoSpent () {
+      return +this.investTemplate.cryptoInvestedAmount + +this.transaction.cryptoSpentTemp;
     },
 
     currencyListSearch () {
@@ -547,28 +624,44 @@ const app = new Vue({
       }
     },
 
-    computedInvestments () {
-      let portfolio = this.myInvestments;
+    computedData () {
+      let portfolio = JSON.parse(localStorage.getItem('myInvestments')),
+      o = this.myInvestments;
 
       portfolio.forEach((item) => {
-        item["icon"] = this.showCoinImage(item.coinsSymbol);
-        item["current_value"] = this.countRate(item.cryptoInvestedAmount, item.cryptoInvestedSymbol);
-        item["quantity"] = item.coinsAmount - item.coinsWithdraw;
-        item["markets_link"] = this.showMarketsLink(item.coinsSymbol);
-        item["price"] = this.countRate(1, item.coinsSymbol);
+        item.icon = this.showCoinImage(item.coinsSymbol);
+        item.current_value = this.countRate(item.cryptoInvestedAmount, item.cryptoInvestedSymbol);
+        item.quantity = item.coinsAmount - item.coinsWithdraw;
+        item.markets_link = this.showMarketsLink(item.coinsSymbol);
+        item.price = this.countRate(1, item.coinsSymbol);
         item["24h_change"] = this.show24hChange(item.coinsSymbol);
 
         if (item["24h_change"] >= 0) {
-          item["is_change_negative"] = true;
+          item.is_change_negative = true;
         } else {
-          item["is_change_negative"] = false;
+          item.is_change_negative = false;
         }
 
-        item["current_pl"] = Math.abs((this.countRate(1, item.coinsSymbol) - item.usdInvested/item.coinsAmount) * (item.coinsAmount - item.coinsWithdraw));
-        item["total"] = this.countRate(item.coinsAmount - item.coinsWithdraw, item.coinsSymbol)
-        item["sold_total"] = item.usdWithdraw + this.countRate(item.coinsAmount - item.coinsWithdraw, item.coinsSymbol);
-        item["sold_pl"] = Math.abs(((item.usdWithdraw/item.coinsWithdraw) - (item.usdInvested/item.coinsAmount)) * item.coinsWithdraw);
+        let pl = (this.countRate(1, item.coinsSymbol) - item.usdInvested/item.coinsAmount) * (item.coinsAmount - item.coinsWithdraw);
+
+        if (pl < 0) {
+          item.is_profit = true;
+        } else {
+          item.is_profit = false;
+        }
+
+        item.current_pl = Math.abs(pl);
+        item.total = this.countRate(item.coinsAmount - item.coinsWithdraw, item.coinsSymbol)
+        item.sold_total = item.usdWithdraw + this.countRate(item.coinsAmount - item.coinsWithdraw, item.coinsSymbol);
+        item.sold_pl = Math.abs(((item.usdWithdraw / item.coinsWithdraw) - (item.usdInvested/item.coinsAmount)) * item.coinsWithdraw);
+        item.average_price = item.usdInvested / item.quantity;
       });
+
+      return portfolio;
+    },
+
+    computedInvestments () {
+      const portfolio = this.computedData.filter(item => item['type'] === 'type-ico');
 
       // filtering not listed entries
       if (!this.notListed) {
@@ -578,6 +671,12 @@ const app = new Vue({
           }
         });
       }
+
+      return portfolio;
+    },
+
+    computedHold () {
+      const portfolio = this.computedData.filter(item => item['type'] === 'type-hold');
 
       return portfolio;
     }

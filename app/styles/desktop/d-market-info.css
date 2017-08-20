@@ -1,8 +1,13 @@
 .market-info {
   margin: 2em;
+  margin-top: 0;
 }
 
 .market-info__search-field {
   max-width: 300px;
   width: 300px;
+}
+
+.market-info__table-holder {
+  flex-grow: 1;
 }

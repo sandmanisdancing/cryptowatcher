@@ -1,9 +1,12 @@
 .market-info {
   min-height: 475px;
-  flex-grow: 1;
   margin-top: 2em;
   max-width: 100%;
   overflow: auto;
+}
+
+.market-info__holder {
+  display: flex;
 }
 
 .market-info__search {

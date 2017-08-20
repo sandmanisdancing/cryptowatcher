@@ -12,6 +12,8 @@
 .portfolio__header {
   margin-left: 10px;
   margin-right: 10px;
+  margin-top: 2.5em;
+  margin-bottom: .5em;
 }
 
 .portfolio__filters {

@@ -12,8 +12,8 @@
   border-radius: 5px;
   box-shadow: 2px 0 4px rgba(0,0,0,.1), -2px 0 4px rgba(0,0,0,.1);
   position: absolute;
-  width: 640px;
-  height: 565px;
+  width: 618px;
+  height: 465px;
   max-height: 100%;
   max-width: 100%;
   left: 0;
@@ -103,4 +103,8 @@
 
 .popup--sign-in .popup__inner {
   display: block;
+}
+
+.popup--buy {
+  width: 618px;
 }

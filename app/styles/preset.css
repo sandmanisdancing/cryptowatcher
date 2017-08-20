@@ -1,3 +1,27 @@
+@font-face {
+  font-family: 'Fira Sans Condensed';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Fira Sans Condensed Regular'),
+       local('FiraSansCondensed-Regular'),
+       url(https://fonts.gstatic.com/s/firasanscondensed/v1/HQGj1o4-qj8agzakWWMQw3beBvOnr03nAdLtAYthXTk.woff2) format('woff2'),
+       url(https://fonts.gstatic.com/s/firasanscondensed/v1/HQGj1o4-qj8agzakWWMQwz-GTvntjrDzHCVWP3JLxew.woff) format('woff');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Fira Sans Condensed';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Fira Sans Condensed Medium'),
+       local('FiraSansCondensed-Medium'),
+       url(https://fonts.gstatic.com/s/firasanscondensed/v1/k1srRZ14gKpu4XGd0R993Aqucz1E_8CNctQpbMaP2yE.woff2) format('woff2'),
+       url(https://fonts.gstatic.com/s/firasanscondensed/v1/k1srRZ14gKpu4XGd0R993GtQbJMUHno6E__xnSC8Luc.woff) format('woff');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+
 :root {
   --text-color: #3b4952;
 
@@ -10,10 +34,12 @@
   --warning-color: #cd0000;
   --warningdark-color: #7b0000;
 
+  --link-color: #4079ea;
+  --linkdark-color: #003294;
+
   --bg-color: #d1d7db;
   --bglight-color: #f7f8fb;
-  --link-color: #4079ea;
-  --font-name: 'Fira Sans Condensed';
+  --font-name: 'Fira Sans Condensed', sans-serif;
 }
 
 *,

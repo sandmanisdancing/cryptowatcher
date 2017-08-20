@@ -2,80 +2,61 @@
 @import url(ui/table.css);
 @import url(ui/popup.css);
 
-/*.checkbox,
-.checkbox-s {
+.radio {
   position: relative;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-.checkbox__label {
-  width: 45px;
-  height: 23px;
-  border: 1px solid var(--bg-color);
-  display: block;
-  border-radius: 20px;
-  transition: all .2s;
+.radio + .radio {
+  margin-left: 25px;
 }
 
-.checkbox__label:after {
+.radio__input {
   position: absolute;
-  content: ' ';
-  width: 19px;
-  height: 19px;
-  border-radius: 10px;
-  background-color: var(--bg-color);
-  top: 2px;
-  left: 2px;
-  transition: all .2s;
-}
-
-.checkbox__input,
-.checkbox-s__input {
-  position: absolute;
-  left: -9999px;
   opacity: 0;
 }
 
-.checkbox__input:checked + .checkbox__label {
-  border-color: var(--main-color);
-  background-color: var(--main-color);
+.radio__label {
+  position: relative;
+  padding-left: 25px;
+  overflow: hidden;
+  display: inline-block;
 }
 
-.checkbox__input:checked + .checkbox__label:after {
-  -webkit-transform: translate(22px, 0);
-  transform: translate(22px, 0);
-  background-color: #fff;
-}
-
-.checkbox-s__label {
+.radio__label:before {
+  position: absolute;
+  content: ' ';
+  left: 0;
+  top: 0;
   width: 22px;
   height: 22px;
   border: 1px solid var(--bg-color);
-  position: relative;
   display: block;
-  border-radius: 3px;
+  border-radius: 15px;
 }
 
-.checkbox-s__input:focus + .checkbox-s__label {
-  box-shadow: 0 0 5px var(--main-color);
-}
-
-.checkbox-s__input:checked + .checkbox-s__label:after {
+.radio__label:after {
   position: absolute;
   content: ' ';
-  left: 3px;
-  top: 4px;
-  width: 17px;
-  height: 15px;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="15" height="12" viewBox="0 0 30 24" ><polyline points="1,14 9,22 28,1" fill="none" stroke-linecap="round" stroke-width="3" stroke="#229fff"/></svg>');
-  background-repeat: no-repeat;
+  left: 5px;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 15px;
+  transform: translateX(-20px);
+  transition: transform .2s;
+  background-color: var(--main-color);
 }
 
-.sect-header {
-  font-size: 24px;
-	font-weight: bold;
-	text-align: center;
-	margin: 0 auto .7em;
-}*/
+.radio__input:focus + .radio__label:before {
+  border-color: var(--main-color);
+}
+
+.radio__input:checked + .radio__label:after {
+  transform: translateX(0);
+}
+
 
 /*.ui-ol {
 	counter-reset: custom-ol;
@@ -144,6 +125,7 @@ strong, b, h1, h2, h3 {
   border-radius: 0 !important;
   border: 1px solid var(--bg-color);
   background-color: #fff;
+  width: 100%;
   max-width: 100%;
   min-width: 130px;
 }
