@@ -1,3 +1,7 @@
+[v-cloak] .popup-overlay {
+  display: none;
+}
+
 .popup-overlay {
   position: fixed;
   top: 0;

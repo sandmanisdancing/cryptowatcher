@@ -100,7 +100,8 @@ gulp.task('styles', () => {
 
   return gulp.src([
     'app/styles/main.css',
-    'app/styles/desktop.css'
+    'app/styles/desktop.css',
+    'app/styles/atf.css'
   ])
     .pipe($.postcss(plugins))
     .on('error', handleError)
@@ -117,17 +118,11 @@ gulp.task('critical', () => {
     .pipe(critical({
       base: 'dist/',
       src: 'index.html',
-      css: ['dist/styles/main.min.css'],
+      css: ['dist/styles/main.css'],
       dest: 'styles/critical.css',
       dimensions: [{
-        width: 320,
-        height: 480
-      },{
         width: 768,
         height: 1024
-      },{
-        width: 1366,
-        height: 960
       }],
       minify: true,
       ignore: ['@font-face']

@@ -39,6 +39,7 @@
 
   --bg-color: #d1d7db;
   --bglight-color: #f7f8fb;
+  
   --font-name: 'Fira Sans Condensed', sans-serif;
 }
 
@@ -46,10 +47,6 @@
 *:before,
 *:after {
 	box-sizing: border-box;
-}
-
-body, html {
-  background-color: var(--bglight-color);
 }
 
 body {
@@ -70,6 +67,7 @@ body {
 html, body {
 	height: 100%;
 	color: var(--text-color);
+  background-color: var(--bglight-color);
   margin: 0;
 }
 
