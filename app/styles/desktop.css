@@ -3,40 +3,12 @@
 @import url(desktop/d-portfolio.css);
 @import url(desktop/d-market-info.css);
 
-
-:root {
-  --text-color: #3b4952;
-
-  --main-color: #1b9c22;
-  --maindark-color: #06520b;
-
-  --secondary-color: #a008b7;
-  --secondarydark-color: #5d046b;
-
-  --warning-color: #cd0000;
-  --warningdark-color: #7b0000;
-
-  --bg-color: #d1d7db;
-  --bglight-color: #f7f8fb;
-  --link-color: #4079ea;
-}
-
 #crypto-app {
   max-width: 1350px;
   margin: auto;
-  background-color: #fff;
-}
-
-body, html {
-  background-color: var(--bglight-color);
-}
-
-.center {
-  max-width: 1085px;
-  padding: 0 40px;
-  margin: 0 auto;
 }
 
 .pagefooter {
   padding: 1em;
+  font-size: 14px;
 }

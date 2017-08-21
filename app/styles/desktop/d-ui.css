@@ -6,10 +6,6 @@
   padding: 5px 6px;
 }
 
-.pagefooter {
-  font-size: 14px;
-}
-
 .no-touchevents .table tr:hover .table__td {
   background-color: #e5e6ea;
 }
