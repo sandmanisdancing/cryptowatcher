@@ -1,3 +1,9 @@
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 :root {
   --text-color: #3b4952;
 
@@ -69,15 +75,29 @@ main {
 
 #crypto-app[v-cloak] .load-status,
 #crypto-app[v-cloak] .portfolio__total,
-#crypto-app[v-cloak] .pageheader__user {
+#crypto-app[v-cloak] .pageheader__user,
+#crypto-app[v-cloak] .portfolio * {
   opacity: 0;
 }
 
 #crypto-app[v-cloak] .pageheader__user + .pageheader__user,
 #crypto-app[v-cloak] .portfolio__filters button span + span,
-#crypto-app[v-cloak] #sign-in-btn,
+#crypto-app[v-cloak] #sign-out-btn,
 #crypto-app[v-cloak] .table tbody {
   display: none;
+}
+
+#crypto-app[v-cloak] .portfolio:after {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  content: ' ';
+  left: 50%;
+  margin-left: -30px;
+  top: 140px;
+  animation: spin linear 1s infinite;
+  transform-origin: 50% 60%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 5 60 55"><path d="M 2,56 L 30,10 56,56 z" fill="none" srtoke-linecap="round" stroke="#000" stroke-width="4"></path></svg>');
 }
 
 .pageheader {
