@@ -149,7 +149,8 @@ var scriptsArrayProd = [
 // Copy
 gulp.task('copyScripts', () => {
     gulp.src([
-      './app/scripts/fontfaceobserver.js'
+      './app/scripts/fontfaceobserver.js',
+      './app/scripts/loadcss.full.min.js'
     ])
       .pipe($.size({title: 'copyScripts'}))
       .pipe(gulp.dest('dist/scripts'))
