@@ -72,6 +72,7 @@ const data = {
     user: null,
     isSignedIn: false
   },
+  activeElement: null,
   popup: {
     investPopup: false,
     deletePopup: false,
@@ -218,7 +219,7 @@ const app = new Vue({
         provider = new firebase.auth.TwitterAuthProvider();
       }
 
-      if(device === 'mobile') {
+      if (device === 'mobile') {
         firebase.auth().signInWithRedirect(provider).then((result) => {
           this.authentication.isSignedIn = true;
         }).catch(function (error) {
@@ -248,7 +249,7 @@ const app = new Vue({
         });
       }
 
-      this.popup.signInPopup = false;
+      this.closeWindow();
     },
 
     signOut () {
@@ -338,7 +339,7 @@ const app = new Vue({
       // and read it from LS
       this.readFromLS("myInvestments");
       // close dialog
-      this.popup.investPopup = false;
+      this.closeWindow();
       // clear invest template
       this.clearInvestTemplate();
       // if signed in, write whole investment table to DB
@@ -360,7 +361,7 @@ const app = new Vue({
       // clear form
       this.clearInvestTemplate();
       // close dialog
-      this.popup.transactionPopup = false;
+      this.closeWindow();
       // if signed in, write whole investment table to DB
       if(this.authentication.isSignedIn) this.writeUserData();
     },
@@ -381,7 +382,7 @@ const app = new Vue({
       // clear form
       this.clearInvestTemplate();
       // close dialog
-      this.popup.buy = false;
+      this.closeWindow();
       // if signed in, write whole investment table to DB
       if(this.authentication.isSignedIn) this.writeUserData();
     },
@@ -425,7 +426,7 @@ const app = new Vue({
       let change = 0;
 
       if (this.fullData) {
-        change = this.fullData.filter(item => item["symbol"] === symbol);
+        change = this.fullData.filter(item => item.symbol === symbol);
 
         if (change.length) {
           return change[0]["percent_change_24h"];
@@ -464,7 +465,7 @@ const app = new Vue({
       });
 
       this.saveToLS("myInvestments");
-      this.popup.deletePopup = false;
+      this.closeWindow();
       this.deleteIndex = null;
       // if signed in, write whole investment table to DB
       if(this.authentication.isSignedIn) this.writeUserData();
@@ -484,7 +485,7 @@ const app = new Vue({
       this.openWindow('investPopup');
     },
 
-    makeTransaction (index, type) {
+    startTransaction (index, type) {
       if (type === 'ico') {
         for (key in this.investTemplate) {
           this.investTemplate[key] = this.computedInvestments[index][key];
@@ -498,7 +499,7 @@ const app = new Vue({
       this.openWindow('transactionPopup');
     },
 
-    buy (index, type) {
+    startBuy (index, type) {
       for (key in this.investTemplate) {
         this.investTemplate[key] = this.computedHold[index][key];
       }
@@ -506,20 +507,39 @@ const app = new Vue({
       this.openWindow('buy');
     },
 
-    closeWindow (popup, e) {
-      if(e.target.matches('.popup-overlay') || e.target.matches('.popup__close')) {
-        this.popup[popup] = false;
-
-        this.clearInvestTemplate();
+    closeWindow () {
+      for (key in this.popup) {
+        this.popup[key] = false;
       }
+
+      const dialog = document.querySelector('.popup-overlay');
+
+      [...document.getElementById('crypto-app').children].forEach(item => {
+        if (item !== dialog) {
+          item.inert = false;
+        }
+      });
+
+      this.clearInvestTemplate();
+
+      this.activeElement.focus();
     },
 
     openWindow (popup) {
+      this.activeElement = document.activeElement;
       this.popup[popup] = true;
 
       setTimeout(function () {
-        document.querySelector('.popup-overlay').focus();
-      }, 200);
+        const dialog = document.querySelector('.popup-overlay');
+
+        [...document.getElementById('crypto-app').children].forEach(item => {
+          if (item !== dialog) {
+            item.inert = true;
+          }
+        });
+
+        dialog.focus();
+      }, 300);
     },
 
     showMarketsLink (symbol) {
@@ -530,12 +550,6 @@ const app = new Vue({
 
     showCryptoLink (id) {
       return 'https://coinmarketcap.com/assets/' + id;
-    },
-
-    detectPixelRatio () {
-      const pixelRatio = window.devicePixelRatio || 1;
-
-      this.pixelRatio = pixelRatio;
     },
 
     showCoinImage (symbol, isInvestment) {
@@ -579,6 +593,12 @@ const app = new Vue({
 
     setTableListing () {
       this.readFromLS("notListed");
+    },
+
+    detectPixelRatio () {
+      const pixelRatio = window.devicePixelRatio || 1;
+
+      this.pixelRatio = pixelRatio;
     }
   },
 
@@ -592,7 +612,7 @@ const app = new Vue({
     },
 
     coinsBought () {
-      return +this.investTemplate.coinsAmount + +this.transaction.coinsBuyTemp;
+      return +this.investTemplate.coinsAmount - +this.investTemplate.coinsWithdraw + +this.transaction.coinsBuyTemp;
     },
 
     usdSpent () {
@@ -642,38 +662,41 @@ const app = new Vue({
 
       portfolio.forEach((item) => {
         item.icon = this.showCoinImage(item.coinsSymbol);
-        item.current_value = this.countRate(item.cryptoInvestedAmount, item.cryptoInvestedSymbol);
+        item.currentValue = this.countRate(item.cryptoInvestedAmount, item.cryptoInvestedSymbol);
         item.quantity = item.coinsAmount - item.coinsWithdraw;
-        item.markets_link = this.showMarketsLink(item.coinsSymbol);
+        item.marketsLink = this.showMarketsLink(item.coinsSymbol);
         item.price = this.countRate(1, item.coinsSymbol);
-        item["24h_change"] = this.show24hChange(item.coinsSymbol);
+        item.buyPrice = item.usdInvested/item.coinsAmount;
+        item["24hChange"] = this.show24hChange(item.coinsSymbol);
 
-        if (item["24h_change"] >= 0) {
-          item.is_change_negative = true;
+        if (item["24hChange"] >= 0) {
+          item.isChangeNegative = true;
         } else {
-          item.is_change_negative = false;
+          item.isChangeNegative = false;
         }
 
-        let pl = (this.countRate(1, item.coinsSymbol) - item.usdInvested/item.coinsAmount) * (item.coinsAmount - item.coinsWithdraw);
+        let pl = (item.price - item.buyPrice) * item.quantity;
 
         if (pl < 0) {
-          item.is_profit = true;
+          item.isProfit = true;
         } else {
-          item.is_profit = false;
+          item.isProfit = false;
         }
 
-        item.current_pl = Math.abs(pl);
-        item.total = this.countRate(item.coinsAmount - item.coinsWithdraw, item.coinsSymbol)
-        item.sold_total = item.usdWithdraw + this.countRate(item.coinsAmount - item.coinsWithdraw, item.coinsSymbol);
-        item.sold_pl = Math.abs(((item.usdWithdraw / item.coinsWithdraw) - (item.usdInvested/item.coinsAmount)) * item.coinsWithdraw);
-        item.average_price = item.usdInvested / item.quantity;
+        item.currentPl = Math.abs(pl);
+        item.total = this.countRate(item.quantity, item.coinsSymbol)
+        item.soldTotal = item.usdWithdraw + item.total;
+        item.soldPl = Math.abs(((item.usdWithdraw / item.coinsWithdraw) - item.buyPrice) * item.coinsWithdraw);
+        item.averagePrice = item.usdInvested / item.coinsAmount;
+        item.currentCryptoAmount = item.total / this.countRate(1, item.cryptoInvestedSymbol);
+        item.currentBtcAmount = item.total / this.countRate(1, 'BTC');
       });
 
       return portfolio;
     },
 
     computedInvestments () {
-      const portfolio = this.computedData.filter(item => item['type'] === 'type-ico');
+      const portfolio = this.computedData.filter(item => item.type === 'type-ico');
 
       // filtering not listed entries
       if (!this.notListed) {

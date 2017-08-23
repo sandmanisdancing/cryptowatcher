@@ -137,14 +137,11 @@ gulp.task('critical', () => {
 var scriptsArray = [
   './app/scripts/vue.js',
   './app/scripts/mdrnzr-touch.js',
+  './app/scripts/inert.js',
   './app/scripts/main.js'
-];
-
-var scriptsArrayProd = [
-  './app/scripts/vue.min.js',
-  './app/scripts/mdrnzr-touch.js',
-  './app/scripts/main.js'
-];
+],
+    scriptsArrayProd = scriptsArray.slice(1);
+    scriptsArrayProd.splice(0, 0, './app/scripts/vue.min.js');
 
 // Copy
 gulp.task('copyScripts', () => {
