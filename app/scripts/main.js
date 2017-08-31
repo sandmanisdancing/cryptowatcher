@@ -48,6 +48,7 @@ const data = {
   loadStatus: null,
   deleteIndex: null,
   myInvestments: [],
+  bittrex: [],
   investTemplate: {
     id: null,
     cryptoInvestedAmount: 0,
@@ -69,7 +70,9 @@ const data = {
     cryptoSpentTemp: 0,
   },
   authentication: {
-    user: null,
+    user: {
+      displayName: 'Not signed in.'
+    },
     isSignedIn: false
   },
   activeElement: null,
@@ -250,6 +253,9 @@ const app = new Vue({
       }
 
       this.closeWindow();
+
+      // after login it's good to refresh market data
+      this.fetchData();
     },
 
     signOut () {
@@ -269,14 +275,24 @@ const app = new Vue({
     checkIsSignedIn () {
       this.loadStatus = 'Authentication...';
 
+      let lsArray = [];
+
+      for (let item in localStorage) {
+        lsArray.push(item);
+      }
+
+      this.authentication.isSignedIn = lsArray.some(item => {
+        if (item.indexOf('firebase:authUser') !== -1) return item;
+      });
+
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           this.authentication.user = user;
-          this.authentication.isSignedIn = true;
+          // this.authentication.isSignedIn = true;
 
           this.readUserData();
         } else {
-          this.authentication.isSignedIn = false;
+          // this.authentication.isSignedIn = false;
         }
       });
     },
@@ -626,7 +642,8 @@ const app = new Vue({
     currencyListSearch () {
       if (this.fullData) {
         return this.fullData.filter((node) => {
-          return node.name.toLowerCase().indexOf(this.searchMarket.toLowerCase()) === 0;
+          return node.name.toLowerCase().indexOf(this.searchMarket.toLowerCase()) === 0 ||
+                 node.symbol.toLowerCase().indexOf(this.searchMarket.toLowerCase()) === 0;
         });
       }
     },

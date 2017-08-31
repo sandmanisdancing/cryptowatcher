@@ -97,11 +97,8 @@
 
       <div class="pageheader__left-column">
         <h1 class="pageheader__name">My crypto portfolio</h1>
-        <div class="pageheader__user" v-if="authentication.isSignedIn">
+        <div class="pageheader__user">
           {{ authentication.user.displayName }}
-        </div>
-        <div class="pageheader__user" v-else>
-          Not signed in.
         </div>
       </div>
 
@@ -212,7 +209,7 @@
                   </td>
                   <td class="table__td table__td--total-usd">
                     <span class="fiat">
-                      <span class="acronym" tabindex="0">
+                      <span class="acronym" tabindex="0" @click.stop>
                         <span class="acronym__text">
                           <span class="fiat__whole">${{ investment.total | tofixWhole }}</span>.<span class="fiat__fraction">{{ investment.total | tofixFraction }}</span>
                         </span>
@@ -250,7 +247,7 @@
                   </td>
                   <td class="table__td table__td--action">
                     <div class="table__action-div">
-                      <button class="btn btn--main action-btn" type="button" @click.stop="makeTransaction(index, 'ico')" title="Sell">
+                      <button class="btn btn--main action-btn" type="button" @click.stop="startTransaction(index, 'ico')" title="Sell">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline></svg>
                       </button>
                       <button class="btn btn--alt action-btn action-btn--edit" type="button" @click.stop="editToken(index, 'ico', $event)" title="Edit">
@@ -354,7 +351,7 @@
                   </td>
                   <td class="table__td table__td--total-usd">
                     <span class="fiat">
-                      <span class="acronym" tabindex="0">
+                      <span class="acronym" tabindex="0" @click.stop>
                         <span class="acronym__text">
                           <span class="fiat__whole">${{ investment.total | tofixWhole }}</span>.<span class="fiat__fraction">{{ investment.total | tofixFraction }}</span>
                         </span>
@@ -415,7 +412,7 @@
       <section class="market-info">
         <div class="market-info__search">
           <label for="search-currency" class="input-label market-info__search-label">Coin search</label>
-          <input type="search" id="search-currency" class="input-field market-info__search-field" v-model="searchMarket" placeholder="Search by name...">
+          <input type="search" id="search-currency" class="input-field market-info__search-field" v-model="searchMarket" placeholder="Search coin...">
         </div>
 
         <div class="market-info__holder">
