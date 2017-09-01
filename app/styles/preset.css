@@ -49,26 +49,29 @@
 	box-sizing: border-box;
 }
 
-body {
-  font-weight: 300;
-  font-family: Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.4;
+html {
+  font-family: sans-serif;
   letter-spacing: -0.65px;
   word-spacing: 1.15px;
+}
+
+body {
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.4;
+	color: var(--text-color);
+  background-color: var(--bglight-color);
+}
+
+html, body {
+	height: 100%;
+  margin: 0;
 }
 
 .fonts-loaded {
   font-family: var(--font-name);
   letter-spacing: normal;
   word-spacing: normal;
-}
-
-html, body {
-	height: 100%;
-	color: var(--text-color);
-  background-color: var(--bglight-color);
-  margin: 0;
 }
 
 input, button, textarea, select {
