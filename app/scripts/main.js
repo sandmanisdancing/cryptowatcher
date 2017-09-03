@@ -560,9 +560,8 @@ const app = new Vue({
 
     showMarketsLink (symbol) {
       let name = this.fullData.filter(item => item.symbol === symbol);
-      name.split(' ').join('-');
 
-      if(name.length) return 'https://coinmarketcap.com/assets/' + name[0].name.toLowerCase() + '/#markets';
+      if(name.length) return 'https://coinmarketcap.com/assets/' + name[0].id + '/#markets';
     },
 
     showCryptoLink (id) {
@@ -581,9 +580,7 @@ const app = new Vue({
           if (item.symbol == symbol) return item;
         });
 
-        name.split(' ').join('-');
-
-        if(name.length) return 'https://files.coinmarketcap.com/static/img/coins/' + size + 'x' + size + '/' + name[0].name.toLowerCase() + '.png';
+        if(name.length) return 'https://files.coinmarketcap.com/static/img/coins/' + size + 'x' + size + '/' + name[0].id + '.png';
       } else {
         return 'https://files.coinmarketcap.com/static/img/coins/' + size + 'x' + size + '/' + symbol + '.png';
       }
