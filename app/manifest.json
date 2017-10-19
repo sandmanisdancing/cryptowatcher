@@ -25,6 +25,5 @@
       "sizes": "256x256",
       "type": "image/png"
     }],
-  "start_url": "dist/",
   "display": "standalone"
 }
