@@ -19,6 +19,30 @@
 
   <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
   <meta name="msapplication-TileColor" content="#a008b7">
+  
+  <!-- check if fontsLoaded key is in sessionStorage -->
+  <script>
+    if (!sessionStorage.fontsLoaded) {
+      var script = document.createElement('script');
+
+      script.onload = function () {
+        var fontRegular = new FontFaceObserver('Fira Sans Condensed'),
+        fontItalic = new FontFaceObserver('Fira Sans Condensed');
+
+        Promise.all([fontRegular.load(), fontItalic.load()]).then(function () {
+          sessionStorage.fontsLoaded = true;
+          document.body.classList.add('fonts-loaded');
+        }).catch(function () {
+          sessionStorage.fontsLoaded = false;
+        });
+      }
+
+      script.src = "scripts/fontfaceobserver.js";
+      document.head.appendChild(script);
+    } else {
+      document.documentElement.classList.add('fonts-loaded')
+    }
+  </script>
 
   <!-- shortcut icon, uncomment for production -->
   <!-- <link rel="shortcut icon" href="images/icons/icon-32x32.png" type="image/ico"> -->
@@ -65,29 +89,6 @@
 
   <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js" defer></script>
   <script src="scripts/main.js" defer></script>
-
-  <script>
-    if (!sessionStorage.fontsLoaded) {
-      var script = document.createElement('script');
-
-      script.onload = function () {
-        var fontRegular = new FontFaceObserver('Fira Sans Condensed'),
-        fontItalic = new FontFaceObserver('Fira Sans Condensed');
-
-        Promise.all([fontRegular.load(), fontItalic.load()]).then(function () {
-          sessionStorage.fontsLoaded = true;
-          document.body.classList.add('fonts-loaded');
-        }).catch(function () {
-          sessionStorage.fontsLoaded = false;
-        });
-      }
-
-      script.src = "scripts/fontfaceobserver.js";
-      document.head.appendChild(script);
-    } else {
-      document.documentElement.classList.add('fonts-loaded')
-    }
-  </script>
 </head>
 <body>
   <div id="crypto-app" v-cloak>

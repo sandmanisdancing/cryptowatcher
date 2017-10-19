@@ -260,7 +260,7 @@ const app = new Vue({
 
     signOut () {
       firebase.auth().signOut().then(() => {
-        this.authentication.user = null;
+        this.authentication.user = 'Not signed in.';
         this.authentication.isSignedIn = false;
       }).catch(function(error) {
         // An error happened.
