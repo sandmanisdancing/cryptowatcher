@@ -185,7 +185,7 @@ const app = new Vue({
     fetchData () {
       const request = new XMLHttpRequest();
 
-      request.open('GET', 'https://api.coinmarketcap.com/v1/ticker/', true);
+      request.open('GET', 'https://api.coinmarketcap.com/v1/ticker/?limit=200', true);
       request.send();
 
       request.onreadystatechange = () => {
