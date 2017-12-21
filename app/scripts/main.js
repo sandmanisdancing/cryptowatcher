@@ -673,6 +673,19 @@ const app = new Vue({
       }
     },
 
+    btcPortfolioValue () {
+      let portfolio = this.myInvestments,
+          result;
+
+      if (portfolio.length) {
+        result = portfolio.reduce((sum, current) => {
+          return sum + this.countRate(current.coinsAmount - current.coinsWithdraw, current.coinsSymbol);
+        }, 0);
+
+        return result / this.fullData[0].price_usd;
+      }
+    },
+
     computedData () {
       let portfolio = JSON.parse(localStorage.getItem('myInvestments')),
       o = this.myInvestments;
