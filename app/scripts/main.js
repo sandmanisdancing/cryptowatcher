@@ -90,7 +90,7 @@ const data = {
 Vue.component('page-footer', {
   template: '<footer class="pagefooter">\
     <div class="pagefooter__copy">\
-      <p>&copy; 2017 — you are able to use this app in the way you need.</p>\
+      <p>&copy; 2018 — you are able to use this app in the way you need.</p>\
       <p>Built with <a href="http://coinmarketcap.com/" target="_blank" rel="noopener">Coinmarketcap API</a> and <a href="http://vuejs.org/" target="_blank" rel="noopener">Vue.js</a>.</p>\
     </div>\
     <div class="pagefooter__donate">\
