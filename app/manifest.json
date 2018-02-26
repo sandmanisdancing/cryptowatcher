@@ -1,6 +1,6 @@
 {
   "name": "Cryptowatcher",
-  "short_name": "Cryptowtchr",
+  "short_name": "My Crypto",
   "start_url": "/cryptowatcher/dist/index.html",
   "description": "Watch your cryptocurrencies and assets.",
   "background_color": "#a008b7",
