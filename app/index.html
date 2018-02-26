@@ -110,7 +110,7 @@
         <button id="sign-out-btn" class="btn btn--rare" @click="signOut" v-else>Sign out</button>
       </div>
     </header>
- 
+
     <main role="main">
       <section class="portfolio">
         <div class="portfolio__total" v-if="myInvestments.length">
@@ -135,8 +135,7 @@
               <tr v-for="(investment, index) in computedInvestments" :key="investment.id" @click.stop="highlightRow(index, 'icos')" class="table__row">
                 <td class="table__td table__td--symbol">
                   <span class="table__symbol">
-                    <img class="table__symbol-icon" :src="investment.icon" :alt="investment.coinsSymbol + ' icon'" v-if="investment.icon">
-                    <span v-else class="table__symbol-icon">&minus;</span>
+                    <coin-icon :src="investment.icon" :alt="investment.iconText" v-if="investment.icon"></coin-icon>
 
                     <template v-if="investment.url">
                       <a class="table__symbol-name" :title="investment.url" :href="investment.url" target="_blank" rel="noopener">{{ investment.coinsSymbol }}</a>
@@ -172,8 +171,7 @@
                 <tr v-for="(investment, index) in computedInvestments" :key="investment.id" @click.stop="highlightRow(index, 'icos')" class="table__row">
                   <td class="table__td table__td--symbol table__td--desktop">
                     <span class="table__symbol">
-                      <img class="table__symbol-icon" :src="investment.icon" :alt="investment.coinsSymbol + ' icon'" v-if="investment.icon">
-                      <span v-else class="table__symbol-icon">&minus;</span>
+                      <coin-icon :src="investment.icon" :alt="investment.iconText" v-if="investment.icon"></coin-icon>
 
                       <template v-if="investment.url">
                         <a class="table__symbol-name" @click.stop :title="investment.url" :href="investment.url" target="_blank" rel="noopener">{{ investment.coinsSymbol }}</a>
@@ -275,8 +273,7 @@
               <tr v-for="(investment, index) in computedHold" :key="investment.id" @click.stop="highlightRow(index, 'hold')" class="table__row">
                 <td class="table__td table__td--symbol">
                   <span class="table__symbol">
-                    <img class="table__symbol-icon" :src="investment.icon" :alt="investment.coinsSymbol + ' icon'" v-if="investment.icon">
-                    <span v-else class="table__symbol-icon">&minus;</span>
+                    <coin-icon :src="investment.icon" :alt="investment.iconText" v-if="investment.icon"></coin-icon>
 
                     <template v-if="investment.url">
                       <a class="table__symbol-name" :title="investment.url" :href="investment.url" target="_blank" rel="noopener">{{ investment.coinsSymbol }}</a>
@@ -312,8 +309,7 @@
                 <tr v-for="(investment, index) in computedHold" :key="investment.id" @click.stop="highlightRow(index, 'hold')" class="table__row">
                   <td class="table__td table__td--symbol table__td--desktop">
                     <span class="table__symbol">
-                      <img class="table__symbol-icon" :src="investment.icon" :alt="investment.coinsSymbol + ' icon'" v-if="investment.icon">
-                      <span v-else class="table__symbol-icon">&minus;</span>
+                      <coin-icon :src="investment.icon" :alt="investment.iconText" v-if="investment.icon"></coin-icon>
 
                       <template v-if="investment.url">
                         <a class="table__symbol-name" @click.stop :title="investment.url" :href="investment.url" target="_blank" rel="noopener">{{ investment.coinsSymbol }}</a>
@@ -431,7 +427,7 @@
                 </td>
                 <td class="table__td table__td--name">
                   <span class="table__symbol">
-                    <img class="table__symbol-icon" :src="showCoinImage(currencyListSearch[n-1].id, false)" :alt="currencyListSearch[n-1].name + ' icon'">
+                    <coin-icon :src="currencyListSearch[n-1].icon" :alt="currencyListSearch[n-1].iconText"></coin-icon>
 
                     <span class="table__symbol-name">{{ currencyListSearch[n-1].name }}</span>&nbsp;<a target="_blank" rel="noopener" :href="showCryptoLink(currencyListSearch[n-1].id)">{{ currencyListSearch[n-1].symbol }}</a>
                   </span>
@@ -460,7 +456,7 @@
                   </td>
                   <td class="table__td table__td--name table__td--desktop">
                     <span class="table__symbol">
-                      <img class="table__symbol-icon" :src="showCoinImage(currencyListSearch[n-1].id, false)" :alt="currencyListSearch[n-1].name + ' icon'">
+                      <coin-icon :src="currencyListSearch[n-1].icon" :alt="currencyListSearch[n-1].iconText"></coin-icon>
 
                       <span class="table__symbol-name">{{ currencyListSearch[n-1].name }}</span>&nbsp;<a target="_blank" rel="noopener" :href="showCryptoLink(currencyListSearch[n-1].id)">{{ currencyListSearch[n-1].symbol }}</a>
                     </span>

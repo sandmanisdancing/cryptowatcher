@@ -236,7 +236,7 @@ gulp.task('serve', ['default'], () => {
   gulp.watch(['app/**/*.html'], ['html', reload]);
   gulp.watch(['app/styles/**/*.css'], ['styles']);
   gulp.watch(['app/scripts/**/*.js'], ['scripts', reload]);
-  gulp.watch(['app/images/**/*.{jpg,png}', '!app/images/sprite/*'], ['images']);
+  gulp.watch(['app/images/**/*.{jpg,png,svg}', '!app/images/sprite/*'], ['images']);
 });
 
 // Build dev files, the default task

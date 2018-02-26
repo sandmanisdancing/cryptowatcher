@@ -48,7 +48,6 @@ const data = {
   loadStatus: null,
   deleteIndex: null,
   myInvestments: [],
-  bittrex: [],
   investTemplate: {
     id: null,
     cryptoInvestedAmount: 0,
@@ -87,10 +86,26 @@ const data = {
   searchMarket: ""
 };
 
+Vue.component('coin-icon', {
+  template: '<img :src="iconSrc" @error="imageLoadError" class="table__symbol-icon">',
+  data () {
+    return {
+      iconSrc: null
+    }
+  },
+  methods: {
+    imageLoadError () {
+      const defaultSource = "images/cryptos/default.svg";
+
+      this.iconSrc = defaultSource;
+    }
+  }
+});
+
 Vue.component('page-footer', {
   template: '<footer class="pagefooter">\
     <div class="pagefooter__copy">\
-      <p>&copy; 2018 — you are able to use this app in the way you need.</p>\
+      <p>&copy; <span class="pagefooter__year">{{ currentYear }}</span> — you are able to use this app in the way you need.</p>\
       <p>Built with <a href="http://coinmarketcap.com/" target="_blank" rel="noopener">Coinmarketcap API</a> and <a href="http://vuejs.org/" target="_blank" rel="noopener">Vue.js</a>.</p>\
     </div>\
     <div class="pagefooter__donate">\
@@ -99,8 +114,10 @@ Vue.component('page-footer', {
       <p>BTC <strong>1NbwV5pqAJKaipM1pTQpdbisB3rwtKq6MF</strong></p>\
     </div>\
   </footer>',
-  data () {
-    return data;
+  computed: {
+    currentYear () {
+      return (new Date()).getFullYear();
+    }
   }
 });
 
@@ -201,6 +218,11 @@ const app = new Vue({
         } else {
           try {
             this.fullData = JSON.parse(request.responseText);
+            this.fullData.forEach((item) => {
+              item.icon = "images/cryptos/" + item.symbol.toLowerCase() + ".svg";
+              item.iconText = item.name + " icon";
+            });
+
             this.saveToLS('fullData');
 
             this.loadStatus = null;
@@ -569,21 +591,19 @@ const app = new Vue({
     },
 
     showCoinImage (symbol, isInvestment) {
-      if (this.pixelRatio > 1) {
-        size = 32;
-      } else {
-        size = 16;
-      }
+      let name = this.fullData.filter((item) => {
+        if (item.symbol == symbol) return item;
+      });
 
-      if(isInvestment === undefined) {
-        let name = this.fullData.filter((item) => {
-          if (item.symbol == symbol) return item;
-        });
+      if (name.length) return name[0].icon;
+    },
 
-        if(name.length) return 'https://files.coinmarketcap.com/static/img/coins/' + size + 'x' + size + '/' + name[0].id + '.png';
-      } else {
-        return 'https://files.coinmarketcap.com/static/img/coins/' + size + 'x' + size + '/' + symbol + '.png';
-      }
+    showCoinText (symbol, isInvestment) {
+      let name = this.fullData.filter((item) => {
+        if (item.symbol == symbol) return item;
+      });
+
+      if (name.length) return name[0].iconText;
     },
 
     highlightRow (index, type) {
@@ -611,10 +631,16 @@ const app = new Vue({
       this.readFromLS("notListed");
     },
 
-    detectPixelRatio () {
-      const pixelRatio = window.devicePixelRatio || 1;
+    imageLoadError (symbol) {
+      let name = this.fullData.filter(item => item.symbol === symbol);
 
-      this.pixelRatio = pixelRatio;
+      // if (name.length) return name[0].icon;
+
+
+
+      console.log(name);
+      // this.icon = "images/cryptos/default.svg";
+      // return iconUrl;
     }
   },
 
@@ -692,6 +718,7 @@ const app = new Vue({
 
       portfolio.forEach((item) => {
         item.icon = this.showCoinImage(item.coinsSymbol);
+        item.iconText = this.showCoinText(item.coinsSymbol);
         item.currentValue = this.countRate(item.cryptoInvestedAmount, item.cryptoInvestedSymbol);
         item.quantity = item.coinsAmount - item.coinsWithdraw;
         item.marketsLink = this.showMarketsLink(item.coinsSymbol);
@@ -749,7 +776,6 @@ const app = new Vue({
 
   created () {
     this.checkIsSignedIn();
-    this.detectPixelRatio();
     this.setTableListing();
     this.fetchData();
 
