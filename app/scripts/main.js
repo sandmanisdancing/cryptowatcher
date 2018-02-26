@@ -310,11 +310,11 @@ const app = new Vue({
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           this.authentication.user = user;
-          // this.authentication.isSignedIn = true;
+          this.authentication.isSignedIn = true;
 
           this.readUserData();
         } else {
-          // this.authentication.isSignedIn = false;
+          this.authentication.isSignedIn = false;
         }
       });
     },
@@ -780,6 +780,7 @@ const app = new Vue({
     this.fetchData();
 
     console.log('App created...');
+
   },
 
   mounted () {

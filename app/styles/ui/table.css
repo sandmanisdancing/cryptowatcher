@@ -109,11 +109,11 @@
   width: 22px;
   font-size: 12px;
   text-align: center;
+  margin-right: 8px;
 }
 
 .table__symbol-name {
   vertical-align: middle;
-  margin-left: 8px;
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -137,10 +137,12 @@
 .table__th--rank {
   width: 35px;
   text-align: center;
+  padding-right: 0;
 }
 
 .table__td--rank {
   text-align: center;
+  padding-right: 0;
 }
 
 .table--marketinfo.table--symbol {
